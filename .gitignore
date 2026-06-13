@@ -1,0 +1,17 @@
+# Dependências (o app não usa, mas previne lixo futuro)
+node_modules/
+
+# Logs e temporários
+*.log
+*.tmp
+.cache/
+
+# Lixo de SO / editor
+.DS_Store
+Thumbs.db
+*.swp
+.idea/
+.vscode/
+
+# NÃO ignoramos config.json nem data.json:
+# são o estado pessoal do usuário e o ponto do app (single-user, local).

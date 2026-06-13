@@ -1,0 +1,118 @@
+{
+  "profile": {
+    "name": "Emanuel",
+    "email": ""
+  },
+  "usdToBrl": 5.4,
+  "goals": [
+    {
+      "id": "dominar-claude-code",
+      "titulo": "Dominar o Claude Code",
+      "icone": "🧠",
+      "marcos": [
+        {
+          "id": "instalar-3-skills",
+          "texto": "Instalar 3 skills úteis",
+          "auto": true
+        },
+        {
+          "id": "conectar-mcp",
+          "texto": "Conectar 1 integração (MCP)",
+          "auto": true
+        },
+        {
+          "id": "usar-subagente",
+          "texto": "Usar um subagente (Explore/Plan)",
+          "auto": true
+        },
+        {
+          "id": "criar-hook",
+          "texto": "Criar o seu primeiro hook",
+          "auto": true
+        },
+        {
+          "id": "sequencia-7-dias",
+          "texto": "Manter sequência de 7 dias",
+          "auto": true
+        }
+      ]
+    },
+    {
+      "id": "automatizar-negocio",
+      "titulo": "Automatizar o negócio",
+      "icone": "⚙️",
+      "marcos": [
+        {
+          "id": "conectar-gdrive",
+          "texto": "Conectar o Google Drive",
+          "auto": true
+        },
+        {
+          "id": "conectar-meta",
+          "texto": "Conectar o Meta / Facebook Ads",
+          "auto": true
+        },
+        {
+          "id": "criar-automacao",
+          "texto": "Criar 1 automação (hook) de rotina",
+          "auto": false
+        },
+        {
+          "id": "documentar-processo",
+          "texto": "Documentar 1 processo com /init",
+          "auto": false
+        }
+      ]
+    },
+    {
+      "id": "criar-conteudo",
+      "titulo": "Criar conteúdo e materiais",
+      "icone": "✍️",
+      "marcos": [
+        {
+          "id": "conectar-canva",
+          "texto": "Conectar o Canva",
+          "auto": true
+        },
+        {
+          "id": "produzir-5-pecas",
+          "texto": "Produzir 5 peças / textos",
+          "auto": false
+        },
+        {
+          "id": "montar-fluxo",
+          "texto": "Montar um fluxo de campanha",
+          "auto": false
+        }
+      ]
+    },
+    {
+      "id": "construir-apps",
+      "titulo": "Construir apps / produtos",
+      "icone": "🚀",
+      "marcos": [
+        {
+          "id": "iniciar-projeto",
+          "texto": "Iniciar 1 projeto",
+          "auto": true
+        },
+        {
+          "id": "concluir-shinzen",
+          "texto": "Concluir o painel Shinzen",
+          "auto": false
+        },
+        {
+          "id": "publicar-produto",
+          "texto": "Publicar 1 produto",
+          "auto": false
+        }
+      ]
+    }
+  ],
+  "projectOverrides": {},
+  "goalsDone": {
+    "concluir-shinzen": false,
+    "documentar-processo": true,
+    "publicar-produto": false
+  }
+}

@@ -1,0 +1,198 @@
+{
+  "areas": {
+    "saude": {
+      "campos": {
+        "peso": 72,
+        "pesoAlvo": null,
+        "sonoH": 7.5,
+        "treinosSemana": 2,
+        "treinosMeta": 3
+      },
+      "historico": {
+        "peso": [
+          {
+            "d": "2026-06-09",
+            "v": 72
+          }
+        ],
+        "sonoH": []
+      },
+      "metasManual": {},
+      "metasTexto": {},
+      "progresso": {
+        "checkins": [],
+        "recordeStreak": 0,
+        "badgesUnlocked": [],
+        "missoesLog": {}
+      }
+    },
+    "financas": {
+      "campos": {
+        "receitaMes": null,
+        "metaReceita": 1000,
+        "despesasMes": null,
+        "reservaEmergencia": null,
+        "reservaMeta": 5000,
+        "dividas": null
+      },
+      "historico": {
+        "receitaMes": [],
+        "despesasMes": [],
+        "reservaEmergencia": []
+      },
+      "metasManual": {},
+      "metasTexto": {},
+      "progresso": {
+        "checkins": [],
+        "recordeStreak": 0,
+        "badgesUnlocked": [],
+        "missoesLog": {}
+      }
+    },
+    "trabalho": {
+      "campos": {
+        "clientesAtivos": null,
+        "metaClientes": 3,
+        "tarefasSemana": null,
+        "tarefasConcluidas": null,
+        "satisfacao": null
+      },
+      "historico": {
+        "clientesAtivos": [],
+        "satisfacao": []
+      },
+      "metasManual": {},
+      "metasTexto": {},
+      "progresso": {
+        "checkins": [],
+        "recordeStreak": 0,
+        "badgesUnlocked": [],
+        "missoesLog": {}
+      }
+    },
+    "metas": {
+      "campos": {
+        "economiasPorsche": 0,
+        "metaPorsche": 350000
+      },
+      "historico": {
+        "economiasPorsche": []
+      },
+      "metasManual": {
+        "sofia": false,
+        "viajar-eua": false,
+        "renda-5k-mes": false
+      },
+      "metasTexto": {},
+      "progresso": {
+        "checkins": [],
+        "recordeStreak": 0,
+        "badgesUnlocked": [],
+        "missoesLog": {}
+      }
+    },
+    "igreja": {
+      "campos": {
+        "missasSemanais": null,
+        "missaMeta": 1,
+        "oracao": null,
+        "biblia": null,
+        "voluntariado": null
+      },
+      "historico": {},
+      "metasManual": {},
+      "metasTexto": {},
+      "progresso": {
+        "checkins": [],
+        "recordeStreak": 0,
+        "badgesUnlocked": [],
+        "missoesLog": {}
+      }
+    },
+    "lazer": {
+      "campos": {
+        "horasLazer": null,
+        "metaLazer": 5,
+        "leituraMin": null,
+        "aprendizadoHoje": null
+      },
+      "historico": {
+        "horasLazer": [],
+        "leituraMin": []
+      },
+      "metasManual": {},
+      "metasTexto": {},
+      "progresso": {
+        "checkins": [],
+        "recordeStreak": 0,
+        "badgesUnlocked": [],
+        "missoesLog": {}
+      }
+    },
+    "rotina": {
+      "campos": {
+        "acordouCedo": null,
+        "aguaL": null,
+        "metaAgua": 2,
+        "celularH": null,
+        "produtividadeH": null
+      },
+      "historico": {
+        "aguaL": [],
+        "celularH": [],
+        "produtividadeH": []
+      },
+      "metasManual": {},
+      "metasTexto": {},
+      "progresso": {
+        "checkins": [],
+        "recordeStreak": 0,
+        "badgesUnlocked": [],
+        "missoesLog": {}
+      }
+    },
+    "mente": {
+      "campos": {
+        "humor": null,
+        "ansiedade": null,
+        "meditacao": null,
+        "gratidao": null,
+        "journalHoje": null
+      },
+      "historico": {
+        "humor": [],
+        "ansiedade": []
+      },
+      "metasManual": {},
+      "metasTexto": {},
+      "progresso": {
+        "checkins": [],
+        "recordeStreak": 0,
+        "badgesUnlocked": [],
+        "missoesLog": {}
+      }
+    }
+  },
+  "areasOrder": [
+    "claude-code",
+    "saude",
+    "financas",
+    "trabalho",
+    "metas",
+    "igreja",
+    "lazer",
+    "rotina",
+    "mente"
+  ],
+  "pesos": {
+    "claude-code": 2,
+    "saude": 2,
+    "financas": 2,
+    "trabalho": 2,
+    "metas": 1,
+    "igreja": 1,
+    "lazer": 1,
+    "rotina": 1,
+    "mente": 1
+  }
+}
