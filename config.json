@@ -115,5 +115,8 @@
     "documentar-processo": true,
     "publicar-produto": false,
     "criar-automacao": false
+  },
+  "projectTags": {
+    "-home-dante-jarvis-dev": "caixa"
   }
 }

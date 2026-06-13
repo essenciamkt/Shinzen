@@ -654,6 +654,69 @@ html, body {
 .detail-body > *:nth-child(5){ animation-delay:.20s }
 .detail-body > *:nth-child(6){ animation-delay:.25s }
 
+/* ── CLAUDE CODE v2: maestria / decisão / projetos / alavancas ── */
+.maestria { border-color: var(--border2); }
+.mst-main { display: flex; align-items: center; gap: 22px; padding-bottom: 16px; border-bottom: 1px solid var(--border); margin-bottom: 16px; }
+.mst-gauge { position: relative; width: 180px; flex-shrink: 0; }
+.mst-gauge .gauge { display: block; }
+.mst-num { position: absolute; left: 0; right: 0; bottom: 4px; text-align: center; font-family: var(--mono); font-weight: 900; font-size: 40px; line-height: 1; color: var(--text); letter-spacing: -.03em; }
+.mst-num small { font-size: 14px; color: var(--text3); font-weight: 600; }
+.mst-info { flex: 1; min-width: 0; }
+.mst-title { font-size: var(--text-xs); text-transform: uppercase; letter-spacing: .12em; color: var(--text3); font-weight: 700; margin-bottom: 6px; }
+.mst-apex { font-size: var(--text-lg); font-weight: 800; color: var(--text); letter-spacing: -.01em; margin-bottom: 8px; }
+.mst-lever { font-size: var(--text-sm); color: var(--text2); line-height: 1.4; }
+.mst-lever b { color: var(--area-color, var(--red)); }
+.mst-subs { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; }
+.mst-sub-head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 5px; }
+.mst-sub-head span:first-child { font-size: var(--text-xs); color: var(--text2); font-weight: 600; }
+.mst-sub-n { font-family: var(--mono); font-weight: 800; font-size: 14px; color: var(--text); }
+.mst-bar { height: 6px; background: var(--bg3); border-radius: 3px; overflow: hidden; }
+.mst-fill { height: 100%; background: var(--area-color, var(--red)); border-radius: 3px; transition: width 1s var(--t-slow); }
+.mst-sub-w { font-size: 9px; color: var(--text3); margin-top: 3px; text-transform: uppercase; letter-spacing: .06em; }
+
+.decision-strip { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+.dec-tile { background: var(--surface-1); border: 1px solid var(--border); border-left: 3px solid var(--border2); border-radius: var(--r2); padding: 14px 16px; }
+.dec-tile.ok   { border-left-color: var(--green); }
+.dec-tile.warn { border-left-color: #f59e0b; }
+.dec-tile.bad  { border-left-color: var(--red); }
+.dec-label { font-size: var(--text-xs); text-transform: uppercase; letter-spacing: .07em; color: var(--text3); font-weight: 600; margin-bottom: 7px; }
+.dec-val { font-size: 26px; font-weight: 800; font-family: var(--mono); color: var(--text); line-height: 1; letter-spacing: -.02em; }
+.dec-val small { font-size: 11px; color: var(--text3); font-weight: 600; }
+.dec-sub { font-size: var(--text-xs); color: var(--text2); margin-top: 5px; }
+
+.roi { display: flex; align-items: center; gap: 16px; }
+.roi.ok  { border-color: rgba(34,197,94,.35); }
+.roi.bad { border-color: rgba(225,29,42,.35); }
+.roi-sig { font-size: 30px; line-height: 1; flex-shrink: 0; }
+.roi-line { font-size: var(--text-md); color: var(--text); }
+.roi-line b { font-family: var(--mono); }
+.roi-msg { font-size: var(--text-sm); color: var(--text2); margin-top: 4px; }
+
+.proj-bar { height: 6px; background: var(--bg3); border-radius: 3px; overflow: hidden; margin-bottom: 14px; }
+.proj-bar-fill { height: 100%; background: linear-gradient(90deg, var(--green), #4ade80); border-radius: 3px; transition: width .8s var(--t-slow); }
+.proj-list { display: flex; flex-direction: column; gap: 8px; }
+.proj-row { display: flex; align-items: center; gap: 12px; padding: 9px 10px; border-radius: var(--r); background: var(--surface-2); border: 1px solid var(--border); }
+.proj-id { flex: 1; min-width: 0; }
+.proj-name { font-size: var(--text-sm); font-weight: 700; color: var(--text); display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.proj-meta { font-size: var(--text-xs); color: var(--text3); }
+.proj-meta .cooled { color: #f59e0b; }
+.proj-cost { font-family: var(--mono); font-size: var(--text-sm); font-weight: 700; color: var(--text2); flex-shrink: 0; min-width: 78px; text-align: right; }
+.proj-tags { display: flex; gap: 4px; flex-shrink: 0; }
+.ptag { width: 30px; height: 30px; border-radius: 7px; border: 1px solid var(--border2); background: var(--surface-3); cursor: pointer; font-size: 14px; line-height: 1; filter: grayscale(1) opacity(.5); transition: all var(--t-fast); }
+.ptag:hover { filter: grayscale(0) opacity(1); border-color: var(--border2); }
+.ptag.on { filter: grayscale(0) opacity(1); }
+.ptag.on.caixa { border-color: var(--green); background: rgba(34,197,94,.15); }
+.ptag.on.dispersao { border-color: #f59e0b; background: rgba(245,158,11,.15); }
+.ptag.on.infra { border-color: var(--border2); background: var(--surface-3); }
+
+.lever-list { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.lever-item { display: flex; gap: 11px; padding: 11px 12px; border-radius: var(--r); background: var(--surface-2); border: 1px solid var(--border); }
+.lever-ic { font-size: 18px; line-height: 1.2; flex-shrink: 0; }
+.lever-t { font-size: var(--text-sm); font-weight: 700; color: var(--text); }
+.lever-d { font-size: var(--text-xs); color: var(--text3); margin-top: 2px; line-height: 1.35; }
+
+.extras-head { font-size: var(--text-xs); text-transform: uppercase; letter-spacing: .1em; color: var(--text3); font-weight: 700; margin: 6px 0 12px; padding-top: 12px; border-top: 1px dashed var(--border2); }
+
 /* ── SPARKLINE ── */
 .sparkline { display: inline-block; vertical-align: middle; }
 .sparkline-row {
@@ -1001,6 +1064,12 @@ tr:hover td { background: var(--bg3); }
   .stats-row { grid-template-columns: 1fr 1fr; }
   .areas-grid { grid-template-columns: 1fr; padding: 0; }
   .checkin-chips { gap: 7px; }
+  /* claude code v2 mobile */
+  .mst-main { flex-direction: column; align-items: flex-start; gap: 12px; }
+  .mst-subs { grid-template-columns: 1fr 1fr; }
+  .decision-strip { grid-template-columns: 1fr 1fr; }
+  .lever-list { grid-template-columns: 1fr; }
+  .proj-cost { min-width: 64px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -1529,6 +1598,76 @@ function renderAreaDetail(areaId) {
   else renderManualArea(area);
 }
 
+// ── Helpers da Maestria / decisão ──
+function min1(x){ return Math.max(0, Math.min(1, x||0)); }
+function ymd2(date){ return date.toISOString().slice(0,10); }
+function diasAte(dataStr){
+  if(!dataStr) return null;
+  const alvo = new Date(dataStr+'T00:00:00');
+  const hoje = new Date(new Date().toISOString().slice(0,10)+'T00:00:00');
+  return Math.round((alvo - hoje)/86400000);
+}
+// burn (R$) do mês corrente a partir de cost.weekly
+function burnMes(cost){
+  const wk = cost.weekly||[];
+  const ym = new Date().toISOString().slice(0,7);
+  return wk.filter(w=>(w.weekStart||'').slice(0,7)===ym).reduce((s,w)=>s+(w.brl||0),0);
+}
+// nº de projetos com sessão nos últimos 7 dias
+function projetosAtivos7d(projs){
+  const dias = [];
+  for(let i=0;i<7;i++){ const d=new Date(); d.setDate(d.getDate()-i); dias.push(ymd2(d)); }
+  return (projs||[]).filter(p=>{
+    const sbd=p.sessionsByDay||{};
+    return dias.some(d=>(sbd[d]||0)>0);
+  }).length;
+}
+// Maestria Claude (0–100): quão milionária está a alavancagem do Claude
+function maestriaScore(det, receitaMes){
+  const t=det.totals||{}, sk=det.skills||{}, cost=det.cost||{}, projs=det.projects||[];
+  const burn=burnMes(cost);
+  let caixa;
+  if(burn<=0) caixa = receitaMes>0?100:0;
+  else { const r=(receitaMes||0)/burn; caixa = r<=1 ? 50*Math.max(0,r) : 50+50*Math.min(1,(r-1)/9); }
+  const ativos=projetosAtivos7d(projs);
+  const foco = ativos<=2?100 : ativos>=7?0 : Math.round(100*(7-ativos)/5);
+  const sInst=min1((sk.installed||[]).length/20), mc=min1((sk.connectedMcp||[]).length/6),
+        hk=min1((sk.hooks||[]).length/2), sa=min1((t.subagentsUsed||0)/100);
+  const alav=100*(sInst*.3+mc*.25+hk*.2+sa*.25);
+  const cons=100*(min1((t.activeDays||0)/30)*.5 + min1((t.currentStreak||0)/14)*.5);
+  const nTypes=Object.keys(det.agentTypes||{}).length;
+  const dom=100*(min1(nTypes/8)*.5 + min1(t.cacheReadRatio||0)*.5);
+  const subs=[
+    {key:'caixa',label:'Caixa / ROI',score:Math.round(caixa),weight:35,tip:'Faça o Claude gerar receita acima do custo (registre em Finanças).'},
+    {key:'foco',label:'Foco',score:Math.round(foco),weight:20,tip:`Concentre em poucos projetos — ativos 7d: ${ativos}.`},
+    {key:'alav',label:'Alavancagem',score:Math.round(alav),weight:20,tip:'Mais skills, MCPs, hooks e subagentes (multiplicadores).'},
+    {key:'cons',label:'Consistência',score:Math.round(cons),weight:15,tip:'Uso regular — dias ativos + streak.'},
+    {key:'dom',label:'Domínio',score:Math.round(dom),weight:10,tip:'Varie tipos de agente e aproveite o cache.'},
+  ];
+  const total=Math.round(subs.reduce((s,x)=>s+x.score*x.weight,0)/100);
+  return { total, subs, burn, ativos };
+}
+// Gauge semicircular grande pra Maestria.
+function gaugeHtml(score, color){
+  const r=70, cx=90, cy=90, circ=Math.PI*r; // semicírculo
+  const dash=circ*(score/100);
+  return `<svg width="180" height="104" viewBox="0 0 180 104" class="gauge">
+    <path d="M20 90 A70 70 0 0 1 160 90" fill="none" stroke="var(--bg3)" stroke-width="11" stroke-linecap="round"/>
+    <path d="M20 90 A70 70 0 0 1 160 90" fill="none" stroke="${color||'var(--red)'}" stroke-width="11" stroke-linecap="round"
+      stroke-dasharray="${dash.toFixed(1)} ${circ.toFixed(1)}" style="filter:drop-shadow(0 0 6px ${color||'var(--red)'}66)"/>
+  </svg>`;
+}
+
+// Alavancas curadas: o que construir pra fazer o Claude render mais caixa.
+const LEVERS = [
+  { ic:'🧲', t:'Agente de prospecção de sites', d:'Outreach automático pros tickets altos (ROADMAP: script de prospecção). → Caixa.' },
+  { ic:'🚀', t:'Hook de publicar LP', d:'Troca placeholders [EDITAR] + deploy num comando (Herança/Atividades travadas). → Caixa + Alavancagem.' },
+  { ic:'📥', t:'Pipeline passivo de julho', d:'Waitlist/agendamento que enche o funil sem Claude e converte em agosto. → Caixa.' },
+  { ic:'🔁', t:'Cron de cobrança Asaas', d:'Liga o billing-integrator num cron: dunning/retry automático. → Caixa.' },
+  { ic:'📊', t:'Relatório de caixa semanal', d:'data-analyst agendado: número de faturamento toda segunda. → Foco.' },
+  { ic:'🧹', t:'Hook de QA pré-entrega', d:'Roda e2e-test-writer antes de entregar pro cliente. → Domínio.' },
+];
+
 // ── ÁREA CLAUDE CODE ──
 function renderClaudeArea(area) {
   const det = area.detalhe||{};
@@ -1537,86 +1676,166 @@ function renderClaudeArea(area) {
   const level = det.level||{};
   const trends = det.trends?.wow||{};
   const ph = det.peakHours||{};
+  const meta = D.meta||{};
+  const cor = area.cor || 'var(--red)';
 
   const body = $('detail-body');
+  body.style.setProperty('--area-color', cor);
 
-  // KPIs
-  const kpis = [
-    { label:'Sessões', val:fmtN(t.sessions), sub:`${t.activeDays} dias ativos` },
-    { label:'Custo equiv.', val:fmtBrl(cost.totals?.brl,0), sub:fmtUsd(cost.totals?.usd) },
-    { label:'Streak', val:t.currentStreak+'d', sub:`Recorde: ${t.longestStreak}d` },
-    { label:'Subagentes', val:fmtN(t.subagentsUsed), sub:`${Object.keys(det.agentTypes||{}).length} tipos` },
-    { label:'Nível', val:String(level.level||1), sub:level.title||'' },
-    { label:'XP', val:String(level.xp||0), sub:`${level.progressPct}% do próx.` },
-  ];
+  // receita do mês (lida da área Finanças)
+  const fin = (D.areas||[]).find(a=>a.id==='financas');
+  const receitaMes = Number(fin?.detalhe?.campos?.receitaMes) || 0;
+
+  // Maestria
+  const M = maestriaScore(det, receitaMes);
+  const fraca = [...M.subs].sort((a,b)=>a.score-b.score)[0];
+  const apex = M.total>=90 ? 'Ápice — Claude é ferramenta milionária.'
+    : M.total>=70 ? 'Forte — perto de milionário.'
+    : M.total>=45 ? 'Médio — alavancando, falta caixa.'
+    : M.total>=20 ? 'Inicial — muito esforço, pouco retorno.'
+    : 'Cru — Claude ainda não vira dinheiro.';
+
+  // Decisão
+  const burn = M.burn;
+  const now = new Date();
+  const diaMes = now.getDate();
+  const diasNoMes = new Date(now.getFullYear(), now.getMonth()+1, 0).getDate();
+  const projecao = diaMes>0 ? burn/diaMes*diasNoMes : burn;
+  const ativos = M.ativos;
+  const dispCls = ativos<=2 ? 'ok' : ativos<=4 ? 'warn' : 'bad';
+  const dCaixa = diasAte(meta.caixaData);
+  const dOff = diasAte(meta.claudeOffData);
+
+  // ROI
+  const roiCls = receitaMes<=0 ? 'na' : receitaMes>=burn ? 'ok' : 'bad';
+  const roiSig = receitaMes<=0 ? '⚪' : receitaMes>=burn ? '🟢' : '🔴';
+
+  // Projetos por custo + tags
+  const projs = (det.projects||[]).slice().sort((a,b)=>(b.cost?.brl||0)-(a.cost?.brl||0));
+  const TAGS = { caixa:{ic:'💰',lb:'Caixa'}, dispersao:{ic:'🔬',lb:'Dispersão'}, infra:{ic:'🛠',lb:'Infra'} };
+  const totBrl = projs.reduce((s,p)=>s+(p.cost?.brl||0),0) || 1;
+  const caixaBrl = projs.filter(p=>p.tag==='caixa').reduce((s,p)=>s+(p.cost?.brl||0),0);
+  const pctCaixa = Math.round(caixaBrl/totBrl*100);
 
   body.innerHTML = `
-    <div class="kpi-row mb16">${kpis.map(k=>`<div class="kpi">
-      <div class="kpi-label">${k.label}</div>
-      <div class="kpi-val">${k.val}</div>
-      <div class="kpi-sub">${k.sub}</div>
-    </div>`).join('')}</div>
-
-    <div class="grid2 mb16">
-      <div class="card">
-        <div class="card-title">Atividade semanal</div>
-        <div id="cc-week-chart"></div>
+    <!-- MAESTRIA (momento-assinatura) -->
+    <div class="card mb16 maestria">
+      <div class="mst-main">
+        <div class="mst-gauge">${gaugeHtml(M.total, cor)}<div class="mst-num">${M.total}<small>/100</small></div></div>
+        <div class="mst-info">
+          <div class="mst-title">Maestria Claude</div>
+          <div class="mst-apex">${apex}</div>
+          <div class="mst-lever">Maior alavanca: <b>${esc(fraca.label)}</b> — ${esc(fraca.tip)}</div>
+        </div>
       </div>
-      <div class="card">
-        <div class="card-title">Tendências (semana vs anterior)</div>
-        <div id="cc-trends"></div>
-      </div>
-    </div>
-
-    <div class="grid2 mb16">
-      <div class="card">
-        <div class="card-title">Coach — próximo passo</div>
-        <div id="cc-coach"></div>
-      </div>
-      <div class="card">
-        <div class="card-title">Pico de atividade</div>
-        <div id="cc-peak"></div>
+      <div class="mst-subs">
+        ${M.subs.map(s=>`<div class="mst-sub">
+          <div class="mst-sub-head"><span>${esc(s.label)}</span><span class="mst-sub-n">${s.score}</span></div>
+          <div class="mst-bar"><div class="mst-fill" style="width:${s.score}%"></div></div>
+          <div class="mst-sub-w">peso ${s.weight}</div>
+        </div>`).join('')}
       </div>
     </div>
 
-    <div class="grid2 mb16">
-      <div class="card">
-        <div class="card-title">Conquistas</div>
-        <div class="ach-grid" id="cc-ach"></div>
+    <!-- PAINEL DE DECISÃO -->
+    <div class="decision-strip mb16">
+      <div class="dec-tile">
+        <div class="dec-label">Burn do mês</div>
+        <div class="dec-val">${fmtBrl(burn,0)}</div>
+        <div class="dec-sub">projeção ${fmtBrl(projecao,0)}</div>
       </div>
-      <div class="card">
-        <div class="card-title">Objetivos Claude</div>
-        <div id="cc-goals"></div>
+      <div class="dec-tile ${dispCls}">
+        <div class="dec-label">Dispersão</div>
+        <div class="dec-val">${ativos}<small> proj/7d</small></div>
+        <div class="dec-sub">${ativos<=2?'foco bom':ativos<=4?'atenção':'⚠ disperso'}</div>
       </div>
-    </div>
-
-    <div class="grid2 mb16">
-      <div class="card">
-        <div class="card-title">Projetos</div>
-        <div id="cc-proj"></div>
+      <div class="dec-tile ${dCaixa!=null&&dCaixa<0?'bad':''}">
+        <div class="dec-label">Meta de caixa</div>
+        <div class="dec-val">${dCaixa==null?'—':dCaixa<0?'venceu':dCaixa+'d'}</div>
+        <div class="dec-sub">${fmtBrl(meta.caixaValor,0)} · ${esc((meta.caixaData||'').slice(5))}</div>
       </div>
-      <div class="card">
-        <div class="card-title">Por modelo</div>
-        <div id="cc-models"></div>
-      </div>
-    </div>
-
-    <div class="grid2 mb16">
-      <div class="card">
-        <div class="card-title">Skills</div>
-        <div class="skill-grid" id="cc-skills"></div>
-      </div>
-      <div class="card">
-        <div class="card-title">MCPs conectados</div>
-        <div class="skill-grid" id="cc-mcps"></div>
+      <div class="dec-tile">
+        <div class="dec-label">Claude desliga</div>
+        <div class="dec-val">${dOff==null?'—':dOff<0?'off':dOff+'d'}</div>
+        <div class="dec-sub">janela de dev</div>
       </div>
     </div>
 
+    <!-- ROI -->
+    <div class="card mb16 roi ${roiCls}">
+      <div class="roi-sig">${roiSig}</div>
+      <div class="roi-body">
+        <div class="roi-line">Gastou <b>${fmtBrl(burn,0)}</b> em Claude este mês · faturou <b>${fmtBrl(receitaMes,0)}</b></div>
+        <div class="roi-msg">${receitaMes<=0?'Sem receita registrada — registre em Finanças. Hoje o Claude é só custo.':receitaMes>=burn?'O Claude se paga. Próximo nível: multiplicar.':'Queima mais do que entra. Foco em fechar caixa.'}</div>
+      </div>
+    </div>
+
+    <!-- PROJETOS + TAGS -->
     <div class="card mb16">
-      <div class="card-title">Custo por semana (últimas 12)</div>
-      <div id="cc-costweek"></div>
+      <div class="card-title">Projetos — pra onde foi o dinheiro <span style="color:var(--text3);font-weight:400">· ${pctCaixa}% em caixa</span></div>
+      <div class="proj-bar"><div class="proj-bar-fill" style="width:${pctCaixa}%"></div></div>
+      <div class="proj-list">
+        ${projs.map(p=>{
+          const cooled = p.lastActive && (Date.now()-p.lastActive)>7*86400000;
+          return `<div class="proj-row">
+            <div class="proj-id">
+              <span class="proj-name">${esc(p.name)}</span>
+              <span class="proj-meta">${fmtN(p.sessions)} sess · ${fmtRel(p.lastActive)}${cooled?' · <span class="cooled">esfriou</span>':''}</span>
+            </div>
+            <div class="proj-cost">${p.cost?.brl?fmtBrl(p.cost.brl,0):'—'}</div>
+            <div class="proj-tags">
+              ${Object.entries(TAGS).map(([k,v])=>`<button class="ptag ${p.tag===k?'on '+k:''}" data-action="proj-tag" data-proj="${esc(p.id)}" data-tag="${k}" title="${v.lb}">${v.ic}</button>`).join('')}
+            </div>
+          </div>`;
+        }).join('')}
+      </div>
+    </div>
+
+    <!-- PRÓXIMAS ALAVANCAS -->
+    <div class="card mb16">
+      <div class="card-title">Próximas alavancas — construir pra subir a Maestria</div>
+      <div class="lever-list">${LEVERS.map(l=>`<div class="lever-item">
+        <span class="lever-ic">${l.ic}</span>
+        <div><div class="lever-t">${esc(l.t)}</div><div class="lever-d">${esc(l.d)}</div></div>
+      </div>`).join('')}</div>
+    </div>
+
+    <!-- EXTRAS (gamificação / detalhes) -->
+    <div class="extras-head">Extras · gamificação e detalhes</div>
+    <div class="grid2 mb16">
+      <div class="card"><div class="card-title">Atividade semanal</div><div id="cc-week-chart"></div></div>
+      <div class="card"><div class="card-title">Tendências (semana vs anterior)</div><div id="cc-trends"></div></div>
+    </div>
+    <div class="grid2 mb16">
+      <div class="card"><div class="card-title">Coach</div><div id="cc-coach"></div></div>
+      <div class="card"><div class="card-title">Pico de atividade</div><div id="cc-peak"></div></div>
+    </div>
+    <div class="grid2 mb16">
+      <div class="card"><div class="card-title">Conquistas</div><div class="ach-grid" id="cc-ach"></div></div>
+      <div class="card"><div class="card-title">Objetivos Claude</div><div id="cc-goals"></div></div>
+    </div>
+    <div class="grid2 mb16">
+      <div class="card"><div class="card-title">Por modelo</div><div id="cc-models"></div></div>
+      <div class="card"><div class="card-title">Custo por semana (últimas 12)</div><div id="cc-costweek"></div></div>
+    </div>
+    <div class="grid2 mb16">
+      <div class="card"><div class="card-title">Skills</div><div class="skill-grid" id="cc-skills"></div></div>
+      <div class="card"><div class="card-title">MCPs conectados</div><div class="skill-grid" id="cc-mcps"></div></div>
     </div>
   `;
+
+  // tag de projeto: clica pra marcar; clica de novo pra remover
+  body.querySelectorAll('[data-action="proj-tag"]').forEach(btn=>{
+    btn.addEventListener('click',()=>guard(async()=>{
+      const proj=btn.dataset.proj, tag=btn.dataset.tag;
+      const cur=(projs.find(p=>p.id===proj)||{}).tag;
+      const next = cur===tag ? null : tag;
+      const r=await fetch('/api/config',{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify({projectTags:{[proj]:next}})});
+      const j=await r.json();
+      if(j.ok){ await load(false); toast(next?('Marcado: '+TAGS[next].lb):'Tag removida'); }
+      else throw new Error(j.error||'erro');
+    }));
+  });
 
   // Week chart
   const weeks = det.activityWeeks||[];
@@ -1724,18 +1943,6 @@ function renderClaudeArea(area) {
       if(j.ok){await load(false);toast(j.done?'✓ Feito':'Desmarcado');}
     }));
   });
-
-  // Projetos
-  const projs=(det.projects||[]).sort((a,b)=>(b.lastActive||0)-(a.lastActive||0));
-  $('cc-proj').innerHTML=`<table>
-    <thead><tr><th>Projeto</th><th>Sess.</th><th>Último</th><th>Custo</th></tr></thead>
-    <tbody>${projs.map(p=>`<tr>
-      <td style="font-size:12px;font-weight:600">${esc(p.name)}</td>
-      <td class="td-mono">${fmtN(p.sessions)}</td>
-      <td style="font-size:11px;color:var(--text2)">${fmtRel(p.lastActive)}</td>
-      <td class="td-mono">${p.cost?.usd?fmtUsd(p.cost.usd):'—'}</td>
-    </tr>`).join('')}</tbody>
-  </table>`;
 
   // Models
   $('cc-models').innerHTML = barRows(

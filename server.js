@@ -250,6 +250,25 @@ const server = http.createServer(async (req, res) => {
         const n = parseFloat(body.usdToBrl);
         if (!isNaN(n) && n > 0) config.usdToBrl = n;
       }
+      // tags de projeto: { [projectId]: 'caixa'|'dispersao'|'infra'|null } (merge)
+      if (body.projectTags && typeof body.projectTags === 'object') {
+        if (!config.projectTags) config.projectTags = {};
+        const ALLOWED = ['caixa', 'dispersao', 'infra'];
+        for (const [k, v] of Object.entries(body.projectTags)) {
+          if (v === null || v === '') delete config.projectTags[k];
+          else if (ALLOWED.includes(v)) config.projectTags[k] = v;
+        }
+      }
+      // meta de caixa / janela (datas e valor editáveis)
+      if (body.meta && typeof body.meta === 'object') {
+        if (!config.meta) config.meta = {};
+        if (body.meta.caixaValor !== undefined) {
+          const n = parseFloat(body.meta.caixaValor);
+          if (!isNaN(n) && n >= 0) config.meta.caixaValor = n;
+        }
+        if (typeof body.meta.caixaData === 'string') config.meta.caixaData = body.meta.caixaData.slice(0, 10);
+        if (typeof body.meta.claudeOffData === 'string') config.meta.claudeOffData = body.meta.claudeOffData.slice(0, 10);
+      }
       fs.writeFileSync(CONFIG_PATH, JSON.stringify(config, null, 2), 'utf8');
       _cachedPayload = null;
       res.writeHead(200, { 'Content-Type': 'application/json' });
