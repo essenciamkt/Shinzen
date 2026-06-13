@@ -5,7 +5,7 @@ const fs = require('fs');
 const path = require('path');
 const { build, CONFIG_PATH } = require('./lib/payload');
 const { clearCache } = require('./lib/scan');
-const { writeArea, pushHistory, addMeta, editMeta, deleteMeta, doCheckin, logMissao } = require('./lib/datastore');
+const { writeArea, pushHistory, addMeta, editMeta, deleteMeta, doCheckin, logMissao, addCliente, updateCliente, deleteCliente } = require('./lib/datastore');
 
 const PORT = 4317;
 const APP_DIR = path.resolve(__dirname);
@@ -78,6 +78,68 @@ const server = http.createServer(async (req, res) => {
       _cachedPayload = null;
       res.writeHead(200, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ ok: true, marcoId, done: !prev }));
+    } catch (err) {
+      res.writeHead(500, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ ok: false, error: String(err) }));
+    }
+    return;
+  }
+
+  // ── CLIENTES (pipeline da área Trabalho) ── (antes do PATCH genérico)
+  // POST /api/area/:id/cliente — cria cliente
+  if (req.method === 'POST' && pathname.match(/^\/api\/area\/[^/]+\/cliente$/)) {
+    const areaId = decodeURIComponent(pathname.split('/')[3]);
+    try {
+      const body = await readBody(req);
+      if (!body.nome || !String(body.nome).trim()) {
+        res.writeHead(400, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ ok: false, error: 'nome requerido' }));
+        return;
+      }
+      const cli = addCliente(areaId, body);
+      _cachedPayload = null;
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ ok: true, cliente: cli }));
+    } catch (err) {
+      res.writeHead(500, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ ok: false, error: String(err) }));
+    }
+    return;
+  }
+
+  // PATCH /api/area/:id/cliente/:cid — atualiza cliente
+  if (req.method === 'PATCH' && pathname.match(/^\/api\/area\/[^/]+\/cliente\/[^/]+$/)) {
+    const parts = pathname.split('/');
+    const areaId = decodeURIComponent(parts[3]);
+    const cid = decodeURIComponent(parts[5]);
+    try {
+      const body = await readBody(req);
+      const cli = updateCliente(areaId, cid, body || {});
+      if (!cli) {
+        res.writeHead(404, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ ok: false, error: 'cliente não encontrado' }));
+        return;
+      }
+      _cachedPayload = null;
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ ok: true, cliente: cli }));
+    } catch (err) {
+      res.writeHead(500, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ ok: false, error: String(err) }));
+    }
+    return;
+  }
+
+  // DELETE /api/area/:id/cliente/:cid — remove cliente
+  if (req.method === 'DELETE' && pathname.match(/^\/api\/area\/[^/]+\/cliente\/[^/]+$/)) {
+    const parts = pathname.split('/');
+    const areaId = decodeURIComponent(parts[3]);
+    const cid = decodeURIComponent(parts[5]);
+    try {
+      deleteCliente(areaId, cid);
+      _cachedPayload = null;
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ ok: true }));
     } catch (err) {
       res.writeHead(500, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ ok: false, error: String(err) }));

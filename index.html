@@ -732,6 +732,47 @@ html, body {
 .fin-indep-t { font-size: var(--text-md); font-weight: 700; color: var(--text); }
 .fin-indep-d { font-size: var(--text-sm); color: var(--text2); margin-top: 3px; line-height: 1.4; }
 
+/* ── TRABALHO cockpit (pipeline) ── */
+.funil { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; align-items: end; }
+.funil-seg { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.funil-bar { width: 100%; height: 70px; background: var(--bg3); border-radius: 7px; display: flex; align-items: flex-end; overflow: hidden; }
+.funil-fill { width: 100%; background: var(--seg); border-radius: 7px 7px 0 0; transition: height .8s var(--t-slow); min-height: 6px; opacity: .85; }
+.funil-n { font-size: 20px; font-weight: 800; font-family: var(--mono); color: var(--text); line-height: 1; }
+.funil-lb { font-size: 10px; color: var(--text2); text-align: center; white-space: nowrap; }
+.funil-v { font-size: 10px; color: var(--text3); font-family: var(--mono); }
+
+.cli-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px; }
+.cli-empty { color: var(--text3); font-size: var(--text-sm); padding: 10px 2px; }
+.cli-row { display: flex; align-items: center; gap: 12px; padding: 10px 12px; border-radius: var(--r); background: var(--surface-2); border: 1px solid var(--border); }
+.cli-main { flex: 1; min-width: 0; }
+.cli-top { display: flex; align-items: baseline; gap: 8px; }
+.cli-nome { font-size: var(--text-sm); font-weight: 700; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.cli-prod { font-size: var(--text-xs); color: var(--text3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.cli-acao { font-size: var(--text-xs); color: var(--text2); margin-top: 3px; display: flex; align-items: center; gap: 6px; }
+.cli-valor { font-family: var(--mono); font-size: var(--text-sm); font-weight: 700; color: var(--text2); flex-shrink: 0; min-width: 70px; text-align: right; }
+.cli-pills { display: flex; gap: 3px; flex-shrink: 0; }
+.cli-pill { width: 26px; height: 26px; border-radius: 6px; border: 1px solid var(--border2); background: var(--surface-3); cursor: pointer; font-size: 12px; line-height: 1; filter: grayscale(1) opacity(.45); transition: all var(--t-fast); }
+.cli-pill:hover { filter: grayscale(0) opacity(1); }
+.cli-pill.on { filter: grayscale(0) opacity(1); border-color: var(--seg); background: color-mix(in srgb, var(--seg) 18%, transparent); box-shadow: 0 0 0 1px var(--seg) inset; }
+.cli-mini { background: none; border: none; cursor: pointer; font-size: 12px; opacity: .6; transition: opacity var(--t-fast); padding: 2px; }
+.cli-mini:hover { opacity: 1; }
+.cli-mini.del { flex-shrink: 0; }
+.cli-add { display: flex; gap: 8px; align-items: center; }
+.cli-inp { flex: 1; min-width: 0; background: var(--surface-2); border: 1px solid var(--border2); border-radius: var(--r); color: var(--text); font-size: var(--text-sm); padding: 9px 11px; outline: none; transition: border-color var(--t-fast); }
+.cli-inp:focus { border-color: var(--area-color, var(--red)); }
+.cli-inp-val { flex: 0 0 90px; font-family: var(--mono); }
+
+@media (max-width: 700px) {
+  .funil { gap: 5px; }
+  .funil-lb { font-size: 8px; }
+  .funil-bar { height: 54px; }
+  .cli-row { flex-wrap: wrap; }
+  .cli-pills { order: 3; width: 100%; justify-content: space-between; }
+  .cli-add { flex-wrap: wrap; }
+  .cli-inp { flex-basis: 100%; }
+  .cli-inp-val { flex-basis: 90px; }
+}
+
 /* ── SPARKLINE ── */
 .sparkline { display: inline-block; vertical-align: middle; }
 .sparkline-row {
@@ -1985,7 +2026,8 @@ function financasCockpitHtml(area){
   const num = v => (v==null||v==='')?null:Number(v);
   const n0 = v => num(v)||0;
   const receita=n0(c.receitaMes), recorrente=n0(c.receitaRecorrente), despesa=n0(c.despesasMes),
-        reserva=n0(c.reservaEmergencia), aReceber=n0(c.aReceber);
+        reserva=n0(c.reservaEmergencia);
+  const aReceber = (num(c.aReceber)!=null) ? n0(c.aReceber) : n0(area.detalhe&&area.detalhe.aReceberAuto);
   const alvo = n0(c.metaReceita) || n0(meta.caixaValor);
   const lucro = (num(c.receitaMes)!=null&&num(c.despesasMes)!=null) ? receita-despesa : null;
   const margem = (lucro!=null&&receita>0) ? Math.round(lucro/receita*100) : null;
@@ -2045,6 +2087,103 @@ function financasCockpitHtml(area){
       <div>
         <div class="fin-indep-t">Independência ${mrrCobre!=null?`— MRR cobre ${mrrCobre}% do custo mensal`:''}</div>
         <div class="fin-indep-d">${recorrente<=0?'Sem receita recorrente. O norte é SaaS: transforme entregas avulsas em assinatura.':faltaMrr>0?`Faltam ${fmtBrl(faltaMrr,0)} de MRR pra cobrir suas despesas e viver disso.`:'Sua receita recorrente já cobre o custo mensal. Independência alcançada — agora é escalar.'}</div>
+      </div>
+    </div>
+  `;
+}
+
+// ── COCKPIT DE TRABALHO (pipeline de clientes) ──
+const CLI_ESTAGIOS = [
+  { id:'lead',       lb:'Lead',       ic:'🔍', cor:'var(--text3)' },
+  { id:'negociando', lb:'Negociando', ic:'💬', cor:'#3b82f6' },
+  { id:'fechado',    lb:'Fechado',    ic:'🤝', cor:'#f59e0b' },
+  { id:'entregando', lb:'Entregando', ic:'🚚', cor:'#38bdf8' },
+  { id:'pago',       lb:'Pago',       ic:'✅', cor:'var(--green)' },
+];
+function trabalhoCockpitHtml(area){
+  const det = area.detalhe||{};
+  const funil = det.funil||[];
+  const pipe = det.pipeline||{};
+  const clientes = (det.clientes||[]).slice();
+  const meta = D.meta||{};
+  const metaClientes = (area.detalhe.campos&&area.detalhe.campos.metaClientes!=null)?area.detalhe.campos.metaClientes:3;
+  const cfg = id => CLI_ESTAGIOS.find(e=>e.id===id) || CLI_ESTAGIOS[0];
+
+  // próxima entrega: menor prazo entre fechado/entregando
+  const comPrazo = clientes.filter(c=>c.prazo && (c.estagio==='fechado'||c.estagio==='entregando'));
+  comPrazo.sort((a,b)=>a.prazo<b.prazo?-1:1);
+  const prox = comPrazo[0];
+  const proxDias = prox ? diasAte(prox.prazo) : null;
+
+  const maxFun = Math.max(...funil.map(f=>f.count), 1);
+  const funilHtml = funil.map(f=>{
+    const e = cfg(f.estagio);
+    return `<div class="funil-seg" style="--seg:${e.cor}">
+      <div class="funil-bar"><div class="funil-fill" style="height:${Math.max(6,Math.round(f.count/maxFun*100))}%"></div></div>
+      <div class="funil-n">${f.count}</div>
+      <div class="funil-lb">${e.ic} ${e.lb}</div>
+      <div class="funil-v">${f.valor?fmtBrl(f.valor,0):'—'}</div>
+    </div>`;
+  }).join('');
+
+  // ordena clientes por estágio (pipeline order) e prazo
+  const ord = Object.fromEntries(CLI_ESTAGIOS.map((e,i)=>[e.id,i]));
+  clientes.sort((a,b)=>(ord[a.estagio]??0)-(ord[b.estagio]??0) || ((a.prazo||'')<(b.prazo||'')?-1:1));
+
+  const listaHtml = clientes.length ? clientes.map(c=>{
+    const e = cfg(c.estagio);
+    const pills = CLI_ESTAGIOS.map(s=>`<button class="cli-pill ${c.estagio===s.id?'on':''}" style="--seg:${s.cor}" data-action="cliente-estagio" data-cid="${esc(c.id)}" data-estagio="${s.id}" title="${s.lb}">${s.ic}</button>`).join('');
+    const prazoTxt = c.prazo ? ` · ${esc(c.prazo.slice(5))}` : '';
+    return `<div class="cli-row">
+      <div class="cli-main">
+        <div class="cli-top"><span class="cli-nome">${esc(c.nome)}</span><span class="cli-prod">${esc(c.produto||'')}</span></div>
+        <div class="cli-acao">${c.proximaAcao?`▸ ${esc(c.proximaAcao)}${prazoTxt}`:'<span style="color:var(--text3)">sem próxima ação</span>'}
+          <button class="cli-mini" data-action="edit-proxima" data-cid="${esc(c.id)}" data-cur="${esc(c.proximaAcao||'')}" title="Editar próxima ação">✏️</button>
+        </div>
+      </div>
+      <div class="cli-valor">${c.valor?fmtBrl(c.valor,0):'—'}</div>
+      <div class="cli-pills">${pills}</div>
+      <button class="cli-mini del" data-action="delete-cliente" data-cid="${esc(c.id)}" data-nome="${esc(c.nome)}" title="Remover">🗑</button>
+    </div>`;
+  }).join('') : '<div class="cli-empty">Nenhum cliente ainda. Adicione o primeiro abaixo — é daqui que sai o caixa.</div>';
+
+  return `
+    <div class="card mb16 funil-card">
+      <div class="card-title">Pipeline de clientes <span style="color:var(--text3);font-weight:400">· ${pipe.clientesAtivos||0} ativos de ${metaClientes} · ${fmtBrl(pipe.aReceber||0,0)} a receber</span></div>
+      <div class="funil">${funilHtml}</div>
+    </div>
+
+    <div class="decision-strip mb16">
+      <div class="dec-tile ${(pipe.clientesAtivos||0)>=metaClientes?'ok':(pipe.clientesAtivos||0)>0?'warn':'bad'}">
+        <div class="dec-label">Clientes ativos</div>
+        <div class="dec-val">${pipe.clientesAtivos||0}<small> /${metaClientes}</small></div>
+        <div class="dec-sub">negociando+fechado+entregando</div>
+      </div>
+      <div class="dec-tile">
+        <div class="dec-label">A receber</div>
+        <div class="dec-val">${fmtBrl(pipe.aReceber||0,0)}</div>
+        <div class="dec-sub">${pipe.fechados||0} fechado(s)</div>
+      </div>
+      <div class="dec-tile ${(pipe.pagos||0)>0?'ok':''}">
+        <div class="dec-label">Recebido</div>
+        <div class="dec-val">${fmtBrl(pipe.recebido||0,0)}</div>
+        <div class="dec-sub">${pipe.pagos||0} pago(s)</div>
+      </div>
+      <div class="dec-tile ${proxDias!=null&&proxDias<0?'bad':proxDias!=null&&proxDias<=7?'warn':''}">
+        <div class="dec-label">Próxima entrega</div>
+        <div class="dec-val">${proxDias==null?'—':proxDias<0?'atrasada':proxDias+'d'}</div>
+        <div class="dec-sub">${prox?esc(prox.nome):'sem prazo definido'}</div>
+      </div>
+    </div>
+
+    <div class="card mb16">
+      <div class="card-title">Clientes</div>
+      <div class="cli-list">${listaHtml}</div>
+      <div class="cli-add">
+        <input type="text" id="cli-nome" class="cli-inp" placeholder="Nome do cliente" maxlength="80">
+        <input type="text" id="cli-prod" class="cli-inp" placeholder="Produto/serviço" maxlength="80">
+        <input type="number" id="cli-valor" class="cli-inp cli-inp-val" placeholder="R$" step="50">
+        <button class="meta-add-btn" data-action="add-cliente" title="Adicionar cliente">+</button>
       </div>
     </div>
   `;
@@ -2199,6 +2338,7 @@ function renderManualArea(area) {
 
   body.innerHTML = `
     ${area.id==='financas' ? financasCockpitHtml(area) : ''}
+    ${area.id==='trabalho' ? trabalhoCockpitHtml(area) : ''}
     <div class="kpi-row mb16">${kpiHtml}</div>
     ${checkinHtml}
     ${missoesHtml}
@@ -2329,6 +2469,40 @@ function bindDetailDelegation(areaId) {
         await load(false);
         toast(j.feita?'✓ Missão concluída':'Missão desmarcada');
       });
+    } else if (action === 'add-cliente') {
+      const nome = $('cli-nome')?.value?.trim();
+      const produto = $('cli-prod')?.value?.trim()||'';
+      const valor = parseFloat($('cli-valor')?.value)||0;
+      if(!nome){ toast('Informe o nome do cliente'); return; }
+      await guard(async()=>{
+        await postJson(`/api/area/${encodeURIComponent(areaId)}/cliente`,{nome,produto,valor,estagio:'lead'});
+        await load(false); toast('✓ Cliente adicionado');
+      });
+    } else if (action === 'cliente-estagio') {
+      const cid = el.dataset.cid, estagio = el.dataset.estagio;
+      await guard(async()=>{
+        const r = await fetch(`/api/area/${encodeURIComponent(areaId)}/cliente/${encodeURIComponent(cid)}`,{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify({estagio})});
+        const j = await r.json(); if(!j.ok) throw new Error(j.error||'erro');
+        await load(false); toast('Estágio: '+estagio);
+      });
+    } else if (action === 'edit-proxima') {
+      e.stopPropagation();
+      const cid = el.dataset.cid;
+      const novo = prompt('Próxima ação:', el.dataset.cur||'');
+      if(novo===null) return;
+      await guard(async()=>{
+        const r = await fetch(`/api/area/${encodeURIComponent(areaId)}/cliente/${encodeURIComponent(cid)}`,{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify({proximaAcao:novo.trim()})});
+        const j = await r.json(); if(!j.ok) throw new Error(j.error||'erro');
+        await load(false); toast('✓ Atualizado');
+      });
+    } else if (action === 'delete-cliente') {
+      e.stopPropagation();
+      const cid = el.dataset.cid;
+      if(!confirm(`Remover cliente "${el.dataset.nome||cid}"?`)) return;
+      await guard(async()=>{
+        await fetch(`/api/area/${encodeURIComponent(areaId)}/cliente/${encodeURIComponent(cid)}`,{method:'DELETE'});
+        await load(false); toast('Cliente removido');
+      });
     }
   };
 
@@ -2345,6 +2519,16 @@ function bindDetailDelegation(areaId) {
         e.target.value='';
         await postJson(`/api/area/${encodeURIComponent(areaId)}/meta`,{texto});
         await load(false); toast('✓ Meta criada');
+      });
+    } else if (e.target.classList.contains('cli-inp')) {
+      e.preventDefault();
+      const nome = $('cli-nome')?.value?.trim();
+      if(!nome){ toast('Informe o nome do cliente'); return; }
+      const produto = $('cli-prod')?.value?.trim()||'';
+      const valor = parseFloat($('cli-valor')?.value)||0;
+      await guard(async()=>{
+        await postJson(`/api/area/${encodeURIComponent(areaId)}/cliente`,{nome,produto,valor,estagio:'lead'});
+        await load(false); toast('✓ Cliente adicionado');
       });
     }
   };
