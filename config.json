@@ -113,6 +113,7 @@
   "goalsDone": {
     "concluir-shinzen": false,
     "documentar-processo": true,
-    "publicar-produto": false
+    "publicar-produto": false,
+    "criar-automacao": false
   }
 }

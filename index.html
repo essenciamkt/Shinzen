@@ -371,7 +371,7 @@ html, body {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
   gap: 16px;
-  padding: 24px;
+  padding: 0;
 }
 .area-card {
   background: var(--surface-1);
@@ -411,8 +411,9 @@ html, body {
 }
 .area-card:hover::before { opacity: 1; }
 .area-card:hover::after  { opacity: 0.12; }
-.area-card-top { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 14px; }
-.area-icon { font-size: 22px; line-height: 1; margin-bottom: 8px; }
+.area-card-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 14px; }
+.area-card-id { display: flex; align-items: center; gap: 11px; min-width: 0; }
+.area-icon { font-size: 22px; line-height: 1; flex-shrink: 0; }
 .area-ring-wrap { position: relative; width: 56px; height: 56px; flex-shrink: 0; }
 .area-ring-wrap svg { transform: rotate(-90deg); }
 .area-ring-num {
@@ -423,13 +424,13 @@ html, body {
   font-family: var(--mono);
   color: var(--text);
 }
-.area-name { font-size: var(--text-md); font-weight: 700; color: var(--text); margin-bottom: 3px; }
+.area-name { font-size: var(--text-md); font-weight: 700; color: var(--text); line-height: 1.15; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .area-fonte {
   font-size: var(--text-xs);
   color: var(--text3);
   text-transform: uppercase;
   letter-spacing: .06em;
-  margin-bottom: 14px;
+  margin-top: 2px;
 }
 .area-kpis { display: flex; flex-direction: column; gap: 3px; }
 .area-kpi { font-size: var(--text-sm); color: var(--text3); display: flex; justify-content: space-between; align-items: baseline; }
@@ -859,10 +860,99 @@ tr:hover td { background: var(--bg3); }
 .missao-periodo { font-size: 9px; text-transform: uppercase; letter-spacing: .5px; color: var(--text3); padding: 2px 6px; border-radius: 4px; background: var(--bg); }
 .missao-xp { font-size: 11px; font-weight: 700; color: var(--red2); white-space: nowrap; }
 
+/* ── HOME v2: main wrapper, stats, painel Hoje ── */
+.home-main { padding: 22px 24px 28px; display: flex; flex-direction: column; gap: 22px; }
+
+/* faixa de stats glanceáveis */
+.stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+.stat-tile {
+  background: var(--surface-1); border: 1px solid var(--border);
+  border-radius: var(--r2); padding: 14px 16px;
+  display: flex; flex-direction: column; gap: 4px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+}
+.stat-tile-top { display: flex; align-items: center; gap: 7px; }
+.stat-ico { font-size: 14px; line-height: 1; }
+.stat-num { font-size: 24px; font-weight: 800; font-family: var(--mono); color: var(--text); line-height: 1; letter-spacing: -.02em; }
+.stat-num small { font-size: 13px; color: var(--text3); font-weight: 600; }
+.stat-label { font-size: var(--text-xs); text-transform: uppercase; letter-spacing: .07em; color: var(--text3); font-weight: 600; }
+
+/* painel Hoje */
+.hoje {
+  background: var(--surface-1); border: 1px solid var(--border);
+  border-radius: var(--r2); padding: 18px 20px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.4);
+  position: relative; overflow: hidden;
+}
+.hoje::before {
+  content:''; position:absolute; top:0; left:0; right:0; height:2px;
+  background: linear-gradient(90deg, var(--red), transparent 60%); opacity:.5;
+}
+.hoje-head { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 14px; gap: 12px; }
+.hoje-title { font-size: var(--text-md); font-weight: 800; color: var(--text); letter-spacing: -.01em; }
+.hoje-title small { font-size: var(--text-xs); color: var(--text3); font-weight: 600; text-transform: none; letter-spacing: 0; margin-left: 8px; }
+.hoje-sub { font-size: var(--text-xs); color: var(--text3); text-transform: uppercase; letter-spacing: .08em; font-weight: 700; }
+
+/* chips de check-in por área */
+.checkin-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+.ci-chip {
+  display: inline-flex; align-items: center; gap: 7px;
+  min-height: 38px; padding: 7px 13px; border-radius: 999px;
+  border: 1px solid var(--border2); background: var(--surface-2);
+  color: var(--text2); font-size: var(--text-sm); font-weight: 600;
+  cursor: pointer; transition: all var(--t-fast); white-space: nowrap; user-select: none;
+}
+.ci-chip:hover { border-color: var(--border2); color: var(--text); transform: translateY(-1px); }
+.ci-chip .ci-ico { font-size: 14px; line-height: 1; }
+.ci-chip .ci-tick { width: 16px; height: 16px; border-radius: 50%; border: 1.5px solid var(--text3); display: inline-flex; align-items: center; justify-content: center; font-size: 10px; color: transparent; flex-shrink: 0; }
+.ci-chip.done { background: rgba(34,197,94,0.10); border-color: rgba(34,197,94,0.4); color: #4ade80; }
+.ci-chip.done .ci-tick { background: #16a34a; border-color: #16a34a; color: #fff; }
+.ci-chip.busy { opacity: .5; pointer-events: none; }
+
+/* missões do dia no painel Hoje (reusa .missao-* do detalhe, ajustes leves) */
+.hoje-missoes { display: flex; flex-direction: column; gap: 8px; }
+.hoje-missoes .missao-area { font-size: 9px; text-transform: uppercase; letter-spacing: .5px; color: var(--text3); padding: 2px 6px; border-radius: 4px; background: var(--bg); white-space: nowrap; }
+.hoje-empty { display: flex; align-items: center; gap: 12px; padding: 8px 2px; color: var(--text2); font-size: var(--text-sm); }
+.hoje-empty .he-ico { font-size: 26px; line-height: 1; }
+.hoje-empty .he-strong { color: var(--text); font-weight: 700; display: block; font-size: var(--text-md); }
+
+/* cabeçalho do grid de áreas */
+.areas-grid-head { margin: 2px 0 -8px; }
+
+/* ── AREA CARDS: ação rápida + entrada ── */
+.area-quick {
+  position: absolute; bottom: 14px; right: 14px; z-index: 3;
+  width: 38px; height: 38px; border-radius: 50%;
+  display: inline-flex; align-items: center; justify-content: center;
+  border: 1px solid var(--border2); background: var(--surface-2);
+  color: var(--text3); font-size: 15px; cursor: pointer;
+  transition: all var(--t-fast); box-shadow: 0 2px 6px rgba(0,0,0,.4);
+}
+.area-quick:hover { color: var(--text); border-color: rgba(34,197,94,.5); transform: scale(1.08); }
+.area-quick.done { background: linear-gradient(135deg,#16a34a,#15803d); border-color:#16a34a; color:#fff; box-shadow: 0 0 12px rgba(34,197,94,.35); }
+.area-quick.busy { opacity:.5; pointer-events:none; }
+.area-card.has-quick .progress-strip { padding-right: 46px; }
+
+@keyframes cardIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+.area-card { animation: cardIn .4s var(--t-slow) both; }
+
 @media (max-width: 700px) {
   #sidebar { display: none; }
   .kpi-row  { grid-template-columns: 1fr 1fr; }
   .grid2, .grid3 { grid-template-columns: 1fr; }
+  /* hero não estoura: empilha */
+  .hero { height: auto; min-height: 300px; }
+  .hero-content { flex-direction: column; align-items: flex-start; justify-content: flex-end; gap: 16px; padding: 28px 20px; }
+  .hero-left, .hero-right { width: 100%; max-width: 100%; }
+  .hero-right { flex-direction: row; align-items: flex-end; justify-content: space-between; gap: 16px; }
+  .hero-name { font-size: 34px; word-break: break-word; }
+  .hero-score-num { font-size: 48px; }
+  .hero-xp-bar { width: 140px; flex-shrink: 0; }
+  /* home conteúdo */
+  .home-main { padding: 16px 14px 24px; gap: 16px; }
+  .stats-row { grid-template-columns: 1fr 1fr; }
+  .areas-grid { grid-template-columns: 1fr; padding: 0; }
+  .checkin-chips { gap: 7px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -934,7 +1024,7 @@ tr:hover td { background: var(--bg3); }
           <div class="hero-overlay"></div>
           <div class="hero-content">
             <div class="hero-left">
-              <div class="hero-eyebrow">Bem-vindo de volta</div>
+              <div class="hero-eyebrow" id="hero-greeting">Bem-vindo de volta</div>
               <div class="hero-name" id="hero-name">—</div>
               <div class="hero-level">Nível <span id="hero-level-num">—</span> — <span id="hero-level-title">—</span></div>
             </div>
@@ -953,7 +1043,12 @@ tr:hover td { background: var(--bg3); }
             </div>
           </div>
         </div>
-        <div class="areas-grid" id="areas-grid"></div>
+        <div class="home-main">
+          <div class="stats-row" id="stats-row"></div>
+          <section class="hoje" id="hoje"></section>
+          <div class="areas-grid-head"><span class="sec-title">Áreas da vida</span></div>
+          <div class="areas-grid" id="areas-grid"></div>
+        </div>
       </div>
 
       <!-- ── ÁREA DETAIL (página genérica, conteúdo injetado) ── -->
@@ -1124,6 +1219,31 @@ document.querySelectorAll('.nav-item').forEach(n=>
 
 $('detail-back').addEventListener('click',()=>showPage('home'));
 
+// Ações da home (painel Hoje + pill dos cards) — reusa os endpoints existentes.
+$('page-home').addEventListener('click', async (e)=>{
+  const el = e.target.closest('[data-action]');
+  if (!el) return;
+  const action = el.dataset.action;
+  const areaId = el.dataset.area;
+  if (action === 'home-checkin') {
+    e.stopPropagation();
+    await guard(async()=>{
+      el.classList.add('busy');
+      const j = await postJson(`/api/area/${encodeURIComponent(areaId)}/checkin`,{});
+      await load(false);
+      toast(j.feito?'✓ Check-in registrado':'Check-in desfeito');
+    });
+  } else if (action === 'home-missao') {
+    const missaoId = el.dataset.missao;
+    await guard(async()=>{
+      el.classList.add('busy');
+      const j = await postJson(`/api/area/${encodeURIComponent(areaId)}/missao/${encodeURIComponent(missaoId)}`,{});
+      await load(false);
+      toast(j.feita?'✓ Missão concluída':'Missão desmarcada');
+    });
+  }
+});
+
 // ── LOAD ──
 async function load(fresh) {
   try {
@@ -1179,7 +1299,11 @@ function renderHome() {
     bg.style.backgroundImage = "url('/assets/porsche.jpg')";
     setTimeout(()=>bg.classList.add('loaded'),100);
   }
-  $('hero-name').textContent = prof.name || 'Você';
+  const nome = prof.name || 'Você';
+  const h = new Date().getHours();
+  const saud = h<12 ? 'Bom dia' : h<18 ? 'Boa tarde' : 'Boa noite';
+  $('hero-greeting').textContent = `${saud}, ${nome}`;
+  $('hero-name').textContent = nome;
   $('hero-level-num').textContent = life.level||1;
   $('hero-level-title').textContent = life.title||'';
   $('hero-score').textContent = life.overall??0;
@@ -1187,20 +1311,30 @@ function renderHome() {
   $('hero-xp-max').textContent = (life.xpForNext||200)+' XP';
   $('hero-xp-fill').style.width = (life.progressPct||0)+'%';
 
+  // Stats + painel Hoje (acionáveis)
+  renderStats();
+  renderHoje();
+
   // Area cards
-  $('areas-grid').innerHTML = (D.areas||[]).map(a=>`
-    <div class="area-card" data-area="${esc(a.id)}" style="--area-color:${esc(a.cor)}">
+  $('areas-grid').innerHTML = (D.areas||[]).map((a,i)=>{
+    const manual = a.fonte!=='auto';
+    const feito = manual && a.progress?.checkin?.feitoHoje;
+    const quick = manual ? `<div class="area-quick ${feito?'done':''}" data-action="home-checkin" data-area="${esc(a.id)}" title="${feito?'Check-in feito hoje':'Check-in de hoje'}">${feito?'✓':'+'}</div>` : '';
+    return `
+    <div class="area-card ${manual?'has-quick':''}" data-area="${esc(a.id)}" style="--area-color:${esc(a.cor)};animation-delay:${(i*0.05).toFixed(2)}s">
       <div class="area-card-top">
-        <div>
+        <div class="area-card-id">
           <div class="area-icon">${a.icone}</div>
+          <div>
+            <div class="area-name">${esc(a.nome)}</div>
+            <div class="area-fonte">${a.fonte==='auto'?'automático':'manual'}</div>
+          </div>
         </div>
         <div class="area-ring-wrap">
           ${ringHtml(a.score, 56, a.cor)}
           <div class="area-ring-num">${a.score}</div>
         </div>
       </div>
-      <div class="area-name">${esc(a.nome)}</div>
-      <div class="area-fonte">${a.fonte==='auto'?'automático':'manual'}</div>
       <div class="area-kpis">
         ${(a.resumo||[]).slice(0,3).map(r=>`<div class="area-kpi">
           <span>${esc(r.label)}</span>
@@ -1208,15 +1342,92 @@ function renderHome() {
         </div>`).join('')}
       </div>
       ${progressStripHtml(a)}
-    </div>
-  `).join('');
+      ${quick}
+    </div>`;
+  }).join('');
 
   $('areas-grid').querySelectorAll('.area-card').forEach(c=>{
-    c.addEventListener('click',()=>{
+    c.addEventListener('click',(e)=>{
+      if (e.target.closest('.area-quick')) return; // pill tem handler próprio
       showPage('area',c.dataset.area);
       renderAreaDetail(c.dataset.area);
     });
   });
+}
+
+// ── STATS RÁPIDOS (glance) ──
+function renderStats() {
+  const life = D.life || {};
+  const manuais = (D.areas||[]).filter(a=>a.fonte!=='auto');
+  const seqAtivas = manuais.filter(a=>(a.progress?.streak?.atual||0)>0).length;
+  let mFeitas=0, mTotal=0;
+  manuais.forEach(a=>(a.progress?.missoes||[]).filter(m=>m.periodo==='dia').forEach(m=>{ mTotal++; if(m.feita) mFeitas++; }));
+  let badges=0; (D.areas||[]).forEach(a=>{ badges += (a.progress?.badges||[]).filter(b=>b.conquistada).length; });
+  const tiles = [
+    { ico:'🔥', num:seqAtivas, sub:'', label:'Sequências ativas' },
+    { ico:'🎯', num:mFeitas, sub:`<small>/${mTotal}</small>`, label:'Missões de hoje' },
+    { ico:'🏅', num:badges, sub:'', label:'Conquistas' },
+    { ico:'⭐', num:life.level||1, sub:`<small> · ${life.xp||0} XP</small>`, label:'Nível' },
+  ];
+  $('stats-row').innerHTML = tiles.map(t=>`
+    <div class="stat-tile">
+      <div class="stat-tile-top"><span class="stat-ico">${t.ico}</span><span class="stat-num">${t.num}${t.sub}</span></div>
+      <div class="stat-label">${t.label}</div>
+    </div>`).join('');
+}
+
+// ── PAINEL HOJE (acionável) ──
+function renderHoje() {
+  const el = $('hoje');
+  if (!el) return;
+  const manuais = (D.areas||[]).filter(a=>a.fonte!=='auto');
+
+  // check-ins
+  const ciFeitos = manuais.filter(a=>a.progress?.checkin?.feitoHoje).length;
+  const chips = manuais.map(a=>{
+    const done = a.progress?.checkin?.feitoHoje;
+    return `<div class="ci-chip ${done?'done':''}" data-action="home-checkin" data-area="${esc(a.id)}">
+      <span class="ci-ico">${a.icone}</span>${esc(a.nome)}
+      <span class="ci-tick">✓</span>
+    </div>`;
+  }).join('');
+
+  // missões do dia pendentes (todas as áreas manuais)
+  const pend = [];
+  manuais.forEach(a=>(a.progress?.missoes||[]).forEach(m=>{
+    if (m.periodo==='dia' && !m.feita) pend.push({ area:a, m });
+  }));
+  let mTotal=0, mFeitas=0;
+  manuais.forEach(a=>(a.progress?.missoes||[]).filter(m=>m.periodo==='dia').forEach(m=>{ mTotal++; if(m.feita) mFeitas++; }));
+
+  const missoesHtml = pend.length ? `
+    <div class="hoje-missoes">
+      ${pend.map(({area,m})=>`
+        <div class="missao-item" data-action="home-missao" data-area="${esc(area.id)}" data-missao="${esc(m.id)}">
+          <div class="missao-check"></div>
+          <span class="missao-icone">${m.icone||'◆'}</span>
+          <span class="missao-nome">${esc(m.nome)}</span>
+          <div class="missao-tags">
+            <span class="missao-area">${esc(area.nome)}</span>
+            <span class="missao-xp">+${m.xp||1} XP</span>
+          </div>
+        </div>`).join('')}
+    </div>` : '';
+
+  const tudoFeito = ciFeitos===manuais.length && pend.length===0;
+  const emptyHtml = tudoFeito ? `
+    <div class="hoje-empty">
+      <span class="he-ico">🎯</span>
+      <span><span class="he-strong">Tudo feito hoje.</span>Check-ins e missões do dia concluídos — manda ver amanhã.</span>
+    </div>` : '';
+
+  el.innerHTML = `
+    <div class="hoje-head">
+      <div class="hoje-title">Hoje <small>${ciFeitos}/${manuais.length} check-ins · ${mFeitas}/${mTotal} missões</small></div>
+    </div>
+    ${manuais.length ? `<div class="hoje-sub" style="margin-bottom:8px">Check-in</div><div class="checkin-chips">${chips}</div>` : ''}
+    ${pend.length ? `<div class="hoje-sub" style="margin-bottom:8px">Missões do dia</div>${missoesHtml}` : ''}
+    ${emptyHtml}`;
 }
 
 // ── AREA DETAIL (roteador) ──
