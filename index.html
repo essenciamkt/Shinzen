@@ -606,6 +606,54 @@ html, body {
 }
 .campo-save-btn:hover { background: var(--red2); }
 
+/* campos v2: steppers +/− + linha */
+.campos-grid { grid-template-columns: repeat(auto-fit, minmax(186px, 1fr)); }
+.campo-row { display: flex; align-items: center; gap: 6px; }
+.campo-row .campo-input { flex: 1; min-width: 0; text-align: center; font-size: var(--text-lg); }
+.campo-row .campo-unidade { margin-top: 0; white-space: nowrap; flex-shrink: 0; }
+.campo-step {
+  width: 32px; height: 32px; flex-shrink: 0; border-radius: 7px;
+  border: 1px solid var(--border2); background: var(--surface-3); color: var(--text2);
+  font-size: 18px; line-height: 1; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: all var(--t-fast); user-select: none;
+}
+.campo-step:hover { color: var(--text); border-color: var(--red); background: rgba(225,29,42,.12); }
+.campo-step:active { transform: scale(.9); }
+
+/* chip de tendência */
+.trend { font-size: 10px; font-weight: 700; font-family: var(--mono); padding: 1px 5px; border-radius: 5px; white-space: nowrap; vertical-align: middle; }
+.trend.up   { color: #4ade80; background: rgba(34,197,94,.12); }
+.trend.down { color: #f87171; background: rgba(248,113,113,.12); }
+.trend.flat { color: var(--text3); background: var(--bg3); }
+.kpi-val .trend { margin-left: 5px; }
+
+/* KPI row preenche a largura (auto-fit estica) */
+.kpi-row { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); }
+
+/* histórico com insight */
+.hist-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; }
+.hist-row { background: var(--surface-2); border: 1px solid var(--border); border-radius: var(--r); padding: 12px 14px; }
+.hist-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 4px; }
+.hist-label { font-size: var(--text-sm); font-weight: 600; color: var(--text2); }
+.hist-chart { height: 46px; }
+.hist-chart .sparkline { width: 100%; height: 100%; display: block; }
+.hist-meta { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; margin-top: 4px; }
+.hist-cur { font-size: var(--text-lg); font-weight: 800; font-family: var(--mono); color: var(--text); }
+.hist-cur small { font-size: 11px; color: var(--text3); font-weight: 600; margin-left: 2px; }
+.hist-mm { font-size: var(--text-xs); color: var(--text3); font-family: var(--mono); }
+
+/* detalhe: títulos com acento da área + entrada em cascata */
+.detail-body .card-title { position: relative; padding-left: 11px; }
+.detail-body .card-title::before { content:''; position:absolute; left:0; top:1px; width:3px; height:12px; border-radius:2px; background: var(--area-color, var(--red)); }
+@keyframes detIn { from { opacity:0; transform: translateY(8px); } to { opacity:1; transform: translateY(0); } }
+.detail-body > * { animation: detIn .35s var(--t-slow) both; }
+.detail-body > *:nth-child(2){ animation-delay:.05s }
+.detail-body > *:nth-child(3){ animation-delay:.10s }
+.detail-body > *:nth-child(4){ animation-delay:.15s }
+.detail-body > *:nth-child(5){ animation-delay:.20s }
+.detail-body > *:nth-child(6){ animation-delay:.25s }
+
 /* ── SPARKLINE ── */
 .sparkline { display: inline-block; vertical-align: middle; }
 .sparkline-row {
@@ -1131,6 +1179,44 @@ function sparkSvg(vals, w, h, color) {
   const step=w/(vals.length-1);
   const pts=vals.map((v,i)=>`${(i*step).toFixed(1)},${(h-(v/max)*h).toFixed(1)}`).join(' ');
   return `<svg width="${w}" height="${h}" class="sparkline" viewBox="0 0 ${w} ${h}"><polyline points="${pts}" fill="none" stroke="${color||'var(--red2)'}" stroke-width="1.5" stroke-linejoin="round"/></svg>`;
+}
+
+// Passo do stepper +/− por unidade do campo.
+function stepFor(unidade) {
+  const u = (unidade||'').toLowerCase();
+  if (u==='r$') return 50;
+  if (u==='kg'||u==='h'||u==='l') return 0.5;
+  return 1; // contagens (x, missas, etc.)
+}
+
+// Chip de tendência a partir de uma série de histórico [{d,v}].
+// Δ = último − penúltimo. Cor neutra (sem julgar se subir é bom/ruim).
+function trendChip(pts) {
+  if (!Array.isArray(pts) || pts.length < 2) return '';
+  const a = Number(pts[pts.length-2].v), b = Number(pts[pts.length-1].v);
+  if (!isFinite(a) || !isFinite(b)) return '';
+  const d = b - a;
+  if (Math.abs(d) < 1e-9) return `<span class="trend flat">→ 0</span>`;
+  const arrow = d>0 ? '↑' : '↓';
+  const cls = d>0 ? 'up' : 'down';
+  const val = Math.abs(d).toLocaleString('pt-BR',{maximumFractionDigits:1});
+  return `<span class="trend ${cls}">${arrow} ${val}</span>`;
+}
+
+// Sparkline com baseline no mínimo + área preenchida (mais legível que só max).
+function sparkArea(vals, w, h, color) {
+  if (!vals || vals.length < 2) return '';
+  const max = Math.max(...vals), min = Math.min(...vals);
+  const rng = (max-min) || 1;
+  const step = w/(vals.length-1);
+  const y = v => (h-2) - ((v-min)/rng)*(h-4) + 1;
+  const line = vals.map((v,i)=>`${(i*step).toFixed(1)},${y(v).toFixed(1)}`).join(' ');
+  const area = `0,${h} ${line} ${w},${h}`;
+  const c = color||'var(--red2)';
+  return `<svg width="${w}" height="${h}" class="sparkline" viewBox="0 0 ${w} ${h}" preserveAspectRatio="none">
+    <polygon points="${area}" fill="${c}" opacity="0.10"/>
+    <polyline points="${line}" fill="none" stroke="${c}" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/>
+  </svg>`;
 }
 
 function ringHtml(score, size, color) {
@@ -1678,22 +1764,36 @@ function renderManualArea(area) {
   const camposEditaveis = det.camposEditaveis||[];
 
   const body = $('detail-body');
+  body.style.setProperty('--area-color', area.cor || 'var(--red)');
 
-  // KPIs resumo
-  const kpiHtml = (area.resumo||[]).map(r=>`<div class="kpi">
-    <div class="kpi-label">${esc(r.label)}</div>
-    <div class="kpi-val">${esc(String(r.valor??'—'))}</div>
-    ${r.delta?`<div class="kpi-sub">${esc(r.delta)}</div>`:''}
-  </div>`).join('');
+  // KPIs resumo (com tendência quando o KPI casa um campo com histórico)
+  const kpiHtml = (area.resumo||[]).map(r=>{
+    const lc = (r.label||'').toLowerCase();
+    const campoT = camposEditaveis.find(c=>c.historico && (
+      c.label.toLowerCase().includes(lc) || lc.includes(c.label.toLowerCase().split(' ')[0])
+    ));
+    const trend = campoT ? trendChip(historico[campoT.id]) : '';
+    return `<div class="kpi">
+      <div class="kpi-label">${esc(r.label)}</div>
+      <div class="kpi-val">${esc(String(r.valor??'—'))} ${trend}</div>
+      ${r.delta?`<div class="kpi-sub">${esc(r.delta)}</div>`:''}
+    </div>`;
+  }).join('');
 
-  // Campos editáveis
+  // Campos editáveis (com steppers +/− e chip de tendência)
   const camposHtml = `<div class="campos-grid">${camposEditaveis.map(c=>{
     const val = campos[c.id];
+    const step = stepFor(c.unidade);
+    const trend = c.historico ? trendChip(historico[c.id]) : '';
     return `<div class="campo-item">
-      <div class="campo-label">${esc(c.label)}</div>
-      <input type="number" class="campo-input" id="campo-${esc(c.id)}" data-campo="${esc(c.id)}" data-hist="${c.historico?'1':''}" value="${val??''}" placeholder="—" step="0.1">
-      <div class="campo-unidade">${esc(c.unidade)}</div>
-      <button class="campo-save-btn" id="save-${esc(c.id)}" data-campo="${esc(c.id)}">↑ salvar</button>
+      <div class="campo-label">${esc(c.label)} ${trend}</div>
+      <div class="campo-row">
+        <button class="campo-step minus" data-step="-${step}" data-campo="${esc(c.id)}" aria-label="Diminuir">−</button>
+        <input type="number" class="campo-input" id="campo-${esc(c.id)}" data-campo="${esc(c.id)}" data-hist="${c.historico?'1':''}" value="${val??''}" placeholder="—" step="${step}">
+        <span class="campo-unidade">${esc(c.unidade)}</span>
+        <button class="campo-step plus" data-step="${step}" data-campo="${esc(c.id)}" aria-label="Aumentar">+</button>
+      </div>
+      <button class="campo-save-btn" id="save-${esc(c.id)}" data-campo="${esc(c.id)}">salvar</button>
     </div>`;
   }).join('')}</div>`;
 
@@ -1711,14 +1811,27 @@ function renderManualArea(area) {
     </span>`:''}
   </div>`).join('');
 
-  // Sparklines do histórico
+  // Histórico com insight: label amigável, gráfico maior, atual + min/máx + tendência
+  const labelDe = id => (camposEditaveis.find(c=>c.id===id)?.label) || id;
+  const unidDe  = id => (camposEditaveis.find(c=>c.id===id)?.unidade) || '';
   const sparkHtml = Object.entries(historico).map(([k,pts])=>{
-    if(!pts||!pts.length) return '';
-    const vals = pts.slice(-14).map(p=>p.v);
-    return `<div class="sparkline-row">
-      <span class="sparkline-label">${esc(k)}</span>
-      <span class="sparkline-svg">${sparkSvg(vals,160,36,'var(--red2)')}</span>
-      <span class="sparkline-current">${vals[vals.length-1]}</span>
+    if(!pts||pts.length<2) return '';
+    const recent = pts.slice(-14);
+    const vals = recent.map(p=>Number(p.v));
+    const cur = vals[vals.length-1];
+    const mn = Math.min(...vals), mx = Math.max(...vals);
+    const u = unidDe(k);
+    const fmt = n => Number(n).toLocaleString('pt-BR',{maximumFractionDigits:1});
+    return `<div class="hist-row">
+      <div class="hist-head">
+        <span class="hist-label">${esc(labelDe(k))}</span>
+        ${trendChip(pts)}
+      </div>
+      <div class="hist-chart">${sparkArea(vals,260,46,'var(--area-color, var(--red2))')}</div>
+      <div class="hist-meta">
+        <span class="hist-cur">${fmt(cur)}<small>${esc(u)}</small></span>
+        <span class="hist-mm">mín ${fmt(mn)} · máx ${fmt(mx)} · ${recent.length} reg.</span>
+      </div>
     </div>`;
   }).join('');
 
@@ -1809,9 +1922,9 @@ function renderManualArea(area) {
       </div>
     </div>
     ${badgesHtml}
-    ${sparkHtml?`<div class="card mb16">
-      <div class="card-title">Histórico (últimos 14 registros)</div>
-      ${sparkHtml}
+    ${sparkHtml?`<div class="card mb16" style="--area-color:${esc(area.cor)}">
+      <div class="card-title">Histórico</div>
+      <div class="hist-grid">${sparkHtml}</div>
     </div>`:''}
   `;
 
@@ -1835,6 +1948,22 @@ function bindDetailDelegation(areaId) {
   if (_detailKeyHandler) body.removeEventListener('keydown', _detailKeyHandler);
 
   _detailHandler = async (e) => {
+    // stepper +/− : ajusta o valor do input e revela o salvar (sem persistir ainda)
+    const step = e.target.closest('.campo-step');
+    if (step) {
+      const input = body.querySelector(`.campo-input[data-campo="${step.dataset.campo}"]`);
+      if (input) {
+        const delta = parseFloat(step.dataset.step) || 0;
+        const cur = parseFloat(input.value) || 0;
+        let next = Math.round((cur + delta) * 100) / 100; // evita 0.30000004
+        if (next < 0) next = 0;
+        input.value = next;
+        const sb = $('save-'+step.dataset.campo);
+        if (sb) sb.style.display = 'block';
+        input.focus();
+      }
+      return;
+    }
     // botão salvar de campo
     const saveBtn = e.target.closest('.campo-save-btn');
     if (saveBtn) {
