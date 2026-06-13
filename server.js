@@ -5,7 +5,7 @@ const fs = require('fs');
 const path = require('path');
 const { build, CONFIG_PATH } = require('./lib/payload');
 const { clearCache } = require('./lib/scan');
-const { writeArea, pushHistory, addMeta, editMeta, deleteMeta, doCheckin, logMissao, addCliente, updateCliente, deleteCliente } = require('./lib/datastore');
+const { writeArea, pushHistory, addMeta, editMeta, deleteMeta, doCheckin, logMissao, addCliente, updateCliente, deleteCliente, addGoal, updateGoal, deleteGoal } = require('./lib/datastore');
 
 const PORT = 4317;
 const APP_DIR = path.resolve(__dirname);
@@ -137,6 +137,68 @@ const server = http.createServer(async (req, res) => {
     const cid = decodeURIComponent(parts[5]);
     try {
       deleteCliente(areaId, cid);
+      _cachedPayload = null;
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ ok: true }));
+    } catch (err) {
+      res.writeHead(500, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ ok: false, error: String(err) }));
+    }
+    return;
+  }
+
+  // ── GOALS / SONHOS (área Metas) ── (antes do PATCH genérico)
+  // POST /api/area/:id/goal — cria sonho rico
+  if (req.method === 'POST' && pathname.match(/^\/api\/area\/[^/]+\/goal$/)) {
+    const areaId = decodeURIComponent(pathname.split('/')[3]);
+    try {
+      const body = await readBody(req);
+      if (!body.titulo || !String(body.titulo).trim()) {
+        res.writeHead(400, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ ok: false, error: 'titulo requerido' }));
+        return;
+      }
+      const goal = addGoal(areaId, body);
+      _cachedPayload = null;
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ ok: true, goal }));
+    } catch (err) {
+      res.writeHead(500, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ ok: false, error: String(err) }));
+    }
+    return;
+  }
+
+  // PATCH /api/area/:id/goal/:gid — atualiza sonho
+  if (req.method === 'PATCH' && pathname.match(/^\/api\/area\/[^/]+\/goal\/[^/]+$/)) {
+    const parts = pathname.split('/');
+    const areaId = decodeURIComponent(parts[3]);
+    const gid = decodeURIComponent(parts[5]);
+    try {
+      const body = await readBody(req);
+      const goal = updateGoal(areaId, gid, body || {});
+      if (!goal) {
+        res.writeHead(404, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ ok: false, error: 'sonho não encontrado' }));
+        return;
+      }
+      _cachedPayload = null;
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ ok: true, goal }));
+    } catch (err) {
+      res.writeHead(500, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ ok: false, error: String(err) }));
+    }
+    return;
+  }
+
+  // DELETE /api/area/:id/goal/:gid — remove sonho
+  if (req.method === 'DELETE' && pathname.match(/^\/api\/area\/[^/]+\/goal\/[^/]+$/)) {
+    const parts = pathname.split('/');
+    const areaId = decodeURIComponent(parts[3]);
+    const gid = decodeURIComponent(parts[5]);
+    try {
+      deleteGoal(areaId, gid);
       _cachedPayload = null;
       res.writeHead(200, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ ok: true }));
@@ -330,6 +392,10 @@ const server = http.createServer(async (req, res) => {
         }
         if (typeof body.meta.caixaData === 'string') config.meta.caixaData = body.meta.caixaData.slice(0, 10);
         if (typeof body.meta.claudeOffData === 'string') config.meta.claudeOffData = body.meta.claudeOffData.slice(0, 10);
+        if (body.meta.mrrAlvo !== undefined) {
+          const n = parseFloat(body.meta.mrrAlvo);
+          if (!isNaN(n) && n >= 0) config.meta.mrrAlvo = n;
+        }
       }
       fs.writeFileSync(CONFIG_PATH, JSON.stringify(config, null, 2), 'utf8');
       _cachedPayload = null;

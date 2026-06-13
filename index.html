@@ -773,6 +773,111 @@ html, body {
   .cli-inp-val { flex-basis: 90px; }
 }
 
+/* ── METAS & SONHOS cockpit — "A Bússola do Norte" ── */
+.serif { font-family: Georgia, 'Times New Roman', 'Iowan Old Style', serif; }
+
+/* Hero Estrela-Norte */
+.norte-hero { position: relative; overflow: hidden; display: flex; align-items: center; gap: 20px;
+  background: #050505;
+  border-color: color-mix(in srgb, var(--area-color) 18%, var(--border));
+  border-top: 1px solid color-mix(in srgb, var(--area-color) 30%, var(--border));
+  box-shadow: 0 1px 0 rgba(255,255,255,.04) inset, 0 24px 60px -28px rgba(168,85,247,.30); }
+.norte-hero::before { content:''; position:absolute; inset:0; pointer-events:none;
+  background: radial-gradient(120% 90% at 82% 8%, rgba(168,85,247,.12), transparent 60%); }
+.norte-orb { position:absolute; top:-30px; right:-10px; width:180px; height:180px; border-radius:50%;
+  background: radial-gradient(circle, rgba(168,85,247,.55), transparent 70%); filter: blur(40px);
+  opacity:.24; pointer-events:none; animation: northPulse 4s ease-in-out infinite alternate; }
+.norte-info { position:relative; flex:1; min-width:0; z-index:1; }
+.norte-eyebrow { font-family: var(--mono); font-size:10px; text-transform:uppercase; letter-spacing:.22em; color: var(--text3); margin-bottom:10px; }
+.norte-title { font-size: clamp(28px, 7vw, 46px); font-weight:600; line-height:.98; letter-spacing:-.02em; color:#f0f0f0; }
+.norte-title b { color: var(--area-color); font-weight:700; }
+.norte-meta { font-family: var(--mono); font-size:12px; color: var(--text2); margin-top:12px; }
+.norte-meta b { color:#f0f0f0; }
+.norte-ringwrap { position:relative; flex-shrink:0; z-index:1; width:92px; height:92px; }
+.norte-ringnum { position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+  font-family: var(--mono); font-weight:800; font-size:24px; color:#f0f0f0; letter-spacing:-.02em; }
+.norte-ringnum small { font-size:11px; color: var(--text3); }
+
+/* Ponte do MRR (a âncora) */
+.mrr-anchor { border-color: color-mix(in srgb, var(--area-color) 16%, var(--border)); }
+.mrr-top { display:flex; align-items:baseline; justify-content:space-between; gap:12px; margin-bottom:9px; }
+.mrr-val { font-size:26px; font-weight:700; color:#f0f0f0; letter-spacing:-.01em; line-height:1; }
+.mrr-val small { font-size:13px; color: var(--text3); font-family: var(--mono); font-weight:600; }
+.mrr-pct { font-family: var(--mono); font-size:22px; font-weight:800; color: var(--area-color); }
+.mrr-msg { font-size: var(--text-sm); color: var(--text2); margin-top:9px; line-height:1.4; }
+
+/* Linha do Horizonte */
+.horizon { position: relative; padding-left: 22px; }
+.hz-line { position:absolute; left:5px; top:4px; bottom:4px; width:2px; transform-origin: top;
+  background: linear-gradient(180deg, var(--area-color), color-mix(in srgb, var(--area-color) 8%, transparent) 75%, transparent);
+  animation: hzLine .7s var(--t-slow) both; }
+.hz-goal { position:relative; display:flex; align-items:flex-start; gap:12px; padding:11px 0; }
+.hz-goal + .hz-goal { border-top:1px solid var(--border); }
+.hz-node { position:absolute; left:-22px; top:13px; width:13px; height:13px; border-radius:50%;
+  background: var(--bg3); border:2px solid color-mix(in srgb, var(--area-color) 55%, var(--bg3));
+  cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:8px; color:#fff;
+  box-shadow:0 0 0 3px #050505; transition: all var(--t-fast); flex-shrink:0; }
+.hz-node:hover { transform: scale(1.15); }
+.hz-node.done { background: var(--green); border-color: var(--green); }
+.hz-node.star { background: var(--area-color); border-color: var(--area-color); box-shadow:0 0 0 3px #050505, 0 0 10px rgba(168,85,247,.6); font-size:9px; }
+.hz-body { flex:1; min-width:0; }
+.hz-head { display:flex; align-items:baseline; gap:10px; flex-wrap:wrap; }
+.hz-title { font-size:16px; font-weight:600; color:#e8e8e8; }
+.hz-goal.done .hz-title { color: var(--text3); }
+.hz-eta { font-family: var(--mono); font-size:10px; padding:2px 7px; border-radius:20px; background: var(--surface-2); border:1px solid var(--border2); color: var(--text2); white-space:nowrap; }
+.hz-eta.ok { color: var(--green); border-color: color-mix(in srgb, var(--green) 40%, var(--border2)); }
+.hz-eta.warn { color:#f59e0b; border-color: color-mix(in srgb, #f59e0b 40%, var(--border2)); }
+.hz-eta.bad { color: var(--red); border-color: color-mix(in srgb, var(--red) 40%, var(--border2)); }
+.hz-porque { font-size: var(--text-xs); color: var(--text2); margin-top:3px; font-style: italic; }
+.hz-bar { height:6px !important; border-radius:3px; margin-top:8px; }
+.hz-bar .fin-bar-fill { border-radius:3px; box-shadow:none; }
+.hz-sub { font-family: var(--mono); font-size:10px; color: var(--text3); margin-top:4px; }
+.hz-actions { display:flex; gap:2px; flex-shrink:0; opacity:0; transition: opacity var(--t-fast); }
+.hz-goal:hover .hz-actions { opacity:1; }
+.hz-act { background:none; border:none; cursor:pointer; font-size:13px; opacity:.7; padding:3px; line-height:1; }
+.hz-act:hover { opacity:1; }
+.goal-add { display:flex; gap:8px; align-items:center; margin-top:14px; }
+.goal-sel { flex:0 0 116px; cursor:pointer; }
+
+/* Espelho do Porsche (custo de oportunidade) */
+.porsche-mirror { display:flex; align-items:center; gap:14px; border-style:dashed; border-color: var(--border2); }
+.pm-ic { font-size:26px; line-height:1; flex-shrink:0; opacity:.9; }
+.pm-t { font-size: var(--text-md); font-weight:700; color:#e8e8e8; }
+.pm-d { font-size: var(--text-sm); color: var(--text2); margin-top:3px; line-height:1.45; }
+.pm-d b { color: var(--area-color); font-family: var(--mono); }
+
+/* Passo único da semana */
+.passo-card { display:flex; align-items:center; gap:14px;
+  border-left:3px solid var(--area-color); }
+.passo-check { width:26px; height:26px; border-radius:8px; border:2px solid color-mix(in srgb, var(--area-color) 55%, var(--bg3));
+  background: var(--surface-2); cursor:pointer; flex-shrink:0; display:flex; align-items:center; justify-content:center;
+  font-size:14px; color:#fff; transition: all var(--t-fast); }
+.passo-check:hover { border-color: var(--area-color); }
+.passo-check.done { background: var(--green); border-color: var(--green); }
+.passo-body { flex:1; min-width:0; }
+.passo-text { font-size: var(--text-md); color:#e8e8e8; font-weight:600; margin-top:2px; }
+.passo-card.done .passo-text { color: var(--text3); text-decoration: line-through; }
+.passo-text.empty { color: var(--text3); font-weight:400; font-style:italic; }
+
+/* Bilhete pro futuro-eu */
+.bilhete { position:relative; background: linear-gradient(180deg, #16121d, #120f18);
+  border-color: color-mix(in srgb, var(--area-color) 14%, var(--border)); }
+.bilhete-q { position:absolute; top:-4px; left:14px; font-family: Georgia, serif; font-size:54px; color: color-mix(in srgb, var(--area-color) 40%, transparent); line-height:1; }
+.bilhete-txt { font-size:17px; line-height:1.5; color:#e6e0ee; padding:8px 30px 2px 34px; }
+.bilhete-edit { position:absolute; top:10px; right:10px; }
+
+@keyframes northPulse { from { opacity:.14; } to { opacity:.32; } }
+@keyframes hzLine { from { transform: scaleY(0); } to { transform: scaleY(1); } }
+
+@media (max-width: 700px) {
+  .norte-hero { flex-direction: column; align-items: flex-start; gap:14px; }
+  .norte-ringwrap { align-self: center; }
+  .bilhete-txt { padding-left:30px; font-size:16px; }
+  .goal-add { flex-wrap: wrap; }
+  .goal-add .cli-inp { flex-basis:100%; }
+  .goal-add .cli-inp-val, .goal-add .goal-sel { flex-basis:46%; }
+}
+
 /* ── SPARKLINE ── */
 .sparkline { display: inline-block; vertical-align: middle; }
 .sparkline-row {
@@ -2189,6 +2294,168 @@ function trabalhoCockpitHtml(area){
   `;
 }
 
+// ── COCKPIT METAS & SONHOS ("A Bússola do Norte") ──
+function metasCockpitHtml(area){
+  const d = area.detalhe||{};
+  const meta = D.meta||{};
+  const goals = d.goals||[];
+  const estrela = d.estrela;
+  const mrr = d.mrr||0, mrrAlvo = d.mrrAlvo||5000, mrrPct = d.mrrPct||0;
+  const cor = area.cor || '#a855f7';
+
+  // ── Hero Estrela-Norte ──
+  let heroHtml = '';
+  if (estrela) {
+    const tt = esc(estrela.titulo);
+    const ws = tt.split(' ');
+    const titleHtml = ws.length>1 ? `${ws.slice(0,-1).join(' ')} <b>${ws.slice(-1)}</b>` : `<b>${tt}</b>`;
+    const dias = estrela.diasPrazo;
+    const pct = estrela.pct||0;
+    const metaLine = `${dias!=null?`faltam <b>${dias}</b> dias · `:''}${pct}% do caminho`;
+    heroHtml = `<div class="card mb16 norte-hero">
+      <div class="norte-orb"></div>
+      <div class="norte-info">
+        <div class="norte-eyebrow">POR QUE EU ACORDO CEDO</div>
+        <div class="norte-title serif">${titleHtml}</div>
+        <div class="norte-meta">${metaLine}</div>
+      </div>
+      <div class="norte-ringwrap">${ringHtml(pct,92,cor)}<div class="norte-ringnum">${pct}<small>%</small></div></div>
+    </div>`;
+  }
+
+  // ── Ponte do MRR (a âncora) — tom firme com fé ──
+  let mrrMsg;
+  if (mrr<=0) mrrMsg = 'MRR zerado — o 1º cliente recorrente liga o relógio dos sonhos. Fé e disciplina: começa por R$1.';
+  else if (mrr>=mrrAlvo) mrrMsg = '🎉 R$5k/mês recorrente. Independência na mira — agora é escalar.';
+  else if (d.mrrGrowthEtaMeses!=null) mrrMsg = `Faltam ${fmtBrl(mrrAlvo-mrr,0)} · no ritmo atual, R$5k em ~${d.mrrGrowthEtaMeses} meses.`;
+  else mrrMsg = `Faltam ${fmtBrl(mrrAlvo-mrr,0)} de MRR. Registra a recorrência em Finanças pra ver o ritmo.`;
+  const mrrHtml = `<div class="card mb16 mrr-anchor">
+    <div class="mrr-top">
+      <div>
+        <div class="dec-label">Renda recorrente — o motor dos sonhos</div>
+        <div class="mrr-val serif">${fmtBrl(mrr,0)} <small>de ${fmtBrl(mrrAlvo,0)}/mês</small></div>
+      </div>
+      <div class="mrr-pct">${mrrPct}%</div>
+    </div>
+    <div class="fin-bar"><div class="fin-bar-fill ${mrr>=mrrAlvo?'done':''}" style="width:${mrrPct}%"></div></div>
+    <div class="mrr-msg">${mrrMsg}</div>
+  </div>`;
+
+  // ── Strip da bússola ──
+  const feitos = goals.filter(g=>g.feito).length, total = goals.length;
+  const pm = d.proximoMarco;
+  const caixaDias = diasAte(meta.caixaData);
+  const cobre = d.cobreDespesa;
+  const bussolaHtml = `<div class="decision-strip mb16">
+    <div class="dec-tile ${feitos>0?'ok':''}">
+      <div class="dec-label">Sonhos batidos</div>
+      <div class="dec-val">${feitos}<small> /${total}</small></div>
+      <div class="dec-sub">no horizonte</div>
+    </div>
+    <div class="dec-tile ${pm&&pm.diasPrazo!=null?(pm.diasPrazo<0?'bad':pm.diasPrazo<=30?'warn':''):''}">
+      <div class="dec-label">Próximo marco</div>
+      <div class="dec-val">${pm&&pm.diasPrazo!=null?(pm.diasPrazo<0?'venc.':pm.diasPrazo+'d'):'—'}</div>
+      <div class="dec-sub">${pm?esc(pm.titulo):'tudo conquistado'}</div>
+    </div>
+    <div class="dec-tile ${caixaDias!=null?(caixaDias<0?'bad':caixaDias<=7?'warn':''):''}">
+      <div class="dec-label">1ª ficha de dominó</div>
+      <div class="dec-val">${caixaDias!=null?(caixaDias<0?'venc.':caixaDias+'d'):'—'}</div>
+      <div class="dec-sub">${fmtBrl(meta.caixaValor||1000,0)} via Claude</div>
+    </div>
+    <div class="dec-tile ${cobre?'ok':''}">
+      <div class="dec-label">Independência</div>
+      <div class="dec-val">${cobre==null?'—':cobre?'✓':'não'}</div>
+      <div class="dec-sub">MRR cobre o custo</div>
+    </div>
+  </div>`;
+
+  // ── Passo único da semana ──
+  const passo = d.passoSemana||'';
+  const passoHtml = `<div class="card mb16 passo-card ${d.passoFeito?'done':''}">
+    <div class="passo-check ${d.passoFeito?'done':''}" data-action="passo-toggle" title="Marcar o passo da semana">${d.passoFeito?'✓':''}</div>
+    <div class="passo-body">
+      <div class="dec-label">O passo desta semana rumo ao R$5k</div>
+      <div class="passo-text ${!passo?'empty':''}">${passo?esc(passo):'Escolhe UMA ação que aproxima a renda recorrente — não dez.'}</div>
+    </div>
+    <button class="hz-act" data-action="edit-passo" data-cur="${esc(passo)}" title="Editar passo">✏️</button>
+  </div>`;
+
+  // ── Bilhete pro futuro-eu ──
+  const porque = d.porqueRaiz||'';
+  const bilheteHtml = `<div class="card mb16 bilhete">
+    <div class="bilhete-q">"</div>
+    <div class="bilhete-txt serif">${esc(porque)}</div>
+    <button class="hz-act bilhete-edit" data-action="edit-porque" data-cur="${esc(porque)}" title="Editar o porquê">✏️</button>
+  </div>`;
+
+  // ── Linha do Horizonte ──
+  function etaInfo(g){
+    if(g.feito) return {label:'conquistado', cls:'ok'};
+    if(g.fonteRitmo==='savings'){
+      if(g.temRitmo) return {label:`~${g.etaMeses} meses`, cls: g.etaMeses>24?'warn':''};
+      return (g.alvo>g.atual)?{label:'sem ritmo', cls:'warn'}:{label:'', cls:''};
+    }
+    if(g.fonteRitmo==='mrr'){
+      if(g.custo>0&&g.temRitmo) return {label:`~${g.etaMeses} meses`, cls: g.etaMeses>24?'warn':''};
+      return {label:'sem renda recorrente, sem data', cls:'warn'};
+    }
+    if(g.diasPrazo!=null) return {label:`${g.diasPrazo}d`, cls: g.diasPrazo<0?'bad':g.diasPrazo<=30?'warn':''};
+    return {label:'', cls:''};
+  }
+  function barOrPill(g){
+    if(!g.fonteRitmo) return '';
+    let sub='';
+    if(g.fonteRitmo==='savings') sub=`${fmtBrl(g.atual||0,0)} de ${fmtBrl(g.alvo||0,0)}`;
+    else if(g.fonteRitmo==='mrr'&&g.custo>0) sub=`custa ${fmtBrl(g.custo,0)} · no ritmo do teu MRR`;
+    return `<div class="fin-bar hz-bar"><div class="fin-bar-fill ${g.feito?'done':''}" style="width:${g.pct||0}%"></div></div>${sub?`<div class="hz-sub">${sub}</div>`:''}`;
+  }
+  const horizonRows = goals.map(g=>{
+    const eta = etaInfo(g);
+    return `<div class="hz-goal ${g.feito?'done':''}">
+      <div class="hz-node ${g.feito?'done':''} ${g.estrela?'star':''}" data-action="goal-feito" data-gid="${esc(g.id)}" title="${g.feito?'Concluído':'Marcar como conquistado'}">${g.feito?'✓':g.estrela?'★':''}</div>
+      <div class="hz-body">
+        <div class="hz-head">
+          <span class="hz-title serif">${esc(g.emoji||'🎯')} ${esc(g.titulo)}</span>
+          ${eta.label?`<span class="hz-eta ${eta.cls}">${eta.label}</span>`:''}
+        </div>
+        ${g.porque?`<div class="hz-porque">${esc(g.porque)}</div>`:''}
+        ${barOrPill(g)}
+      </div>
+      <div class="hz-actions">
+        ${!g.estrela?`<button class="hz-act" data-action="goal-estrela" data-gid="${esc(g.id)}" title="Definir como sonho nº1">☆</button>`:''}
+        <button class="hz-act" data-action="edit-goal" data-gid="${esc(g.id)}" data-titulo="${esc(g.titulo)}" data-porque="${esc(g.porque||'')}" title="Editar">✏️</button>
+        <button class="hz-act del" data-action="delete-goal" data-gid="${esc(g.id)}" data-titulo="${esc(g.titulo)}" title="Remover">🗑</button>
+      </div>
+    </div>`;
+  }).join('') || '<div class="cli-empty">Sem sonhos no horizonte. Adicione o primeiro abaixo.</div>';
+  const horizonHtml = `<div class="card mb16">
+    <div class="card-title">A linha do horizonte</div>
+    <div class="horizon"><div class="hz-line"></div>${horizonRows}</div>
+    <div class="goal-add">
+      <input type="text" id="goal-nome" class="cli-inp" placeholder="Novo sonho..." maxlength="120">
+      <input type="number" id="goal-custo" class="cli-inp cli-inp-val" placeholder="R$ custo" step="100">
+      <select id="goal-fonte" class="cli-inp goal-sel" title="Como progride">
+        <option value="">marco simples</option>
+        <option value="savings">poupança</option>
+        <option value="mrr">recorrência</option>
+      </select>
+      <button class="meta-add-btn" data-action="add-goal" title="Adicionar sonho">+</button>
+    </div>
+  </div>`;
+
+  // ── Espelho do Porsche (custo de oportunidade) ──
+  const pr = d.porscheReframe||{};
+  const porscheHtml = (pr.metaPorsche>0) ? `<div class="card mb16 porsche-mirror">
+    <span class="pm-ic">🏎️</span>
+    <div>
+      <div class="pm-t">O Porsche é consequência, não atalho</div>
+      <div class="pm-d">${fmtBrl(pr.metaPorsche,0)} = <b>${pr.mesesMrr} meses</b> do teu MRR-alvo. O carro custa <b>${pr.ratioVsSofia}×</b> a viagem pra Sofia. Primeiro a renda recorrente — o Porsche vem sozinho depois.</div>
+    </div>
+  </div>` : '';
+
+  return heroHtml + mrrHtml + bussolaHtml + passoHtml + bilheteHtml + horizonHtml + porscheHtml;
+}
+
 // ── ÁREA MANUAL (Saúde e modelo futuro) ──
 function renderManualArea(area) {
   const det = area.detalhe||{};
@@ -2336,13 +2603,14 @@ function renderManualArea(area) {
     </div>
   </div>` : '';
 
-  body.innerHTML = `
-    ${area.id==='financas' ? financasCockpitHtml(area) : ''}
-    ${area.id==='trabalho' ? trabalhoCockpitHtml(area) : ''}
-    <div class="kpi-row mb16">${kpiHtml}</div>
-    ${checkinHtml}
-    ${missoesHtml}
-    <div class="grid2 mb16">
+  // Na área Metas, o horizonte (cockpit) substitui a lista genérica de metas;
+  // sobra só o card de registro (steppers do Porsche), em largura cheia.
+  const editarBloco = area.id==='metas'
+    ? `<div class="card mb16">
+        <div class="card-title">Guardar pro Porsche</div>
+        ${camposHtml}
+      </div>`
+    : `<div class="grid2 mb16">
       <div class="card">
         <div class="card-title">Registrar / Editar</div>
         ${camposHtml}
@@ -2355,7 +2623,16 @@ function renderManualArea(area) {
           <button class="meta-add-btn" id="meta-add-btn-${esc(area.id)}" data-action="add-meta" data-area="${esc(area.id)}">+</button>
         </div>
       </div>
-    </div>
+    </div>`;
+
+  body.innerHTML = `
+    ${area.id==='financas' ? financasCockpitHtml(area) : ''}
+    ${area.id==='trabalho' ? trabalhoCockpitHtml(area) : ''}
+    ${area.id==='metas' ? metasCockpitHtml(area) : ''}
+    <div class="kpi-row mb16">${kpiHtml}</div>
+    ${checkinHtml}
+    ${missoesHtml}
+    ${editarBloco}
     ${badgesHtml}
     ${sparkHtml?`<div class="card mb16" style="--area-color:${esc(area.cor)}">
       <div class="card-title">Histórico</div>
@@ -2503,6 +2780,68 @@ function bindDetailDelegation(areaId) {
         await fetch(`/api/area/${encodeURIComponent(areaId)}/cliente/${encodeURIComponent(cid)}`,{method:'DELETE'});
         await load(false); toast('Cliente removido');
       });
+    } else if (action === 'add-goal') {
+      const titulo = $('goal-nome')?.value?.trim();
+      if(!titulo){ toast('Dê um nome ao sonho'); return; }
+      const custo = parseFloat($('goal-custo')?.value)||0;
+      const fonteRitmo = $('goal-fonte')?.value||null;
+      await guard(async()=>{
+        await postJson(`/api/area/${encodeURIComponent(areaId)}/goal`,{titulo,custo,fonteRitmo});
+        await load(false); toast('✓ Sonho adicionado ao horizonte');
+      });
+    } else if (action === 'goal-feito') {
+      const gid = el.dataset.gid;
+      const g = (D.areas||[]).find(a=>a.id===areaId)?.detalhe?.goals?.find(x=>x.id===gid);
+      const novo = !(g?.feito);
+      await guard(async()=>{
+        await fetch(`/api/area/${encodeURIComponent(areaId)}/goal/${encodeURIComponent(gid)}`,{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify({feito:novo})});
+        await load(false); toast(novo?'✓ Sonho conquistado!':'Sonho reaberto');
+      });
+    } else if (action === 'goal-estrela') {
+      const gid = el.dataset.gid;
+      await guard(async()=>{
+        await fetch(`/api/area/${encodeURIComponent(areaId)}/goal/${encodeURIComponent(gid)}`,{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify({estrela:true})});
+        await load(false); toast('★ Novo sonho nº1');
+      });
+    } else if (action === 'edit-goal') {
+      e.stopPropagation();
+      const gid = el.dataset.gid;
+      const novoT = prompt('Nome do sonho:', el.dataset.titulo||'');
+      if(novoT===null || !novoT.trim()) return;
+      const novoP = prompt('Por quê (o motivo, 1 linha):', el.dataset.porque||'');
+      await guard(async()=>{
+        await fetch(`/api/area/${encodeURIComponent(areaId)}/goal/${encodeURIComponent(gid)}`,{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify({titulo:novoT.trim(), porque:(novoP||'').trim()})});
+        await load(false); toast('✓ Sonho atualizado');
+      });
+    } else if (action === 'delete-goal') {
+      e.stopPropagation();
+      const gid = el.dataset.gid;
+      if(!confirm(`Remover "${el.dataset.titulo||gid}" do horizonte?`)) return;
+      await guard(async()=>{
+        await fetch(`/api/area/${encodeURIComponent(areaId)}/goal/${encodeURIComponent(gid)}`,{method:'DELETE'});
+        await load(false); toast('Sonho removido');
+      });
+    } else if (action === 'passo-toggle') {
+      await guard(async()=>{
+        const j = await postJson(`/api/area/${encodeURIComponent(areaId)}/missao/passo-semana`,{});
+        await load(false); toast(j.feita?'✓ Passo da semana feito':'Passo reaberto');
+      });
+    } else if (action === 'edit-passo') {
+      e.stopPropagation();
+      const novo = prompt('O passo desta semana rumo ao R$5k:', el.dataset.cur||'');
+      if(novo===null || !novo.trim()) return;
+      await guard(async()=>{
+        await fetch(`/api/area/${encodeURIComponent(areaId)}/meta/passo-semana`,{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify({texto:novo.trim()})});
+        await load(false); toast('✓ Passo definido');
+      });
+    } else if (action === 'edit-porque') {
+      e.stopPropagation();
+      const novo = prompt('O porquê — escreve com tuas palavras (prazo e número, não frase de Instagram):', el.dataset.cur||'');
+      if(novo===null || !novo.trim()) return;
+      await guard(async()=>{
+        await fetch(`/api/area/${encodeURIComponent(areaId)}/meta/porqueRaiz`,{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify({texto:novo.trim()})});
+        await load(false); toast('✓ Bilhete atualizado');
+      });
     }
   };
 
@@ -2519,6 +2858,16 @@ function bindDetailDelegation(areaId) {
         e.target.value='';
         await postJson(`/api/area/${encodeURIComponent(areaId)}/meta`,{texto});
         await load(false); toast('✓ Meta criada');
+      });
+    } else if (e.target.id && e.target.id.indexOf('goal-')===0) {
+      e.preventDefault();
+      const titulo = $('goal-nome')?.value?.trim();
+      if(!titulo){ toast('Dê um nome ao sonho'); return; }
+      const custo = parseFloat($('goal-custo')?.value)||0;
+      const fonteRitmo = $('goal-fonte')?.value||null;
+      await guard(async()=>{
+        await postJson(`/api/area/${encodeURIComponent(areaId)}/goal`,{titulo,custo,fonteRitmo});
+        await load(false); toast('✓ Sonho adicionado ao horizonte');
       });
     } else if (e.target.classList.contains('cli-inp')) {
       e.preventDefault();

@@ -89,7 +89,42 @@
         "recordeStreak": 0,
         "badgesUnlocked": [],
         "missoesLog": {}
-      }
+      },
+      "goals": [
+        {
+          "id": "goal-sofia",
+          "titulo": "Utah, ver a Sofia",
+          "emoji": "❤️",
+          "porque": "Construir uma vida boa pra nós dois.",
+          "fonteRitmo": "mrr",
+          "custo": 12000,
+          "prazo": "2026-12-31",
+          "estrela": true,
+          "feito": false
+        },
+        {
+          "id": "goal-porsche",
+          "titulo": "Comprar o Porsche",
+          "emoji": "🏎️",
+          "porque": "Consequência do R$50k/mês — não o atalho.",
+          "fonteRitmo": "savings",
+          "custo": 350000,
+          "prazo": null,
+          "estrela": false,
+          "feito": false
+        },
+        {
+          "id": "goal-ingles",
+          "titulo": "Inglês fluente",
+          "emoji": "🗣️",
+          "porque": "Falar com a família da Sofia e com o mundo.",
+          "fonteRitmo": null,
+          "custo": 0,
+          "prazo": null,
+          "estrela": false,
+          "feito": false
+        }
+      ]
     },
     "igreja": {
       "campos": {
