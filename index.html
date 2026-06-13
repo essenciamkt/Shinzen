@@ -717,6 +717,21 @@ html, body {
 
 .extras-head { font-size: var(--text-xs); text-transform: uppercase; letter-spacing: .1em; color: var(--text3); font-weight: 700; margin: 6px 0 12px; padding-top: 12px; border-top: 1px dashed var(--border2); }
 
+/* ── FINANÇAS cockpit ── */
+.fin-traj { border-color: var(--border2); }
+.fin-traj-top { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 8px; }
+.fin-traj-val { font-size: 28px; font-weight: 800; font-family: var(--mono); color: var(--text); letter-spacing: -.02em; line-height: 1; }
+.fin-traj-val small { font-size: 14px; color: var(--text3); font-weight: 600; }
+.fin-traj-pct { font-size: 22px; font-weight: 800; font-family: var(--mono); color: var(--area-color, var(--red)); }
+.fin-bar { height: 12px; background: var(--bg3); border-radius: 6px; overflow: hidden; }
+.fin-bar-fill { height: 100%; background: linear-gradient(90deg, var(--area-color, var(--red)), #fcd34d); border-radius: 6px; transition: width 1s var(--t-slow); box-shadow: 0 0 10px rgba(245,158,11,.4); }
+.fin-bar-fill.done { background: linear-gradient(90deg, var(--green), #4ade80); box-shadow: 0 0 10px rgba(34,197,94,.4); }
+.fin-traj-msg { font-size: var(--text-sm); color: var(--text2); margin-top: 8px; }
+.fin-indep { display: flex; align-items: center; gap: 14px; }
+.fin-indep-ic { font-size: 26px; line-height: 1; flex-shrink: 0; }
+.fin-indep-t { font-size: var(--text-md); font-weight: 700; color: var(--text); }
+.fin-indep-d { font-size: var(--text-sm); color: var(--text2); margin-top: 3px; line-height: 1.4; }
+
 /* ── SPARKLINE ── */
 .sparkline { display: inline-block; vertical-align: middle; }
 .sparkline-row {
@@ -1963,6 +1978,78 @@ function renderClaudeArea(area) {
   $('cc-costweek').innerHTML = barRows((cost.weekly||[]).slice(-12),'weekStart','usd',fmtUsd);
 }
 
+// ── COCKPIT DE FINANÇAS (injetado no topo do detalhe quando area=financas) ──
+function financasCockpitHtml(area){
+  const c = (area.detalhe&&area.detalhe.campos)||{};
+  const meta = D.meta||{};
+  const num = v => (v==null||v==='')?null:Number(v);
+  const n0 = v => num(v)||0;
+  const receita=n0(c.receitaMes), recorrente=n0(c.receitaRecorrente), despesa=n0(c.despesasMes),
+        reserva=n0(c.reservaEmergencia), aReceber=n0(c.aReceber);
+  const alvo = n0(c.metaReceita) || n0(meta.caixaValor);
+  const lucro = (num(c.receitaMes)!=null&&num(c.despesasMes)!=null) ? receita-despesa : null;
+  const margem = (lucro!=null&&receita>0) ? Math.round(lucro/receita*100) : null;
+  const runway = (num(c.reservaEmergencia)!=null&&despesa>0) ? reserva/despesa : null;
+  const caixaPot = receita + aReceber;
+  const arr = recorrente*12;
+  const mrrCobre = despesa>0 ? Math.round(recorrente/despesa*100) : null;
+  const faltaMrr = Math.max(0, despesa-recorrente);
+
+  // trajetória até a meta
+  const dias = diasAte(meta.caixaData);
+  const falta = Math.max(0, alvo-receita);
+  const pct = alvo>0 ? Math.min(100, Math.round(receita/alvo*100)) : 0;
+  const porDia = (dias!=null&&dias>0) ? falta/dias : falta;
+  const batida = alvo>0 && receita>=alvo;
+  const trajMsg = alvo<=0 ? 'Defina uma meta de receita.'
+    : batida ? '🎉 Meta batida. Próximo nível: subir a meta.'
+    : (num(c.receitaMes)==null ? 'Registre a receita do mês pra ver o ritmo.'
+      : `Faltam ${fmtBrl(falta,0)}${dias!=null&&dias>0?` · ${fmtBrl(porDia,0)}/dia em ${dias} dias`:(dias!=null&&dias<0?' · prazo vencido':'')}`);
+
+  return `
+    <div class="card mb16 fin-traj">
+      <div class="card-title">Rumo à meta de caixa</div>
+      <div class="fin-traj-top">
+        <div class="fin-traj-val">${fmtBrl(receita,0)} <small>de ${fmtBrl(alvo,0)}</small></div>
+        <div class="fin-traj-pct">${pct}%</div>
+      </div>
+      <div class="fin-bar"><div class="fin-bar-fill ${batida?'done':''}" style="width:${pct}%"></div></div>
+      <div class="fin-traj-msg">${trajMsg}</div>
+    </div>
+
+    <div class="decision-strip mb16">
+      <div class="dec-tile ${lucro!=null?(lucro>=0?'ok':'bad'):''}">
+        <div class="dec-label">Lucro do mês</div>
+        <div class="dec-val">${lucro!=null?fmtBrl(lucro,0):'—'}</div>
+        <div class="dec-sub">${margem!=null?`margem ${margem}%`:'registre receita e despesa'}</div>
+      </div>
+      <div class="dec-tile ${runway!=null?(runway>=3?'ok':runway>=1?'warn':'bad'):''}">
+        <div class="dec-label">Runway</div>
+        <div class="dec-val">${runway!=null?runway.toLocaleString('pt-BR',{maximumFractionDigits:1})+'m':'—'}</div>
+        <div class="dec-sub">fôlego sem vender</div>
+      </div>
+      <div class="dec-tile">
+        <div class="dec-label">Caixa potencial</div>
+        <div class="dec-val">${fmtBrl(caixaPot,0)}</div>
+        <div class="dec-sub">${aReceber>0?`+ ${fmtBrl(aReceber,0)} a receber`:'sem a receber'}</div>
+      </div>
+      <div class="dec-tile ${recorrente>0?'ok':''}">
+        <div class="dec-label">MRR (recorrente)</div>
+        <div class="dec-val">${fmtBrl(recorrente,0)}</div>
+        <div class="dec-sub">${recorrente>0?`ARR ${fmtBrl(arr,0)}`:'nada recorrente ainda'}</div>
+      </div>
+    </div>
+
+    <div class="card mb16 fin-indep">
+      <span class="fin-indep-ic">${recorrente>0&&mrrCobre>=100?'🟢':recorrente>0?'🟡':'⚪'}</span>
+      <div>
+        <div class="fin-indep-t">Independência ${mrrCobre!=null?`— MRR cobre ${mrrCobre}% do custo mensal`:''}</div>
+        <div class="fin-indep-d">${recorrente<=0?'Sem receita recorrente. O norte é SaaS: transforme entregas avulsas em assinatura.':faltaMrr>0?`Faltam ${fmtBrl(faltaMrr,0)} de MRR pra cobrir suas despesas e viver disso.`:'Sua receita recorrente já cobre o custo mensal. Independência alcançada — agora é escalar.'}</div>
+      </div>
+    </div>
+  `;
+}
+
 // ── ÁREA MANUAL (Saúde e modelo futuro) ──
 function renderManualArea(area) {
   const det = area.detalhe||{};
@@ -2111,6 +2198,7 @@ function renderManualArea(area) {
   </div>` : '';
 
   body.innerHTML = `
+    ${area.id==='financas' ? financasCockpitHtml(area) : ''}
     <div class="kpi-row mb16">${kpiHtml}</div>
     ${checkinHtml}
     ${missoesHtml}
