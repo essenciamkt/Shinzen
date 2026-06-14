@@ -889,6 +889,26 @@ html, body {
 .esc-cd { font-size:10px; font-family:var(--mono); color: var(--text2); min-width:36px; text-align:right; }
 .esc-cd.ok { color: var(--green); }
 .esc-cd.bad { color: var(--red); }
+.esc-row.has-mis { cursor:pointer; }
+.esc-row.has-mis:hover { background: color-mix(in srgb, var(--area-color) 6%, transparent); }
+.esc-mis { font-family:var(--mono); font-size:9px; color:var(--text3); font-weight:600; }
+.esc-chev { color:var(--area-color); font-size:9px; flex-shrink:0; }
+.esc-col .hz-missoes { margin-bottom:6px; }
+
+/* Banner de caixa (o elo que falta: o sonho começa pela venda de hoje) */
+.caixa-banner { display:flex; align-items:center; justify-content:space-between; gap:14px;
+  background: linear-gradient(110deg, color-mix(in srgb, var(--green) 16%, var(--surface)) 0%, var(--surface) 70%);
+  border:1px solid color-mix(in srgb, var(--green) 35%, var(--border)); }
+.caixa-banner.urg { background: linear-gradient(110deg, color-mix(in srgb, #f59e0b 18%, var(--surface)) 0%, var(--surface) 70%); border-color: color-mix(in srgb, #f59e0b 40%, var(--border)); }
+.caixa-banner.venc { background: linear-gradient(110deg, color-mix(in srgb, var(--red) 18%, var(--surface)) 0%, var(--surface) 70%); border-color: color-mix(in srgb, var(--red) 40%, var(--border)); }
+.cx-eyebrow { font-size:10px; font-family:var(--mono); letter-spacing:.1em; color:var(--text2); margin-bottom:4px; }
+.cx-val { font-size:24px; font-weight:800; color:#f0f0f0; }
+.cx-val small { font-size:12px; font-weight:600; color:var(--text2); }
+.cx-right { text-align:right; flex-shrink:0; }
+.cx-dias { font-size:26px; font-weight:800; font-family:var(--mono); color: var(--green); line-height:1; }
+.caixa-banner.urg .cx-dias { color:#f59e0b; }
+.caixa-banner.venc .cx-dias { color:var(--red); }
+.cx-sub { font-size:10px; font-family:var(--mono); color:var(--text3); margin-top:3px; }
 
 /* Missões por meta (barra + contador + accordion) */
 .hz-prog { display:flex; align-items:center; gap:10px; margin-top:8px; cursor:pointer; }
@@ -2362,6 +2382,19 @@ function metasCockpitHtml(area){
   const heroPct = d.heroPct||0;
   const cor = area.cor || '#a855f7';
 
+  // ── Banner de caixa (o elo que faltava): o sonho começa pela venda de hoje ──
+  const cxDias = diasAte(meta.caixaData);
+  const caixaBanner = cxDias!=null ? `<div class="card mb16 caixa-banner ${cxDias<0?'venc':cxDias<=7?'urg':''}">
+    <div class="cx-left">
+      <div class="cx-eyebrow">CAIXA AGORA — O 1º DOMINÓ QUE DERRUBA TODOS</div>
+      <div class="cx-val serif">${fmtBrl(meta.caixaValor||1000,0)} <small>faturados via Claude</small></div>
+    </div>
+    <div class="cx-right">
+      <div class="cx-dias">${cxDias<0?'venceu':cxDias+'d'}</div>
+      <div class="cx-sub">até ${esc((meta.caixaData||'').split('-').reverse().join('/'))}</div>
+    </div>
+  </div>` : '';
+
   // ── Hero Estrela-Norte (Sofia, com data real) ──
   let heroHtml = '';
   if (estrela) {
@@ -2520,12 +2553,15 @@ function metasCockpitHtml(area){
   function rungRow(g){
     const cd = fmtDias(g.diasPrazo);
     const cdCls = g.atingido?'ok':g.diasPrazo!=null&&g.diasPrazo<0?'bad':'';
-    return `<div class="esc-row ${g.atingido?'done':''}">
+    const open = _metasExpanded.has(g.id);
+    const hasMis = g.misTotal>0;
+    return `<div class="esc-row ${g.atingido?'done':''} ${hasMis?'has-mis':''}" ${hasMis?`data-action="goal-missoes" data-gid="${esc(g.id)}" title="Ver os 10 degraus"`:''}>
       <span class="esc-dot ${g.atingido?'done':''}" data-action="goal-feito" data-gid="${esc(g.id)}" title="${g.atingido?'Atingido':'Marcar atingido'}">${g.atingido?'✓':''}</span>
-      <span class="esc-val">${esc(g.titulo.replace('/mês','').replace(' em caixa','').replace(' de patrimônio',''))}</span>
+      <span class="esc-val">${esc(g.titulo.replace('/mês','').replace(' em caixa','').replace(' de patrimônio',''))}${hasMis?` <small class="esc-mis">${g.misFeitas}/${g.misTotal}</small>`:''}</span>
       <span class="esc-date" data-action="edit-prazo" data-gid="${esc(g.id)}" data-cur="${esc(g.prazo||'')}" title="Editar data">${fmtMes(g.prazo)}</span>
       <span class="esc-cd ${cdCls}">${cd}</span>
-    </div>`;
+      ${hasMis?`<span class="esc-chev hz-chev">${open?'▾':'▸'}</span>`:''}
+    </div>${hasMis?misAccordion(g):''}`;
   }
   const financeiroHtml = ((tracks.renda&&tracks.renda.length)||(tracks.patrimonio&&tracks.patrimonio.length)) ? `<div class="card mb16">
     <div class="card-title">💰 Financeiro</div>
@@ -2562,7 +2598,7 @@ function metasCockpitHtml(area){
     </div>
   </div>`;
 
-  return heroHtml + mrrHtml + bussolaHtml + passoHtml + bilheteHtml
+  return caixaBanner + heroHtml + mrrHtml + bussolaHtml + passoHtml + bilheteHtml
     + sec('❤️ Sofia', tracks.sofia)
     + financeiroHtml
     + sec('✈️ Experiências', tracks.experiencias)

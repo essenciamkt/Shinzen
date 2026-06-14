@@ -86,7 +86,7 @@
       "metasTexto": {},
       "progresso": {
         "checkins": [],
-        "recordeStreak": 0,
+        "recordeStreak": 1,
         "badgesUnlocked": [],
         "missoesLog": {}
       },
@@ -102,7 +102,58 @@
           "prazo": "2026-08-08",
           "estrela": false,
           "feito": false,
-          "missoes": []
+          "missoes": [
+            {
+              "id": "m1",
+              "texto": "R$1 mil/mês recorrente",
+              "feito": false
+            },
+            {
+              "id": "m2",
+              "texto": "R$2 mil/mês recorrente",
+              "feito": false
+            },
+            {
+              "id": "m3",
+              "texto": "R$3 mil/mês recorrente",
+              "feito": false
+            },
+            {
+              "id": "m4",
+              "texto": "R$4 mil/mês recorrente",
+              "feito": false
+            },
+            {
+              "id": "m5",
+              "texto": "R$5 mil/mês recorrente",
+              "feito": false
+            },
+            {
+              "id": "m6",
+              "texto": "R$6 mil/mês recorrente",
+              "feito": false
+            },
+            {
+              "id": "m7",
+              "texto": "R$7 mil/mês recorrente",
+              "feito": false
+            },
+            {
+              "id": "m8",
+              "texto": "R$8 mil/mês recorrente",
+              "feito": false
+            },
+            {
+              "id": "m9",
+              "texto": "R$9 mil/mês recorrente",
+              "feito": false
+            },
+            {
+              "id": "m10",
+              "texto": "R$10 mil/mês recorrente",
+              "feito": false
+            }
+          ]
         },
         {
           "id": "goal-renda-1",
@@ -115,7 +166,58 @@
           "prazo": "2026-09-17",
           "estrela": false,
           "feito": false,
-          "missoes": []
+          "missoes": [
+            {
+              "id": "m1",
+              "texto": "R$2 mil/mês recorrente",
+              "feito": false
+            },
+            {
+              "id": "m2",
+              "texto": "R$4 mil/mês recorrente",
+              "feito": false
+            },
+            {
+              "id": "m3",
+              "texto": "R$6 mil/mês recorrente",
+              "feito": false
+            },
+            {
+              "id": "m4",
+              "texto": "R$8 mil/mês recorrente",
+              "feito": false
+            },
+            {
+              "id": "m5",
+              "texto": "R$10 mil/mês recorrente",
+              "feito": false
+            },
+            {
+              "id": "m6",
+              "texto": "R$12 mil/mês recorrente",
+              "feito": false
+            },
+            {
+              "id": "m7",
+              "texto": "R$14 mil/mês recorrente",
+              "feito": false
+            },
+            {
+              "id": "m8",
+              "texto": "R$16 mil/mês recorrente",
+              "feito": false
+            },
+            {
+              "id": "m9",
+              "texto": "R$18 mil/mês recorrente",
+              "feito": false
+            },
+            {
+              "id": "m10",
+              "texto": "R$20 mil/mês recorrente",
+              "feito": false
+            }
+          ]
         },
         {
           "id": "goal-renda-2",
@@ -128,7 +230,58 @@
           "prazo": "2026-10-29",
           "estrela": false,
           "feito": false,
-          "missoes": []
+          "missoes": [
+            {
+              "id": "m1",
+              "texto": "R$3 mil/mês recorrente",
+              "feito": false
+            },
+            {
+              "id": "m2",
+              "texto": "R$6 mil/mês recorrente",
+              "feito": false
+            },
+            {
+              "id": "m3",
+              "texto": "R$9 mil/mês recorrente",
+              "feito": false
+            },
+            {
+              "id": "m4",
+              "texto": "R$12 mil/mês recorrente",
+              "feito": false
+            },
+            {
+              "id": "m5",
+              "texto": "R$15 mil/mês recorrente",
+              "feito": false
+            },
+            {
+              "id": "m6",
+              "texto": "R$18 mil/mês recorrente",
+              "feito": false
+            },
+            {
+              "id": "m7",
+              "texto": "R$21 mil/mês recorrente",
+              "feito": false
+            },
+            {
+              "id": "m8",
+              "texto": "R$24 mil/mês recorrente",
+              "feito": false
+            },
+            {
+              "id": "m9",
+              "texto": "R$27 mil/mês recorrente",
+              "feito": false
+            },
+            {
+              "id": "m10",
+              "texto": "R$30 mil/mês recorrente",
+              "feito": false
+            }
+          ]
         },
         {
           "id": "goal-renda-3",
@@ -141,7 +294,58 @@
           "prazo": "2027-02-18",
           "estrela": false,
           "feito": false,
-          "missoes": []
+          "missoes": [
+            {
+              "id": "m1",
+              "texto": "R$5 mil/mês recorrente",
+              "feito": false
+            },
+            {
+              "id": "m2",
+              "texto": "R$10 mil/mês recorrente",
+              "feito": false
+            },
+            {
+              "id": "m3",
+              "texto": "R$15 mil/mês recorrente",
+              "feito": false
+            },
+            {
+              "id": "m4",
+              "texto": "R$20 mil/mês recorrente",
+              "feito": false
+            },
+            {
+              "id": "m5",
+              "texto": "R$25 mil/mês recorrente",
+              "feito": false
+            },
+            {
+              "id": "m6",
+              "texto": "R$30 mil/mês recorrente",
+              "feito": false
+            },
+            {
+              "id": "m7",
+              "texto": "R$35 mil/mês recorrente",
+              "feito": false
+            },
+            {
+              "id": "m8",
+              "texto": "R$40 mil/mês recorrente",
+              "feito": false
+            },
+            {
+              "id": "m9",
+              "texto": "R$45 mil/mês recorrente",
+              "feito": false
+            },
+            {
+              "id": "m10",
+              "texto": "R$50 mil/mês recorrente",
+              "feito": false
+            }
+          ]
         },
         {
           "id": "goal-renda-4",
@@ -154,7 +358,58 @@
           "prazo": "2027-04-27",
           "estrela": false,
           "feito": false,
-          "missoes": []
+          "missoes": [
+            {
+              "id": "m1",
+              "texto": "R$8 mil/mês recorrente",
+              "feito": false
+            },
+            {
+              "id": "m2",
+              "texto": "R$16 mil/mês recorrente",
+              "feito": false
+            },
+            {
+              "id": "m3",
+              "texto": "R$24 mil/mês recorrente",
+              "feito": false
+            },
+            {
+              "id": "m4",
+              "texto": "R$32 mil/mês recorrente",
+              "feito": false
+            },
+            {
+              "id": "m5",
+              "texto": "R$40 mil/mês recorrente",
+              "feito": false
+            },
+            {
+              "id": "m6",
+              "texto": "R$48 mil/mês recorrente",
+              "feito": false
+            },
+            {
+              "id": "m7",
+              "texto": "R$56 mil/mês recorrente",
+              "feito": false
+            },
+            {
+              "id": "m8",
+              "texto": "R$64 mil/mês recorrente",
+              "feito": false
+            },
+            {
+              "id": "m9",
+              "texto": "R$72 mil/mês recorrente",
+              "feito": false
+            },
+            {
+              "id": "m10",
+              "texto": "R$80 mil/mês recorrente",
+              "feito": false
+            }
+          ]
         },
         {
           "id": "goal-renda-5",
@@ -167,7 +422,58 @@
           "prazo": "2027-06-09",
           "estrela": false,
           "feito": false,
-          "missoes": []
+          "missoes": [
+            {
+              "id": "m1",
+              "texto": "R$10 mil/mês recorrente",
+              "feito": false
+            },
+            {
+              "id": "m2",
+              "texto": "R$20 mil/mês recorrente",
+              "feito": false
+            },
+            {
+              "id": "m3",
+              "texto": "R$30 mil/mês recorrente",
+              "feito": false
+            },
+            {
+              "id": "m4",
+              "texto": "R$40 mil/mês recorrente",
+              "feito": false
+            },
+            {
+              "id": "m5",
+              "texto": "R$50 mil/mês recorrente",
+              "feito": false
+            },
+            {
+              "id": "m6",
+              "texto": "R$60 mil/mês recorrente",
+              "feito": false
+            },
+            {
+              "id": "m7",
+              "texto": "R$70 mil/mês recorrente",
+              "feito": false
+            },
+            {
+              "id": "m8",
+              "texto": "R$80 mil/mês recorrente",
+              "feito": false
+            },
+            {
+              "id": "m9",
+              "texto": "R$90 mil/mês recorrente",
+              "feito": false
+            },
+            {
+              "id": "m10",
+              "texto": "R$100 mil/mês recorrente",
+              "feito": false
+            }
+          ]
         },
         {
           "id": "goal-patr-0",
@@ -180,7 +486,58 @@
           "prazo": "2026-07-12",
           "estrela": false,
           "feito": false,
-          "missoes": []
+          "missoes": [
+            {
+              "id": "m1",
+              "texto": "R$1 mil acumulado",
+              "feito": false
+            },
+            {
+              "id": "m2",
+              "texto": "R$2 mil acumulado",
+              "feito": false
+            },
+            {
+              "id": "m3",
+              "texto": "R$3 mil acumulado",
+              "feito": false
+            },
+            {
+              "id": "m4",
+              "texto": "R$4 mil acumulado",
+              "feito": false
+            },
+            {
+              "id": "m5",
+              "texto": "R$5 mil acumulado",
+              "feito": false
+            },
+            {
+              "id": "m6",
+              "texto": "R$6 mil acumulado",
+              "feito": false
+            },
+            {
+              "id": "m7",
+              "texto": "R$7 mil acumulado",
+              "feito": false
+            },
+            {
+              "id": "m8",
+              "texto": "R$8 mil acumulado",
+              "feito": false
+            },
+            {
+              "id": "m9",
+              "texto": "R$9 mil acumulado",
+              "feito": false
+            },
+            {
+              "id": "m10",
+              "texto": "R$10 mil acumulado",
+              "feito": false
+            }
+          ]
         },
         {
           "id": "goal-patr-1",
@@ -193,7 +550,58 @@
           "prazo": "2026-09-30",
           "estrela": false,
           "feito": false,
-          "missoes": []
+          "missoes": [
+            {
+              "id": "m1",
+              "texto": "R$5 mil acumulado",
+              "feito": false
+            },
+            {
+              "id": "m2",
+              "texto": "R$10 mil acumulado",
+              "feito": false
+            },
+            {
+              "id": "m3",
+              "texto": "R$15 mil acumulado",
+              "feito": false
+            },
+            {
+              "id": "m4",
+              "texto": "R$20 mil acumulado",
+              "feito": false
+            },
+            {
+              "id": "m5",
+              "texto": "R$25 mil acumulado",
+              "feito": false
+            },
+            {
+              "id": "m6",
+              "texto": "R$30 mil acumulado",
+              "feito": false
+            },
+            {
+              "id": "m7",
+              "texto": "R$35 mil acumulado",
+              "feito": false
+            },
+            {
+              "id": "m8",
+              "texto": "R$40 mil acumulado",
+              "feito": false
+            },
+            {
+              "id": "m9",
+              "texto": "R$45 mil acumulado",
+              "feito": false
+            },
+            {
+              "id": "m10",
+              "texto": "R$50 mil acumulado",
+              "feito": false
+            }
+          ]
         },
         {
           "id": "goal-patr-2",
@@ -206,7 +614,58 @@
           "prazo": "2026-12-22",
           "estrela": false,
           "feito": false,
-          "missoes": []
+          "missoes": [
+            {
+              "id": "m1",
+              "texto": "R$10 mil acumulado",
+              "feito": false
+            },
+            {
+              "id": "m2",
+              "texto": "R$20 mil acumulado",
+              "feito": false
+            },
+            {
+              "id": "m3",
+              "texto": "R$30 mil acumulado",
+              "feito": false
+            },
+            {
+              "id": "m4",
+              "texto": "R$40 mil acumulado",
+              "feito": false
+            },
+            {
+              "id": "m5",
+              "texto": "R$50 mil acumulado",
+              "feito": false
+            },
+            {
+              "id": "m6",
+              "texto": "R$60 mil acumulado",
+              "feito": false
+            },
+            {
+              "id": "m7",
+              "texto": "R$70 mil acumulado",
+              "feito": false
+            },
+            {
+              "id": "m8",
+              "texto": "R$80 mil acumulado",
+              "feito": false
+            },
+            {
+              "id": "m9",
+              "texto": "R$90 mil acumulado",
+              "feito": false
+            },
+            {
+              "id": "m10",
+              "texto": "R$100 mil acumulado",
+              "feito": false
+            }
+          ]
         },
         {
           "id": "goal-patr-3",
@@ -219,7 +678,58 @@
           "prazo": "2027-08-14",
           "estrela": false,
           "feito": false,
-          "missoes": []
+          "missoes": [
+            {
+              "id": "m1",
+              "texto": "R$50 mil acumulado",
+              "feito": false
+            },
+            {
+              "id": "m2",
+              "texto": "R$100 mil acumulado",
+              "feito": false
+            },
+            {
+              "id": "m3",
+              "texto": "R$150 mil acumulado",
+              "feito": false
+            },
+            {
+              "id": "m4",
+              "texto": "R$200 mil acumulado",
+              "feito": false
+            },
+            {
+              "id": "m5",
+              "texto": "R$250 mil acumulado",
+              "feito": false
+            },
+            {
+              "id": "m6",
+              "texto": "R$300 mil acumulado",
+              "feito": false
+            },
+            {
+              "id": "m7",
+              "texto": "R$350 mil acumulado",
+              "feito": false
+            },
+            {
+              "id": "m8",
+              "texto": "R$400 mil acumulado",
+              "feito": false
+            },
+            {
+              "id": "m9",
+              "texto": "R$450 mil acumulado",
+              "feito": false
+            },
+            {
+              "id": "m10",
+              "texto": "R$500 mil acumulado",
+              "feito": false
+            }
+          ]
         },
         {
           "id": "goal-patr-4",
@@ -232,7 +742,58 @@
           "prazo": "2027-11-19",
           "estrela": false,
           "feito": false,
-          "missoes": []
+          "missoes": [
+            {
+              "id": "m1",
+              "texto": "R$100 mil acumulado",
+              "feito": false
+            },
+            {
+              "id": "m2",
+              "texto": "R$200 mil acumulado",
+              "feito": false
+            },
+            {
+              "id": "m3",
+              "texto": "R$300 mil acumulado",
+              "feito": false
+            },
+            {
+              "id": "m4",
+              "texto": "R$400 mil acumulado",
+              "feito": false
+            },
+            {
+              "id": "m5",
+              "texto": "R$500 mil acumulado",
+              "feito": false
+            },
+            {
+              "id": "m6",
+              "texto": "R$600 mil acumulado",
+              "feito": false
+            },
+            {
+              "id": "m7",
+              "texto": "R$700 mil acumulado",
+              "feito": false
+            },
+            {
+              "id": "m8",
+              "texto": "R$800 mil acumulado",
+              "feito": false
+            },
+            {
+              "id": "m9",
+              "texto": "R$900 mil acumulado",
+              "feito": false
+            },
+            {
+              "id": "m10",
+              "texto": "R$1 milhão acumulado",
+              "feito": false
+            }
+          ]
         },
         {
           "id": "goal-abdomen",
@@ -245,7 +806,58 @@
           "prazo": "2026-09-20",
           "estrela": false,
           "feito": false,
-          "missoes": []
+          "missoes": [
+            {
+              "id": "m1",
+              "texto": "Foto e medida inicial",
+              "feito": false
+            },
+            {
+              "id": "m2",
+              "texto": "Cortar açúcar e ultraprocessado",
+              "feito": false
+            },
+            {
+              "id": "m3",
+              "texto": "Treino 3×/semana fixo",
+              "feito": false
+            },
+            {
+              "id": "m4",
+              "texto": "Definir o déficit calórico",
+              "feito": false
+            },
+            {
+              "id": "m5",
+              "texto": "4 semanas seguidas treinando",
+              "feito": false
+            },
+            {
+              "id": "m6",
+              "texto": "Primeiro -2kg de gordura",
+              "feito": false
+            },
+            {
+              "id": "m7",
+              "texto": "Cardio 2×/semana",
+              "feito": false
+            },
+            {
+              "id": "m8",
+              "texto": "Prancha de 2 minutos",
+              "feito": false
+            },
+            {
+              "id": "m9",
+              "texto": "8 semanas seguidas",
+              "feito": false
+            },
+            {
+              "id": "m10",
+              "texto": "Abdômen visível no espelho",
+              "feito": false
+            }
+          ]
         },
         {
           "id": "goal-shape",
@@ -258,7 +870,58 @@
           "prazo": "2027-02-15",
           "estrela": false,
           "feito": false,
-          "missoes": []
+          "missoes": [
+            {
+              "id": "m1",
+              "texto": "Abdômen visível atingido",
+              "feito": false
+            },
+            {
+              "id": "m2",
+              "texto": "Montar plano de hipertrofia",
+              "feito": false
+            },
+            {
+              "id": "m3",
+              "texto": "Treino 4-5×/semana",
+              "feito": false
+            },
+            {
+              "id": "m4",
+              "texto": "Registrar progressão de carga",
+              "feito": false
+            },
+            {
+              "id": "m5",
+              "texto": "Bater a meta diária de proteína",
+              "feito": false
+            },
+            {
+              "id": "m6",
+              "texto": "Sono de 7h+ consistente",
+              "feito": false
+            },
+            {
+              "id": "m7",
+              "texto": "Primeiro ganho visível de massa",
+              "feito": false
+            },
+            {
+              "id": "m8",
+              "texto": "12 semanas de consistência",
+              "feito": false
+            },
+            {
+              "id": "m9",
+              "texto": "Postura e presença treinadas",
+              "feito": false
+            },
+            {
+              "id": "m10",
+              "texto": "Entrar na sala e virar cabeças",
+              "feito": false
+            }
+          ]
         },
         {
           "id": "goal-condicionamento",
@@ -271,7 +934,58 @@
           "prazo": "2027-05-03",
           "estrela": false,
           "feito": false,
-          "missoes": []
+          "missoes": [
+            {
+              "id": "m1",
+              "texto": "Teste de base (corrida/FC)",
+              "feito": false
+            },
+            {
+              "id": "m2",
+              "texto": "Correr 2×/semana",
+              "feito": false
+            },
+            {
+              "id": "m3",
+              "texto": "Correr 5km sem parar",
+              "feito": false
+            },
+            {
+              "id": "m4",
+              "texto": "Incluir HIIT",
+              "feito": false
+            },
+            {
+              "id": "m5",
+              "texto": "Mobilidade na rotina",
+              "feito": false
+            },
+            {
+              "id": "m6",
+              "texto": "FC de repouso caindo",
+              "feito": false
+            },
+            {
+              "id": "m7",
+              "texto": "Correr 10km sem parar",
+              "feito": false
+            },
+            {
+              "id": "m8",
+              "texto": "Recuperação rápida pós-treino",
+              "feito": false
+            },
+            {
+              "id": "m9",
+              "texto": "Subir escada sem cansar",
+              "feito": false
+            },
+            {
+              "id": "m10",
+              "texto": "Condicionamento de atleta",
+              "feito": false
+            }
+          ]
         },
         {
           "id": "goal-ingles",
@@ -284,7 +998,58 @@
           "prazo": "2026-10-01",
           "estrela": false,
           "feito": false,
-          "missoes": []
+          "missoes": [
+            {
+              "id": "m1",
+              "texto": "Teste de nível atual",
+              "feito": false
+            },
+            {
+              "id": "m2",
+              "texto": "30 min/dia de input",
+              "feito": false
+            },
+            {
+              "id": "m3",
+              "texto": "500 palavras-chave",
+              "feito": false
+            },
+            {
+              "id": "m4",
+              "texto": "Falar sozinho 10 min/dia",
+              "feito": false
+            },
+            {
+              "id": "m5",
+              "texto": "1ª conversa com nativo (app)",
+              "feito": false
+            },
+            {
+              "id": "m6",
+              "texto": "Pensar em inglês 1h/dia",
+              "feito": false
+            },
+            {
+              "id": "m7",
+              "texto": "Assistir sem legenda",
+              "feito": false
+            },
+            {
+              "id": "m8",
+              "texto": "Conversa de 30 min sem travar",
+              "feito": false
+            },
+            {
+              "id": "m9",
+              "texto": "Call de trabalho em inglês",
+              "feito": false
+            },
+            {
+              "id": "m10",
+              "texto": "Conversa natural, sem medo",
+              "feito": false
+            }
+          ]
         },
         {
           "id": "goal-espanhol",
@@ -297,7 +1062,58 @@
           "prazo": "2027-01-18",
           "estrela": false,
           "feito": false,
-          "missoes": []
+          "missoes": [
+            {
+              "id": "m1",
+              "texto": "Aproveitar a base do português",
+              "feito": false
+            },
+            {
+              "id": "m2",
+              "texto": "20 min/dia de estudo",
+              "feito": false
+            },
+            {
+              "id": "m3",
+              "texto": "500 palavras",
+              "feito": false
+            },
+            {
+              "id": "m4",
+              "texto": "Gramática essencial",
+              "feito": false
+            },
+            {
+              "id": "m5",
+              "texto": "Primeira conversa",
+              "feito": false
+            },
+            {
+              "id": "m6",
+              "texto": "Consumir conteúdo nativo",
+              "feito": false
+            },
+            {
+              "id": "m7",
+              "texto": "Escrever sem traduzir",
+              "feito": false
+            },
+            {
+              "id": "m8",
+              "texto": "Conversa de 30 min",
+              "feito": false
+            },
+            {
+              "id": "m9",
+              "texto": "Pensar em espanhol",
+              "feito": false
+            },
+            {
+              "id": "m10",
+              "texto": "Fluente",
+              "feito": false
+            }
+          ]
         },
         {
           "id": "goal-100dias",
@@ -310,7 +1126,58 @@
           "prazo": "2026-09-27",
           "estrela": false,
           "feito": false,
-          "missoes": []
+          "missoes": [
+            {
+              "id": "m1",
+              "texto": "Definir a execução mínima diária",
+              "feito": false
+            },
+            {
+              "id": "m2",
+              "texto": "Dia 1 marcado",
+              "feito": false
+            },
+            {
+              "id": "m3",
+              "texto": "7 dias seguidos",
+              "feito": false
+            },
+            {
+              "id": "m4",
+              "texto": "21 dias (vira hábito)",
+              "feito": false
+            },
+            {
+              "id": "m5",
+              "texto": "30 dias",
+              "feito": false
+            },
+            {
+              "id": "m6",
+              "texto": "Atravessar 1 recaída sem parar",
+              "feito": false
+            },
+            {
+              "id": "m7",
+              "texto": "50 dias",
+              "feito": false
+            },
+            {
+              "id": "m8",
+              "texto": "75 dias",
+              "feito": false
+            },
+            {
+              "id": "m9",
+              "texto": "90 dias",
+              "feito": false
+            },
+            {
+              "id": "m10",
+              "texto": "100 dias",
+              "feito": false
+            }
+          ]
         },
         {
           "id": "goal-vender-olhos",
@@ -323,7 +1190,58 @@
           "prazo": "2026-07-31",
           "estrela": false,
           "feito": false,
-          "missoes": []
+          "missoes": [
+            {
+              "id": "m1",
+              "texto": "Decorar o script da oferta",
+              "feito": false
+            },
+            {
+              "id": "m2",
+              "texto": "Treinar no espelho",
+              "feito": false
+            },
+            {
+              "id": "m3",
+              "texto": "Pitch pra 1 amigo",
+              "feito": false
+            },
+            {
+              "id": "m4",
+              "texto": "1ª oferta presencial",
+              "feito": false
+            },
+            {
+              "id": "m5",
+              "texto": "Aguentar o silêncio pós-preço",
+              "feito": false
+            },
+            {
+              "id": "m6",
+              "texto": "Ouvir \"não\" sem desmontar",
+              "feito": false
+            },
+            {
+              "id": "m7",
+              "texto": "1ª venda presencial",
+              "feito": false
+            },
+            {
+              "id": "m8",
+              "texto": "Contornar 1 objeção ao vivo",
+              "feito": false
+            },
+            {
+              "id": "m9",
+              "texto": "Vender sem decoreba",
+              "feito": false
+            },
+            {
+              "id": "m10",
+              "texto": "Vender olhando nos olhos, calmo",
+              "feito": false
+            }
+          ]
         },
         {
           "id": "goal-venda-10k",
@@ -336,7 +1254,58 @@
           "prazo": "2026-12-13",
           "estrela": false,
           "feito": false,
-          "missoes": []
+          "missoes": [
+            {
+              "id": "m1",
+              "texto": "Definir a oferta de R$10k",
+              "feito": false
+            },
+            {
+              "id": "m2",
+              "texto": "Identificar quem paga R$10k",
+              "feito": false
+            },
+            {
+              "id": "m3",
+              "texto": "Lista de 10 prospects",
+              "feito": false
+            },
+            {
+              "id": "m4",
+              "texto": "1ª reunião marcada",
+              "feito": false
+            },
+            {
+              "id": "m5",
+              "texto": "Apresentar a proposta",
+              "feito": false
+            },
+            {
+              "id": "m6",
+              "texto": "Negociar sem dar desconto à toa",
+              "feito": false
+            },
+            {
+              "id": "m7",
+              "texto": "Mandar a proposta formal",
+              "feito": false
+            },
+            {
+              "id": "m8",
+              "texto": "Follow-up sem medo",
+              "feito": false
+            },
+            {
+              "id": "m9",
+              "texto": "Contornar a objeção final",
+              "feito": false
+            },
+            {
+              "id": "m10",
+              "texto": "R$10k fechado sozinho",
+              "feito": false
+            }
+          ]
         },
         {
           "id": "goal-venda-100k",
@@ -349,7 +1318,58 @@
           "prazo": "2027-11-08",
           "estrela": false,
           "feito": false,
-          "missoes": []
+          "missoes": [
+            {
+              "id": "m1",
+              "texto": "Ter um caso de R$10k provado",
+              "feito": false
+            },
+            {
+              "id": "m2",
+              "texto": "Construir a oferta de R$100k",
+              "feito": false
+            },
+            {
+              "id": "m3",
+              "texto": "Mapear cliente desse porte",
+              "feito": false
+            },
+            {
+              "id": "m4",
+              "texto": "Entrar pela indicação certa",
+              "feito": false
+            },
+            {
+              "id": "m5",
+              "texto": "Reunião com o decisor",
+              "feito": false
+            },
+            {
+              "id": "m6",
+              "texto": "Diagnóstico do problema dele",
+              "feito": false
+            },
+            {
+              "id": "m7",
+              "texto": "Proposta de alto valor",
+              "feito": false
+            },
+            {
+              "id": "m8",
+              "texto": "Várias rodadas de negociação",
+              "feito": false
+            },
+            {
+              "id": "m9",
+              "texto": "Contrato revisado",
+              "feito": false
+            },
+            {
+              "id": "m10",
+              "texto": "R$100k assinado",
+              "feito": false
+            }
+          ]
         },
         {
           "id": "goal-1a-pessoa",
@@ -362,7 +1382,58 @@
           "prazo": "2026-08-21",
           "estrela": false,
           "feito": false,
-          "missoes": []
+          "missoes": [
+            {
+              "id": "m1",
+              "texto": "Listar o que tira o meu tempo",
+              "feito": false
+            },
+            {
+              "id": "m2",
+              "texto": "Definir a 1ª função a delegar",
+              "feito": false
+            },
+            {
+              "id": "m3",
+              "texto": "Caixa pra pagar alguém",
+              "feito": false
+            },
+            {
+              "id": "m4",
+              "texto": "Escrever a vaga/tarefa",
+              "feito": false
+            },
+            {
+              "id": "m5",
+              "texto": "Achar candidatos",
+              "feito": false
+            },
+            {
+              "id": "m6",
+              "texto": "1º teste pago pequeno",
+              "feito": false
+            },
+            {
+              "id": "m7",
+              "texto": "Treinar a pessoa",
+              "feito": false
+            },
+            {
+              "id": "m8",
+              "texto": "Delegar de verdade (soltar)",
+              "feito": false
+            },
+            {
+              "id": "m9",
+              "texto": "1ª entrega feita por ela",
+              "feito": false
+            },
+            {
+              "id": "m10",
+              "texto": "Alguém trabalhando comigo",
+              "feito": false
+            }
+          ]
         },
         {
           "id": "goal-time",
@@ -375,7 +1446,58 @@
           "prazo": "2027-03-11",
           "estrela": false,
           "feito": false,
-          "missoes": []
+          "missoes": [
+            {
+              "id": "m1",
+              "texto": "1ª pessoa funcionando bem",
+              "feito": false
+            },
+            {
+              "id": "m2",
+              "texto": "Mapear 2ª e 3ª funções",
+              "feito": false
+            },
+            {
+              "id": "m3",
+              "texto": "Processos escritos",
+              "feito": false
+            },
+            {
+              "id": "m4",
+              "texto": "Contratar a 2ª pessoa",
+              "feito": false
+            },
+            {
+              "id": "m5",
+              "texto": "Contratar a 3ª",
+              "feito": false
+            },
+            {
+              "id": "m6",
+              "texto": "Rotina de alinhamento semanal",
+              "feito": false
+            },
+            {
+              "id": "m7",
+              "texto": "Cada um com meta clara",
+              "feito": false
+            },
+            {
+              "id": "m8",
+              "texto": "Time entrega sem apagar incêndio",
+              "feito": false
+            },
+            {
+              "id": "m9",
+              "texto": "Cultura mínima definida",
+              "feito": false
+            },
+            {
+              "id": "m10",
+              "texto": "Pequeno time rodando",
+              "feito": false
+            }
+          ]
         },
         {
           "id": "goal-empresa-roda",
@@ -388,7 +1510,58 @@
           "prazo": "2027-12-09",
           "estrela": false,
           "feito": false,
-          "missoes": []
+          "missoes": [
+            {
+              "id": "m1",
+              "texto": "Time formado",
+              "feito": false
+            },
+            {
+              "id": "m2",
+              "texto": "Documentar todo processo-chave",
+              "feito": false
+            },
+            {
+              "id": "m3",
+              "texto": "Indicadores no painel",
+              "feito": false
+            },
+            {
+              "id": "m4",
+              "texto": "Delegar decisões do dia a dia",
+              "feito": false
+            },
+            {
+              "id": "m5",
+              "texto": "Um gestor/COO no lugar",
+              "feito": false
+            },
+            {
+              "id": "m6",
+              "texto": "Sair 1 semana sem quebrar",
+              "feito": false
+            },
+            {
+              "id": "m7",
+              "texto": "Vendas sem eu vender",
+              "feito": false
+            },
+            {
+              "id": "m8",
+              "texto": "Entrega sem eu entregar",
+              "feito": false
+            },
+            {
+              "id": "m9",
+              "texto": "Sair 1 mês sem quebrar",
+              "feito": false
+            },
+            {
+              "id": "m10",
+              "texto": "Empresa roda sem mim",
+              "feito": false
+            }
+          ]
         },
         {
           "id": "goal-1o-mes-renda",
@@ -401,7 +1574,58 @@
           "prazo": "2026-08-31",
           "estrela": false,
           "feito": false,
-          "missoes": []
+          "missoes": [
+            {
+              "id": "m1",
+              "texto": "Calcular meu custo de vida",
+              "feito": false
+            },
+            {
+              "id": "m2",
+              "texto": "Renda cobre 50% do custo",
+              "feito": false
+            },
+            {
+              "id": "m3",
+              "texto": "Renda cobre 80%",
+              "feito": false
+            },
+            {
+              "id": "m4",
+              "texto": "Renda cobre 100% uma vez",
+              "feito": false
+            },
+            {
+              "id": "m5",
+              "texto": "Reserva de 1 mês guardada",
+              "feito": false
+            },
+            {
+              "id": "m6",
+              "texto": "Zerar a dependência financeira",
+              "feito": false
+            },
+            {
+              "id": "m7",
+              "texto": "Pagar minhas contas sozinho",
+              "feito": false
+            },
+            {
+              "id": "m8",
+              "texto": "Renda cobre o custo 2 meses seguidos",
+              "feito": false
+            },
+            {
+              "id": "m9",
+              "texto": "Sobra no fim do mês",
+              "feito": false
+            },
+            {
+              "id": "m10",
+              "texto": "1 mês 100% da própria renda",
+              "feito": false
+            }
+          ]
         },
         {
           "id": "goal-morar-sozinho",
@@ -414,7 +1638,58 @@
           "prazo": "2026-10-03",
           "estrela": false,
           "feito": false,
-          "missoes": []
+          "missoes": [
+            {
+              "id": "m1",
+              "texto": "Definir cidade/lugar",
+              "feito": false
+            },
+            {
+              "id": "m2",
+              "texto": "Orçar o custo mensal",
+              "feito": false
+            },
+            {
+              "id": "m3",
+              "texto": "Reserva pra 3 meses",
+              "feito": false
+            },
+            {
+              "id": "m4",
+              "texto": "Renda recorrente que sustenta",
+              "feito": false
+            },
+            {
+              "id": "m5",
+              "texto": "Achar o lugar",
+              "feito": false
+            },
+            {
+              "id": "m6",
+              "texto": "Falar com a família",
+              "feito": false
+            },
+            {
+              "id": "m7",
+              "texto": "Mobiliar o básico",
+              "feito": false
+            },
+            {
+              "id": "m8",
+              "texto": "Mudança feita",
+              "feito": false
+            },
+            {
+              "id": "m9",
+              "texto": "1ª semana sozinho",
+              "feito": false
+            },
+            {
+              "id": "m10",
+              "texto": "Temporada morando sozinho",
+              "feito": false
+            }
+          ]
         },
         {
           "id": "goal-viagem-intl",
@@ -427,7 +1702,58 @@
           "prazo": "2026-12-18",
           "estrela": false,
           "feito": false,
-          "missoes": []
+          "missoes": [
+            {
+              "id": "m1",
+              "texto": "Tirar/renovar o passaporte",
+              "feito": false
+            },
+            {
+              "id": "m2",
+              "texto": "Escolher o destino",
+              "feito": false
+            },
+            {
+              "id": "m3",
+              "texto": "Orçar a viagem",
+              "feito": false
+            },
+            {
+              "id": "m4",
+              "texto": "Guardar o valor (sem mexer na reserva)",
+              "feito": false
+            },
+            {
+              "id": "m5",
+              "texto": "Comprar a passagem",
+              "feito": false
+            },
+            {
+              "id": "m6",
+              "texto": "Reservar hospedagem",
+              "feito": false
+            },
+            {
+              "id": "m7",
+              "texto": "Visto/documentos se precisar",
+              "feito": false
+            },
+            {
+              "id": "m8",
+              "texto": "Roteiro montado",
+              "feito": false
+            },
+            {
+              "id": "m9",
+              "texto": "Mala pronta",
+              "feito": false
+            },
+            {
+              "id": "m10",
+              "texto": "Pisar fora do Brasil",
+              "feito": false
+            }
+          ]
         },
         {
           "id": "goal-porsche",
@@ -504,7 +1830,58 @@
           "prazo": "2026-09-15",
           "estrela": false,
           "feito": false,
-          "missoes": []
+          "missoes": [
+            {
+              "id": "m1",
+              "texto": "Clareza do que eu quero dizer",
+              "feito": false
+            },
+            {
+              "id": "m2",
+              "texto": "Reabrir/manter o canal de contato",
+              "feito": false
+            },
+            {
+              "id": "m3",
+              "texto": "1ª mensagem honesta",
+              "feito": false
+            },
+            {
+              "id": "m4",
+              "texto": "Conversa fluindo",
+              "feito": false
+            },
+            {
+              "id": "m5",
+              "texto": "Saber da vida dela hoje",
+              "feito": false
+            },
+            {
+              "id": "m6",
+              "texto": "Mostrar quem eu virei (sem provar nada)",
+              "feito": false
+            },
+            {
+              "id": "m7",
+              "texto": "Conversa profunda",
+              "feito": false
+            },
+            {
+              "id": "m8",
+              "texto": "Combinar de falar com frequência",
+              "feito": false
+            },
+            {
+              "id": "m9",
+              "texto": "Ela sabe da minha intenção",
+              "feito": false
+            },
+            {
+              "id": "m10",
+              "texto": "Contato significativo de verdade",
+              "feito": false
+            }
+          ]
         },
         {
           "id": "goal-sofia-condicoes",
@@ -517,7 +1894,58 @@
           "prazo": "2027-03-20",
           "estrela": false,
           "feito": false,
-          "missoes": []
+          "missoes": [
+            {
+              "id": "m1",
+              "texto": "Contato significativo mantido",
+              "feito": false
+            },
+            {
+              "id": "m2",
+              "texto": "Saber onde ela está",
+              "feito": false
+            },
+            {
+              "id": "m3",
+              "texto": "Renda recorrente estável",
+              "feito": false
+            },
+            {
+              "id": "m4",
+              "texto": "Reserva intacta pra viagem",
+              "feito": false
+            },
+            {
+              "id": "m5",
+              "texto": "Passaporte pronto",
+              "feito": false
+            },
+            {
+              "id": "m6",
+              "texto": "Inglês pra me virar lá",
+              "feito": false
+            },
+            {
+              "id": "m7",
+              "texto": "Orçar a viagem inteira",
+              "feito": false
+            },
+            {
+              "id": "m8",
+              "texto": "Não comprometer o caixa da empresa",
+              "feito": false
+            },
+            {
+              "id": "m9",
+              "texto": "Janela de tempo possível",
+              "feito": false
+            },
+            {
+              "id": "m10",
+              "texto": "Em condições reais de ir",
+              "feito": false
+            }
+          ]
         },
         {
           "id": "goal-sofia-encontro",
@@ -530,10 +1958,62 @@
           "prazo": "2027-06-12",
           "estrela": true,
           "feito": false,
-          "missoes": []
+          "missoes": [
+            {
+              "id": "m1",
+              "texto": "Condições reais atingidas",
+              "feito": false
+            },
+            {
+              "id": "m2",
+              "texto": "Alinhar o encontro com ela",
+              "feito": false
+            },
+            {
+              "id": "m3",
+              "texto": "Comprar a passagem",
+              "feito": false
+            },
+            {
+              "id": "m4",
+              "texto": "Planejar os dias lá",
+              "feito": false
+            },
+            {
+              "id": "m5",
+              "texto": "Hospedagem reservada",
+              "feito": false
+            },
+            {
+              "id": "m6",
+              "texto": "Chegar aos EUA",
+              "feito": false
+            },
+            {
+              "id": "m7",
+              "texto": "Primeiro olho no olho",
+              "feito": false
+            },
+            {
+              "id": "m8",
+              "texto": "O encontro",
+              "feito": false
+            },
+            {
+              "id": "m9",
+              "texto": "Viver o momento sem pressa",
+              "feito": false
+            },
+            {
+              "id": "m10",
+              "texto": "Encontro presencial realizado",
+              "feito": false
+            }
+          ]
         }
       ],
-      "seedV": 4
+      "seedV": 5,
+      "clientes": []
     },
     "igreja": {
       "campos": {
