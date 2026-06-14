@@ -910,6 +910,13 @@ html, body {
 .caixa-banner.venc .cx-dias { color:var(--red); }
 .cx-sub { font-size:10px; font-family:var(--mono); color:var(--text3); margin-top:3px; }
 
+/* A Visão — foto do futuro */
+.visao-card { padding:0; overflow:hidden; position:relative; }
+.visao-img { width:100%; display:block; max-height:560px; object-fit:cover; }
+.visao-cap { position:absolute; left:0; right:0; bottom:0; padding:26px 22px 18px; font-size:19px; font-weight:600; color:#fff; background:linear-gradient(to top, rgba(0,0,0,.78), rgba(0,0,0,.25) 60%, transparent); letter-spacing:.01em; }
+.visao-ph { display:none; align-items:center; justify-content:center; min-height:160px; padding:24px; text-align:center; color:var(--text2); font-size:var(--text-sm); border:1px dashed var(--border2); border-radius:var(--r); }
+.visao-ph code { font-family:var(--mono); color:var(--area-color); background:var(--surface-2); padding:2px 6px; border-radius:4px; }
+
 /* Missões por meta (barra + contador + accordion) */
 .hz-prog { display:flex; align-items:center; gap:10px; margin-top:8px; cursor:pointer; }
 .hz-prog .hz-bar { flex:1; margin-top:0; }
@@ -2364,6 +2371,19 @@ function trabalhoCockpitHtml(area){
 // ── COCKPIT METAS & SONHOS ("A Bússola do Norte") ──
 const MES_ABREV = ['jan','fev','mar','abr','mai','jun','jul','ago','set','out','nov','dez'];
 function fmtMes(p){ if(!p) return 'sem data'; const [y,m]=p.split('-'); return (MES_ABREV[(+m||1)-1]||'?')+'/'+y; }
+function fmtDia(p){ if(!p) return 'sem data'; const [y,m,d]=p.split('-'); if(!d) return fmtMes(p); return d+'/'+(m||'?')+'/'+y; }
+// Aceita "DD/MM/AAAA" ou "AAAA-MM-DD" → devolve "AAAA-MM-DD" (ou null se inválido).
+function parseDataBR(s){
+  s=(s||'').trim(); if(!s) return '';
+  let y,m,d;
+  if(/^\d{4}-\d{2}-\d{2}$/.test(s)){ [y,m,d]=s.split('-'); }
+  else if(/^\d{1,2}\/\d{1,2}\/\d{4}$/.test(s)){ [d,m,y]=s.split('/'); }
+  else return null;
+  m=String(m).padStart(2,'0'); d=String(d).padStart(2,'0');
+  const dt=new Date(`${y}-${m}-${d}T00:00:00`);
+  if(isNaN(dt)||+m<1||+m>12||+d<1||+d>31) return null;
+  return `${y}-${m}-${d}`;
+}
 function fmtDias(d){
   if(d==null) return '';
   if(d<0) return 'venceu';
@@ -2402,7 +2422,7 @@ function metasCockpitHtml(area){
     const ws = tt.split(' ');
     const titleHtml = ws.length>1 ? `${ws.slice(0,-1).join(' ')} <b>${ws.slice(-1)}</b>` : `<b>${tt}</b>`;
     const dias = estrela.diasPrazo;
-    const metaLine = `${estrela.prazo?`${fmtMes(estrela.prazo)} · `:''}${dias!=null&&dias>0?`faltam <b>${dias}</b> dias`:dias!=null?'é agora':'sem data'}`;
+    const metaLine = `${estrela.prazo?`${fmtDia(estrela.prazo)} · `:''}${dias!=null&&dias>0?`faltam <b>${dias}</b> dias`:dias!=null?'é agora':'sem data'}`;
     heroHtml = `<div class="card mb16 norte-hero">
       <div class="norte-orb"></div>
       <div class="norte-info">
@@ -2413,6 +2433,13 @@ function metasCockpitHtml(area){
       <div class="norte-ringwrap">${ringHtml(heroPct,92,cor)}<div class="norte-ringnum">${heroPct}<small>%</small></div></div>
     </div>`;
   }
+
+  // ── A Visão (foto do futuro: Porsche + Sofia + o homem) ──
+  const visaoHtml = `<div class="card mb16 visao-card">
+    <img src="/assets/visao.jpg" alt="A visão" class="visao-img" onerror="this.style.display='none';this.parentNode.querySelector('.visao-ph').style.display='flex';this.parentNode.querySelector('.visao-cap').style.display='none';">
+    <div class="visao-ph"><span>📷 Salve a foto em <code>Shinzen/assets/visao.jpg</code> e recarregue</span></div>
+    <div class="visao-cap serif">O dia em que tudo isso for real.</div>
+  </div>`;
 
   // ── Ponte do MRR (onde tu está HOJE) — tom firme com fé ──
   let mrrMsg;
@@ -2514,7 +2541,7 @@ function metasCockpitHtml(area){
       <div class="hz-body">
         <div class="hz-head">
           <span class="hz-title serif">${esc(g.emoji||'🎯')} ${esc(g.titulo)}</span>
-          <span class="hz-date ${cdCls}" data-action="edit-prazo" data-gid="${esc(g.id)}" data-cur="${esc(g.prazo||'')}" title="Editar data">${fmtMes(g.prazo)}${cd?` · <b>${cd}</b>`:''}</span>
+          <span class="hz-date ${cdCls}" data-action="edit-prazo" data-gid="${esc(g.id)}" data-cur="${esc(g.prazo||'')}" title="Editar data">${fmtDia(g.prazo)}${cd?` · <b>${cd}</b>`:''}</span>
         </div>
         ${g.porque?`<div class="hz-porque">${esc(g.porque)}</div>`:''}
         ${progBlock}
@@ -2558,7 +2585,7 @@ function metasCockpitHtml(area){
     return `<div class="esc-row ${g.atingido?'done':''} ${hasMis?'has-mis':''}" ${hasMis?`data-action="goal-missoes" data-gid="${esc(g.id)}" title="Ver os 10 degraus"`:''}>
       <span class="esc-dot ${g.atingido?'done':''}" data-action="goal-feito" data-gid="${esc(g.id)}" title="${g.atingido?'Atingido':'Marcar atingido'}">${g.atingido?'✓':''}</span>
       <span class="esc-val">${esc(g.titulo.replace('/mês','').replace(' em caixa','').replace(' de patrimônio',''))}${hasMis?` <small class="esc-mis">${g.misFeitas}/${g.misTotal}</small>`:''}</span>
-      <span class="esc-date" data-action="edit-prazo" data-gid="${esc(g.id)}" data-cur="${esc(g.prazo||'')}" title="Editar data">${fmtMes(g.prazo)}</span>
+      <span class="esc-date" data-action="edit-prazo" data-gid="${esc(g.id)}" data-cur="${esc(g.prazo||'')}" title="Editar data">${fmtDia(g.prazo)}</span>
       <span class="esc-cd ${cdCls}">${cd}</span>
       ${hasMis?`<span class="esc-chev hz-chev">${open?'▾':'▸'}</span>`:''}
     </div>${hasMis?misAccordion(g):''}`;
@@ -2598,7 +2625,7 @@ function metasCockpitHtml(area){
     </div>
   </div>`;
 
-  return caixaBanner + heroHtml + mrrHtml + bussolaHtml + passoHtml + bilheteHtml
+  return caixaBanner + heroHtml + visaoHtml + mrrHtml + bussolaHtml + passoHtml + bilheteHtml
     + sec('❤️ Sofia', tracks.sofia)
     + financeiroHtml
     + sec('✈️ Experiências', tracks.experiencias)
@@ -2947,10 +2974,13 @@ function bindDetailDelegation(areaId) {
     } else if (action === 'edit-prazo') {
       e.stopPropagation();
       const gid = el.dataset.gid;
-      const novo = prompt('Data alvo (AAAA-MM-DD) — vazio pra tirar a data:', el.dataset.cur||'');
+      const cur = el.dataset.cur ? el.dataset.cur.split('-').reverse().join('/') : '';
+      const novo = prompt('Data alvo (DD/MM/AAAA) — vazio pra tirar a data:', cur);
       if(novo===null) return;
+      const iso = parseDataBR(novo);
+      if(iso===null){ toast('Data inválida — use DD/MM/AAAA'); return; }
       await guard(async()=>{
-        await fetch(`/api/area/${encodeURIComponent(areaId)}/goal/${encodeURIComponent(gid)}`,{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify({prazo:novo.trim()})});
+        await fetch(`/api/area/${encodeURIComponent(areaId)}/goal/${encodeURIComponent(gid)}`,{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify({prazo:iso})});
         await load(false); toast('✓ Data atualizada');
       });
     } else if (action === 'goal-feito') {
