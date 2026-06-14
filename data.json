@@ -92,206 +92,352 @@
       },
       "goals": [
         {
-          "id": "goal-sair-casa",
-          "titulo": "Sair de casa",
-          "emoji": "🚪",
-          "porque": "Liberdade — minha vida nas minhas mãos.",
-          "track": "jornada",
-          "fonteRitmo": null,
-          "custo": 0,
-          "prazo": "2027-07-01",
+          "id": "goal-renda-0",
+          "titulo": "R$10 mil/mês",
+          "emoji": "💸",
+          "porque": "",
+          "track": "renda",
+          "fonteRitmo": "mrr",
+          "custo": 10000,
+          "prazo": "2026-08-08",
           "estrela": false,
           "feito": false,
-          "missoes": [
-            {
-              "id": "m1",
-              "texto": "Faturar o 1º R$1k",
-              "feito": false
-            },
-            {
-              "id": "m2",
-              "texto": "Juntar 6 meses de reserva",
-              "feito": false
-            },
-            {
-              "id": "m3",
-              "texto": "Pesquisar emancipação",
-              "feito": false
-            },
-            {
-              "id": "m4",
-              "texto": "Conversar com os pais",
-              "feito": false
-            },
-            {
-              "id": "m5",
-              "texto": "Iniciar a emancipação",
-              "feito": false
-            },
-            {
-              "id": "m6",
-              "texto": "Bater R$10k/mês estável",
-              "feito": false
-            },
-            {
-              "id": "m7",
-              "texto": "Escolher a 1ª cidade",
-              "feito": false
-            },
-            {
-              "id": "m8",
-              "texto": "Montar setup remoto",
-              "feito": false
-            },
-            {
-              "id": "m9",
-              "texto": "Emancipação concluída",
-              "feito": false
-            },
-            {
-              "id": "m10",
-              "texto": "Fazer a mudança",
-              "feito": false
-            }
-          ]
+          "missoes": []
         },
         {
-          "id": "goal-airbnb",
-          "titulo": "Morar de Airbnb em Airbnb",
-          "emoji": "🧳",
-          "porque": "Sem âncora — o mundo como casa.",
-          "track": "jornada",
-          "fonteRitmo": null,
-          "custo": 0,
-          "prazo": "2027-08-01",
+          "id": "goal-renda-1",
+          "titulo": "R$20 mil/mês",
+          "emoji": "💸",
+          "porque": "",
+          "track": "renda",
+          "fonteRitmo": "mrr",
+          "custo": 20000,
+          "prazo": "2026-09-17",
           "estrela": false,
           "feito": false,
-          "missoes": [
-            {
-              "id": "m1",
-              "texto": "Renda cobre aluguel + vida",
-              "feito": false
-            },
-            {
-              "id": "m2",
-              "texto": "Definir a 1ª cidade",
-              "feito": false
-            },
-            {
-              "id": "m3",
-              "texto": "Reservar o 1º Airbnb",
-              "feito": false
-            },
-            {
-              "id": "m4",
-              "texto": "Reduzir posses ao essencial",
-              "feito": false
-            },
-            {
-              "id": "m5",
-              "texto": "Rotina de trabalho remoto",
-              "feito": false
-            },
-            {
-              "id": "m6",
-              "texto": "1º mês fora completo",
-              "feito": false
-            },
-            {
-              "id": "m7",
-              "texto": "Mudar pra 2ª cidade",
-              "feito": false
-            },
-            {
-              "id": "m8",
-              "texto": "Rede de contatos local",
-              "feito": false
-            },
-            {
-              "id": "m9",
-              "texto": "6 meses nômade",
-              "feito": false
-            },
-            {
-              "id": "m10",
-              "texto": "Estilo de vida firmado",
-              "feito": false
-            }
-          ]
+          "missoes": []
         },
         {
-          "id": "goal-eua",
-          "titulo": "Ir pros EUA",
+          "id": "goal-renda-2",
+          "titulo": "R$30 mil/mês",
+          "emoji": "💸",
+          "porque": "",
+          "track": "renda",
+          "fonteRitmo": "mrr",
+          "custo": 30000,
+          "prazo": "2026-10-29",
+          "estrela": false,
+          "feito": false,
+          "missoes": []
+        },
+        {
+          "id": "goal-renda-3",
+          "titulo": "R$50 mil/mês",
+          "emoji": "💸",
+          "porque": "",
+          "track": "renda",
+          "fonteRitmo": "mrr",
+          "custo": 50000,
+          "prazo": "2027-02-18",
+          "estrela": false,
+          "feito": false,
+          "missoes": []
+        },
+        {
+          "id": "goal-renda-4",
+          "titulo": "R$80 mil/mês",
+          "emoji": "💸",
+          "porque": "",
+          "track": "renda",
+          "fonteRitmo": "mrr",
+          "custo": 80000,
+          "prazo": "2027-04-27",
+          "estrela": false,
+          "feito": false,
+          "missoes": []
+        },
+        {
+          "id": "goal-renda-5",
+          "titulo": "R$100 mil/mês",
+          "emoji": "💸",
+          "porque": "",
+          "track": "renda",
+          "fonteRitmo": "mrr",
+          "custo": 100000,
+          "prazo": "2027-06-09",
+          "estrela": false,
+          "feito": false,
+          "missoes": []
+        },
+        {
+          "id": "goal-patr-0",
+          "titulo": "R$10 mil em caixa",
+          "emoji": "🏦",
+          "porque": "",
+          "track": "patrimonio",
+          "fonteRitmo": "savings",
+          "custo": 10000,
+          "prazo": "2026-07-12",
+          "estrela": false,
+          "feito": false,
+          "missoes": []
+        },
+        {
+          "id": "goal-patr-1",
+          "titulo": "R$50 mil em caixa",
+          "emoji": "🏦",
+          "porque": "",
+          "track": "patrimonio",
+          "fonteRitmo": "savings",
+          "custo": 50000,
+          "prazo": "2026-09-30",
+          "estrela": false,
+          "feito": false,
+          "missoes": []
+        },
+        {
+          "id": "goal-patr-2",
+          "titulo": "R$100 mil de patrimônio",
+          "emoji": "🏦",
+          "porque": "",
+          "track": "patrimonio",
+          "fonteRitmo": "savings",
+          "custo": 100000,
+          "prazo": "2026-12-22",
+          "estrela": false,
+          "feito": false,
+          "missoes": []
+        },
+        {
+          "id": "goal-patr-3",
+          "titulo": "R$500 mil de patrimônio",
+          "emoji": "🏦",
+          "porque": "",
+          "track": "patrimonio",
+          "fonteRitmo": "savings",
+          "custo": 500000,
+          "prazo": "2027-08-14",
+          "estrela": false,
+          "feito": false,
+          "missoes": []
+        },
+        {
+          "id": "goal-patr-4",
+          "titulo": "R$1 milhão",
+          "emoji": "🏦",
+          "porque": "",
+          "track": "patrimonio",
+          "fonteRitmo": "savings",
+          "custo": 1000000,
+          "prazo": "2027-11-19",
+          "estrela": false,
+          "feito": false,
+          "missoes": []
+        },
+        {
+          "id": "goal-abdomen",
+          "titulo": "Abdômen visível",
+          "emoji": "🔥",
+          "porque": "",
+          "track": "corpo",
+          "fonteRitmo": null,
+          "custo": 0,
+          "prazo": "2026-09-20",
+          "estrela": false,
+          "feito": false,
+          "missoes": []
+        },
+        {
+          "id": "goal-shape",
+          "titulo": "Shape que chama atenção na sala",
+          "emoji": "💪",
+          "porque": "",
+          "track": "corpo",
+          "fonteRitmo": null,
+          "custo": 0,
+          "prazo": "2027-02-15",
+          "estrela": false,
+          "feito": false,
+          "missoes": []
+        },
+        {
+          "id": "goal-condicionamento",
+          "titulo": "Excelente condicionamento",
+          "emoji": "🏃",
+          "porque": "",
+          "track": "corpo",
+          "fonteRitmo": null,
+          "custo": 0,
+          "prazo": "2027-05-03",
+          "estrela": false,
+          "feito": false,
+          "missoes": []
+        },
+        {
+          "id": "goal-ingles",
+          "titulo": "Conversa natural em inglês",
           "emoji": "🇺🇸",
-          "porque": "O passo que aproxima a Sofia.",
-          "track": "jornada",
+          "porque": "",
+          "track": "idioma",
           "fonteRitmo": null,
           "custo": 0,
-          "prazo": "2028-07-01",
+          "prazo": "2026-10-01",
           "estrela": false,
           "feito": false,
-          "missoes": [
-            {
-              "id": "m1",
-              "texto": "Tirar o passaporte",
-              "feito": false
-            },
-            {
-              "id": "m2",
-              "texto": "Juntar a grana da viagem",
-              "feito": false
-            },
-            {
-              "id": "m3",
-              "texto": "Preencher o DS-160",
-              "feito": false
-            },
-            {
-              "id": "m4",
-              "texto": "Agendar entrevista do visto",
-              "feito": false
-            },
-            {
-              "id": "m5",
-              "texto": "Reunir provas de vínculo/renda",
-              "feito": false
-            },
-            {
-              "id": "m6",
-              "texto": "Entrevista no consulado",
-              "feito": false
-            },
-            {
-              "id": "m7",
-              "texto": "Visto aprovado",
-              "feito": false
-            },
-            {
-              "id": "m8",
-              "texto": "Comprar a passagem",
-              "feito": false
-            },
-            {
-              "id": "m9",
-              "texto": "Reservar Airbnb nos EUA",
-              "feito": false
-            },
-            {
-              "id": "m10",
-              "texto": "Embarcar",
-              "feito": false
-            }
-          ]
+          "missoes": []
+        },
+        {
+          "id": "goal-espanhol",
+          "titulo": "Fluente em espanhol",
+          "emoji": "🇪🇸",
+          "porque": "",
+          "track": "idioma",
+          "fonteRitmo": null,
+          "custo": 0,
+          "prazo": "2027-01-18",
+          "estrela": false,
+          "feito": false,
+          "missoes": []
+        },
+        {
+          "id": "goal-100dias",
+          "titulo": "100 dias seguidos sem abandonar a execução",
+          "emoji": "🔁",
+          "porque": "",
+          "track": "mentalidade",
+          "fonteRitmo": null,
+          "custo": 0,
+          "prazo": "2026-09-27",
+          "estrela": false,
+          "feito": false,
+          "missoes": []
+        },
+        {
+          "id": "goal-vender-olhos",
+          "titulo": "Vender olhando nos olhos sem medo",
+          "emoji": "👁️",
+          "porque": "",
+          "track": "mentalidade",
+          "fonteRitmo": null,
+          "custo": 0,
+          "prazo": "2026-07-31",
+          "estrela": false,
+          "feito": false,
+          "missoes": []
+        },
+        {
+          "id": "goal-venda-10k",
+          "titulo": "Fechar uma venda de R$10 mil sozinho",
+          "emoji": "🤝",
+          "porque": "",
+          "track": "mentalidade",
+          "fonteRitmo": null,
+          "custo": 0,
+          "prazo": "2026-12-13",
+          "estrela": false,
+          "feito": false,
+          "missoes": []
+        },
+        {
+          "id": "goal-venda-100k",
+          "titulo": "Fechar uma venda de R$100 mil",
+          "emoji": "💼",
+          "porque": "",
+          "track": "mentalidade",
+          "fonteRitmo": null,
+          "custo": 0,
+          "prazo": "2027-11-08",
+          "estrela": false,
+          "feito": false,
+          "missoes": []
+        },
+        {
+          "id": "goal-1a-pessoa",
+          "titulo": "Primeira pessoa trabalhando comigo",
+          "emoji": "🧑‍🤝‍🧑",
+          "porque": "",
+          "track": "lideranca",
+          "fonteRitmo": null,
+          "custo": 0,
+          "prazo": "2026-08-21",
+          "estrela": false,
+          "feito": false,
+          "missoes": []
+        },
+        {
+          "id": "goal-time",
+          "titulo": "Primeiro pequeno time",
+          "emoji": "👥",
+          "porque": "",
+          "track": "lideranca",
+          "fonteRitmo": null,
+          "custo": 0,
+          "prazo": "2027-03-11",
+          "estrela": false,
+          "feito": false,
+          "missoes": []
+        },
+        {
+          "id": "goal-empresa-roda",
+          "titulo": "Empresa roda sem depender de mim",
+          "emoji": "🏢",
+          "porque": "",
+          "track": "lideranca",
+          "fonteRitmo": null,
+          "custo": 0,
+          "prazo": "2027-12-09",
+          "estrela": false,
+          "feito": false,
+          "missoes": []
+        },
+        {
+          "id": "goal-1o-mes-renda",
+          "titulo": "1º mês vivendo 100% da própria renda",
+          "emoji": "💵",
+          "porque": "",
+          "track": "experiencias",
+          "fonteRitmo": null,
+          "custo": 0,
+          "prazo": "2026-08-31",
+          "estrela": false,
+          "feito": false,
+          "missoes": []
+        },
+        {
+          "id": "goal-morar-sozinho",
+          "titulo": "1ª temporada morando sozinho",
+          "emoji": "🏠",
+          "porque": "",
+          "track": "experiencias",
+          "fonteRitmo": null,
+          "custo": 0,
+          "prazo": "2026-10-03",
+          "estrela": false,
+          "feito": false,
+          "missoes": []
+        },
+        {
+          "id": "goal-viagem-intl",
+          "titulo": "Primeira viagem internacional",
+          "emoji": "✈️",
+          "porque": "",
+          "track": "experiencias",
+          "fonteRitmo": null,
+          "custo": 0,
+          "prazo": "2026-12-18",
+          "estrela": false,
+          "feito": false,
+          "missoes": []
         },
         {
           "id": "goal-porsche",
-          "titulo": "Comprar o Porsche",
+          "titulo": "Comprar a Porsche",
           "emoji": "🏎️",
-          "porque": "Consequência do trabalho, conquistado lá.",
-          "track": "jornada",
+          "porque": "Consequência do trabalho.",
+          "track": "experiencias",
           "fonteRitmo": "savings",
           "custo": 350000,
-          "prazo": "2028-12-01",
+          "prazo": "2027-05-08",
           "estrela": false,
           "feito": false,
           "missoes": [
@@ -342,787 +488,52 @@
             },
             {
               "id": "m10",
-              "texto": "Dirigir o Porsche",
+              "texto": "Dirigir a Porsche",
               "feito": false
             }
           ]
         },
         {
-          "id": "goal-sofia",
-          "titulo": "Encontrar a Sofia",
-          "emoji": "❤️",
-          "porque": "Construir uma vida boa pra nós dois.",
-          "track": "jornada",
+          "id": "goal-sofia-contato",
+          "titulo": "Primeiro contato significativo",
+          "emoji": "💬",
+          "porque": "Ou fortalecer o contato, se já existir.",
+          "track": "sofia",
           "fonteRitmo": null,
           "custo": 0,
-          "prazo": "2029-06-01",
+          "prazo": "2026-09-15",
+          "estrela": false,
+          "feito": false,
+          "missoes": []
+        },
+        {
+          "id": "goal-sofia-condicoes",
+          "titulo": "Em condições reais de viajar até ela",
+          "emoji": "🧭",
+          "porque": "Sem colocar a vida financeira em risco.",
+          "track": "sofia",
+          "fonteRitmo": null,
+          "custo": 0,
+          "prazo": "2027-03-20",
+          "estrela": false,
+          "feito": false,
+          "missoes": []
+        },
+        {
+          "id": "goal-sofia-encontro",
+          "titulo": "Encontro presencial",
+          "emoji": "❤️",
+          "porque": "O encontro que move tudo.",
+          "track": "sofia",
+          "fonteRitmo": null,
+          "custo": 0,
+          "prazo": "2027-06-12",
           "estrela": true,
           "feito": false,
-          "missoes": [
-            {
-              "id": "m1",
-              "texto": "Virar um homem de respeito",
-              "feito": false
-            },
-            {
-              "id": "m2",
-              "texto": "Inglês fluente",
-              "feito": false
-            },
-            {
-              "id": "m3",
-              "texto": "Corpo em forma",
-              "feito": false
-            },
-            {
-              "id": "m4",
-              "texto": "Estar nos EUA",
-              "feito": false
-            },
-            {
-              "id": "m5",
-              "texto": "Ter o Porsche",
-              "feito": false
-            },
-            {
-              "id": "m6",
-              "texto": "Ir até Utah",
-              "feito": false
-            },
-            {
-              "id": "m7",
-              "texto": "Primeiro contato",
-              "feito": false
-            },
-            {
-              "id": "m8",
-              "texto": "Primeiro encontro",
-              "feito": false
-            },
-            {
-              "id": "m9",
-              "texto": "Conquistar a confiança dela",
-              "feito": false
-            },
-            {
-              "id": "m10",
-              "texto": "Construir a vida juntos",
-              "feito": false
-            }
-          ]
-        },
-        {
-          "id": "goal-renda-0",
-          "titulo": "R$10 mil/mês",
-          "emoji": "💸",
-          "porque": "",
-          "track": "renda",
-          "fonteRitmo": "mrr",
-          "custo": 10000,
-          "prazo": "2026-11-01",
-          "estrela": false,
-          "feito": false,
           "missoes": []
-        },
-        {
-          "id": "goal-renda-1",
-          "titulo": "R$20 mil/mês",
-          "emoji": "💸",
-          "porque": "",
-          "track": "renda",
-          "fonteRitmo": "mrr",
-          "custo": 20000,
-          "prazo": "2027-02-01",
-          "estrela": false,
-          "feito": false,
-          "missoes": []
-        },
-        {
-          "id": "goal-renda-2",
-          "titulo": "R$30 mil/mês",
-          "emoji": "💸",
-          "porque": "",
-          "track": "renda",
-          "fonteRitmo": "mrr",
-          "custo": 30000,
-          "prazo": "2027-04-01",
-          "estrela": false,
-          "feito": false,
-          "missoes": []
-        },
-        {
-          "id": "goal-renda-3",
-          "titulo": "R$50 mil/mês",
-          "emoji": "💸",
-          "porque": "",
-          "track": "renda",
-          "fonteRitmo": "mrr",
-          "custo": 50000,
-          "prazo": "2027-07-01",
-          "estrela": false,
-          "feito": false,
-          "missoes": []
-        },
-        {
-          "id": "goal-renda-4",
-          "titulo": "R$80 mil/mês",
-          "emoji": "💸",
-          "porque": "",
-          "track": "renda",
-          "fonteRitmo": "mrr",
-          "custo": 80000,
-          "prazo": "2027-10-01",
-          "estrela": false,
-          "feito": false,
-          "missoes": []
-        },
-        {
-          "id": "goal-renda-5",
-          "titulo": "R$100 mil/mês",
-          "emoji": "💸",
-          "porque": "",
-          "track": "renda",
-          "fonteRitmo": "mrr",
-          "custo": 100000,
-          "prazo": "2027-12-01",
-          "estrela": false,
-          "feito": false,
-          "missoes": []
-        },
-        {
-          "id": "goal-renda-6",
-          "titulo": "R$150 mil/mês",
-          "emoji": "💸",
-          "porque": "",
-          "track": "renda",
-          "fonteRitmo": "mrr",
-          "custo": 150000,
-          "prazo": "2028-03-01",
-          "estrela": false,
-          "feito": false,
-          "missoes": []
-        },
-        {
-          "id": "goal-renda-7",
-          "titulo": "R$200 mil/mês",
-          "emoji": "💸",
-          "porque": "",
-          "track": "renda",
-          "fonteRitmo": "mrr",
-          "custo": 200000,
-          "prazo": "2028-06-01",
-          "estrela": false,
-          "feito": false,
-          "missoes": []
-        },
-        {
-          "id": "goal-renda-8",
-          "titulo": "R$300 mil/mês",
-          "emoji": "💸",
-          "porque": "",
-          "track": "renda",
-          "fonteRitmo": "mrr",
-          "custo": 300000,
-          "prazo": "2028-11-01",
-          "estrela": false,
-          "feito": false,
-          "missoes": []
-        },
-        {
-          "id": "goal-renda-9",
-          "titulo": "R$500 mil/mês",
-          "emoji": "💸",
-          "porque": "",
-          "track": "renda",
-          "fonteRitmo": "mrr",
-          "custo": 500000,
-          "prazo": "2029-06-01",
-          "estrela": false,
-          "feito": false,
-          "missoes": []
-        },
-        {
-          "id": "goal-renda-10",
-          "titulo": "R$700 mil/mês",
-          "emoji": "💸",
-          "porque": "",
-          "track": "renda",
-          "fonteRitmo": "mrr",
-          "custo": 700000,
-          "prazo": "2029-12-01",
-          "estrela": false,
-          "feito": false,
-          "missoes": []
-        },
-        {
-          "id": "goal-renda-11",
-          "titulo": "R$1 mi/mês",
-          "emoji": "💸",
-          "porque": "",
-          "track": "renda",
-          "fonteRitmo": "mrr",
-          "custo": 1000000,
-          "prazo": "2030-07-01",
-          "estrela": false,
-          "feito": false,
-          "missoes": []
-        },
-        {
-          "id": "goal-renda-12",
-          "titulo": "R$1,5 mi/mês",
-          "emoji": "💸",
-          "porque": "",
-          "track": "renda",
-          "fonteRitmo": "mrr",
-          "custo": 1500000,
-          "prazo": "2031-02-01",
-          "estrela": false,
-          "feito": false,
-          "missoes": []
-        },
-        {
-          "id": "goal-renda-13",
-          "titulo": "R$2 mi/mês",
-          "emoji": "💸",
-          "porque": "",
-          "track": "renda",
-          "fonteRitmo": "mrr",
-          "custo": 2000000,
-          "prazo": "2031-08-01",
-          "estrela": false,
-          "feito": false,
-          "missoes": []
-        },
-        {
-          "id": "goal-renda-14",
-          "titulo": "R$3 mi/mês",
-          "emoji": "💸",
-          "porque": "",
-          "track": "renda",
-          "fonteRitmo": "mrr",
-          "custo": 3000000,
-          "prazo": "2032-05-01",
-          "estrela": false,
-          "feito": false,
-          "missoes": []
-        },
-        {
-          "id": "goal-renda-15",
-          "titulo": "R$5 mi/mês",
-          "emoji": "💸",
-          "porque": "",
-          "track": "renda",
-          "fonteRitmo": "mrr",
-          "custo": 5000000,
-          "prazo": "2033-06-01",
-          "estrela": false,
-          "feito": false,
-          "missoes": []
-        },
-        {
-          "id": "goal-patr-0",
-          "titulo": "R$10 mil",
-          "emoji": "🏦",
-          "porque": "",
-          "track": "patrimonio",
-          "fonteRitmo": "savings",
-          "custo": 10000,
-          "prazo": "2026-10-01",
-          "estrela": false,
-          "feito": false,
-          "missoes": []
-        },
-        {
-          "id": "goal-patr-1",
-          "titulo": "R$50 mil",
-          "emoji": "🏦",
-          "porque": "",
-          "track": "patrimonio",
-          "fonteRitmo": "savings",
-          "custo": 50000,
-          "prazo": "2027-02-01",
-          "estrela": false,
-          "feito": false,
-          "missoes": []
-        },
-        {
-          "id": "goal-patr-2",
-          "titulo": "R$100 mil",
-          "emoji": "🏦",
-          "porque": "",
-          "track": "patrimonio",
-          "fonteRitmo": "savings",
-          "custo": 100000,
-          "prazo": "2027-05-01",
-          "estrela": false,
-          "feito": false,
-          "missoes": []
-        },
-        {
-          "id": "goal-patr-3",
-          "titulo": "R$200 mil",
-          "emoji": "🏦",
-          "porque": "",
-          "track": "patrimonio",
-          "fonteRitmo": "savings",
-          "custo": 200000,
-          "prazo": "2027-08-01",
-          "estrela": false,
-          "feito": false,
-          "missoes": []
-        },
-        {
-          "id": "goal-patr-4",
-          "titulo": "R$500 mil",
-          "emoji": "🏦",
-          "porque": "",
-          "track": "patrimonio",
-          "fonteRitmo": "savings",
-          "custo": 500000,
-          "prazo": "2028-01-01",
-          "estrela": false,
-          "feito": false,
-          "missoes": []
-        },
-        {
-          "id": "goal-patr-5",
-          "titulo": "R$1 mi",
-          "emoji": "🏦",
-          "porque": "",
-          "track": "patrimonio",
-          "fonteRitmo": "savings",
-          "custo": 1000000,
-          "prazo": "2028-07-01",
-          "estrela": false,
-          "feito": false,
-          "missoes": []
-        },
-        {
-          "id": "goal-patr-6",
-          "titulo": "R$2 mi",
-          "emoji": "🏦",
-          "porque": "",
-          "track": "patrimonio",
-          "fonteRitmo": "savings",
-          "custo": 2000000,
-          "prazo": "2029-02-01",
-          "estrela": false,
-          "feito": false,
-          "missoes": []
-        },
-        {
-          "id": "goal-patr-7",
-          "titulo": "R$3 mi",
-          "emoji": "🏦",
-          "porque": "",
-          "track": "patrimonio",
-          "fonteRitmo": "savings",
-          "custo": 3000000,
-          "prazo": "2029-07-01",
-          "estrela": false,
-          "feito": false,
-          "missoes": []
-        },
-        {
-          "id": "goal-patr-8",
-          "titulo": "R$4 mi",
-          "emoji": "🏦",
-          "porque": "",
-          "track": "patrimonio",
-          "fonteRitmo": "savings",
-          "custo": 4000000,
-          "prazo": "2029-11-01",
-          "estrela": false,
-          "feito": false,
-          "missoes": []
-        },
-        {
-          "id": "goal-patr-9",
-          "titulo": "R$5 mi",
-          "emoji": "🏦",
-          "porque": "",
-          "track": "patrimonio",
-          "fonteRitmo": "savings",
-          "custo": 5000000,
-          "prazo": "2030-03-01",
-          "estrela": false,
-          "feito": false,
-          "missoes": []
-        },
-        {
-          "id": "goal-patr-10",
-          "titulo": "R$10 mi",
-          "emoji": "🏦",
-          "porque": "",
-          "track": "patrimonio",
-          "fonteRitmo": "savings",
-          "custo": 10000000,
-          "prazo": "2030-12-01",
-          "estrela": false,
-          "feito": false,
-          "missoes": []
-        },
-        {
-          "id": "goal-patr-11",
-          "titulo": "R$15 mi",
-          "emoji": "🏦",
-          "porque": "",
-          "track": "patrimonio",
-          "fonteRitmo": "savings",
-          "custo": 15000000,
-          "prazo": "2031-08-01",
-          "estrela": false,
-          "feito": false,
-          "missoes": []
-        },
-        {
-          "id": "goal-patr-12",
-          "titulo": "R$20 mi",
-          "emoji": "🏦",
-          "porque": "",
-          "track": "patrimonio",
-          "fonteRitmo": "savings",
-          "custo": 20000000,
-          "prazo": "2032-03-01",
-          "estrela": false,
-          "feito": false,
-          "missoes": []
-        },
-        {
-          "id": "goal-patr-13",
-          "titulo": "R$30 mi",
-          "emoji": "🏦",
-          "porque": "",
-          "track": "patrimonio",
-          "fonteRitmo": "savings",
-          "custo": 30000000,
-          "prazo": "2033-01-01",
-          "estrela": false,
-          "feito": false,
-          "missoes": []
-        },
-        {
-          "id": "goal-patr-14",
-          "titulo": "R$50 mi",
-          "emoji": "🏦",
-          "porque": "",
-          "track": "patrimonio",
-          "fonteRitmo": "savings",
-          "custo": 50000000,
-          "prazo": "2034-01-01",
-          "estrela": false,
-          "feito": false,
-          "missoes": []
-        },
-        {
-          "id": "goal-patr-15",
-          "titulo": "R$70 mi",
-          "emoji": "🏦",
-          "porque": "",
-          "track": "patrimonio",
-          "fonteRitmo": "savings",
-          "custo": 70000000,
-          "prazo": "2034-11-01",
-          "estrela": false,
-          "feito": false,
-          "missoes": []
-        },
-        {
-          "id": "goal-patr-16",
-          "titulo": "R$100 mi",
-          "emoji": "🏦",
-          "porque": "",
-          "track": "patrimonio",
-          "fonteRitmo": "savings",
-          "custo": 100000000,
-          "prazo": "2035-12-01",
-          "estrela": false,
-          "feito": false,
-          "missoes": []
-        },
-        {
-          "id": "goal-patr-17",
-          "titulo": "R$300 mi",
-          "emoji": "🏦",
-          "porque": "",
-          "track": "patrimonio",
-          "fonteRitmo": "savings",
-          "custo": 300000000,
-          "prazo": "2037-06-01",
-          "estrela": false,
-          "feito": false,
-          "missoes": []
-        },
-        {
-          "id": "goal-patr-18",
-          "titulo": "R$500 mi",
-          "emoji": "🏦",
-          "porque": "",
-          "track": "patrimonio",
-          "fonteRitmo": "savings",
-          "custo": 500000000,
-          "prazo": "2039-01-01",
-          "estrela": false,
-          "feito": false,
-          "missoes": []
-        },
-        {
-          "id": "goal-abdomen",
-          "titulo": "Abdômen definido",
-          "emoji": "🔥",
-          "porque": "Disciplina que aparece no espelho.",
-          "track": "corpo",
-          "fonteRitmo": null,
-          "custo": 0,
-          "prazo": "2027-07-01",
-          "estrela": false,
-          "feito": false,
-          "missoes": [
-            {
-              "id": "m1",
-              "texto": "Montar o treino",
-              "feito": false
-            },
-            {
-              "id": "m2",
-              "texto": "Ajustar a dieta",
-              "feito": false
-            },
-            {
-              "id": "m3",
-              "texto": "Treinar 3x/sem por 1 mês",
-              "feito": false
-            },
-            {
-              "id": "m4",
-              "texto": "Cardio na rotina",
-              "feito": false
-            },
-            {
-              "id": "m5",
-              "texto": "Entrar em déficit",
-              "feito": false
-            },
-            {
-              "id": "m6",
-              "texto": "3 meses consistente",
-              "feito": false
-            },
-            {
-              "id": "m7",
-              "texto": "Reduzir % de gordura",
-              "feito": false
-            },
-            {
-              "id": "m8",
-              "texto": "Core forte",
-              "feito": false
-            },
-            {
-              "id": "m9",
-              "texto": "6 meses firme",
-              "feito": false
-            },
-            {
-              "id": "m10",
-              "texto": "Abdômen visível",
-              "feito": false
-            }
-          ]
-        },
-        {
-          "id": "goal-musculoso",
-          "titulo": "Corpo musculoso",
-          "emoji": "💪",
-          "porque": "Forte por fora e por dentro.",
-          "track": "corpo",
-          "fonteRitmo": null,
-          "custo": 0,
-          "prazo": "2028-07-01",
-          "estrela": false,
-          "feito": false,
-          "missoes": [
-            {
-              "id": "m1",
-              "texto": "Treino de hipertrofia",
-              "feito": false
-            },
-            {
-              "id": "m2",
-              "texto": "Comer em superávit",
-              "feito": false
-            },
-            {
-              "id": "m3",
-              "texto": "Progressão de carga",
-              "feito": false
-            },
-            {
-              "id": "m4",
-              "texto": "3 meses firme",
-              "feito": false
-            },
-            {
-              "id": "m5",
-              "texto": "Costas e ombros",
-              "feito": false
-            },
-            {
-              "id": "m6",
-              "texto": "Pernas pesadas",
-              "feito": false
-            },
-            {
-              "id": "m7",
-              "texto": "1 ano de treino",
-              "feito": false
-            },
-            {
-              "id": "m8",
-              "texto": "Braços e peito",
-              "feito": false
-            },
-            {
-              "id": "m9",
-              "texto": "Ajuste fino",
-              "feito": false
-            },
-            {
-              "id": "m10",
-              "texto": "Shape musculoso",
-              "feito": false
-            }
-          ]
-        },
-        {
-          "id": "goal-espanhol",
-          "titulo": "Espanhol fluente",
-          "emoji": "🗣️",
-          "porque": "Outra língua, outro mundo.",
-          "track": "idioma",
-          "fonteRitmo": null,
-          "custo": 0,
-          "prazo": "2028-01-01",
-          "estrela": false,
-          "feito": false,
-          "missoes": [
-            {
-              "id": "m1",
-              "texto": "App todo dia",
-              "feito": false
-            },
-            {
-              "id": "m2",
-              "texto": "500 palavras",
-              "feito": false
-            },
-            {
-              "id": "m3",
-              "texto": "Gramática base",
-              "feito": false
-            },
-            {
-              "id": "m4",
-              "texto": "Série em espanhol",
-              "feito": false
-            },
-            {
-              "id": "m5",
-              "texto": "1ª conversa real",
-              "feito": false
-            },
-            {
-              "id": "m6",
-              "texto": "Pensar em espanhol",
-              "feito": false
-            },
-            {
-              "id": "m7",
-              "texto": "Ler um livro",
-              "feito": false
-            },
-            {
-              "id": "m8",
-              "texto": "Conversa fluida",
-              "feito": false
-            },
-            {
-              "id": "m9",
-              "texto": "Sotaque natural",
-              "feito": false
-            },
-            {
-              "id": "m10",
-              "texto": "Fluente",
-              "feito": false
-            }
-          ]
-        },
-        {
-          "id": "goal-ingles",
-          "titulo": "Inglês fluente",
-          "emoji": "🌎",
-          "porque": "A língua dos EUA e dos negócios.",
-          "track": "idioma",
-          "fonteRitmo": null,
-          "custo": 0,
-          "prazo": "2028-04-01",
-          "estrela": false,
-          "feito": false,
-          "missoes": [
-            {
-              "id": "m1",
-              "texto": "App todo dia",
-              "feito": false
-            },
-            {
-              "id": "m2",
-              "texto": "1000 palavras",
-              "feito": false
-            },
-            {
-              "id": "m3",
-              "texto": "Gramática base",
-              "feito": false
-            },
-            {
-              "id": "m4",
-              "texto": "Conteúdo só em inglês",
-              "feito": false
-            },
-            {
-              "id": "m5",
-              "texto": "1ª conversa real",
-              "feito": false
-            },
-            {
-              "id": "m6",
-              "texto": "Pensar em inglês",
-              "feito": false
-            },
-            {
-              "id": "m7",
-              "texto": "Ler um livro",
-              "feito": false
-            },
-            {
-              "id": "m8",
-              "texto": "Reunião em inglês",
-              "feito": false
-            },
-            {
-              "id": "m9",
-              "texto": "Sotaque natural",
-              "feito": false
-            },
-            {
-              "id": "m10",
-              "texto": "Fluente",
-              "feito": false
-            }
-          ]
         }
-      ]
+      ],
+      "seedV": 4
     },
     "igreja": {
       "campos": {

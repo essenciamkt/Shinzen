@@ -2514,47 +2514,63 @@ function metasCockpitHtml(area){
       ${add}
     </div>`;
   };
-  const jornadaHtml = horizonBlock('A jornada até a Sofia', tracks.jornada, true);
-  const corpoIdioma = [...(tracks.corpo||[]), ...(tracks.idioma||[])];
-  const corpoHtml = horizonBlock('Corpo & idioma', corpoIdioma, false);
+  const sec = (titulo, arr) => horizonBlock(titulo, arr, false);
 
-  // ── Escada do dinheiro (2 trilhos: renda/mês + patrimônio) ──
+  // ── Financeiro: escada (2 trilhos: renda/mês + patrimônio) ──
   function rungRow(g){
     const cd = fmtDias(g.diasPrazo);
     const cdCls = g.atingido?'ok':g.diasPrazo!=null&&g.diasPrazo<0?'bad':'';
     return `<div class="esc-row ${g.atingido?'done':''}">
       <span class="esc-dot ${g.atingido?'done':''}" data-action="goal-feito" data-gid="${esc(g.id)}" title="${g.atingido?'Atingido':'Marcar atingido'}">${g.atingido?'✓':''}</span>
-      <span class="esc-val">${esc(g.titulo.replace('/mês',''))}</span>
+      <span class="esc-val">${esc(g.titulo.replace('/mês','').replace(' em caixa','').replace(' de patrimônio',''))}</span>
       <span class="esc-date" data-action="edit-prazo" data-gid="${esc(g.id)}" data-cur="${esc(g.prazo||'')}" title="Editar data">${fmtMes(g.prazo)}</span>
       <span class="esc-cd ${cdCls}">${cd}</span>
     </div>`;
   }
-  const escadaHtml = ((tracks.renda&&tracks.renda.length)||(tracks.patrimonio&&tracks.patrimonio.length)) ? `<div class="card mb16">
-    <div class="card-title">A escada do dinheiro</div>
+  const financeiroHtml = ((tracks.renda&&tracks.renda.length)||(tracks.patrimonio&&tracks.patrimonio.length)) ? `<div class="card mb16">
+    <div class="card-title">💰 Financeiro</div>
     <div class="escada">
       <div class="esc-col">
         <div class="esc-head">💸 Renda / mês</div>
         ${(tracks.renda||[]).map(rungRow).join('')}
       </div>
       <div class="esc-col">
-        <div class="esc-head">🏦 Patrimônio</div>
+        <div class="esc-head">🏦 Patrimônio / caixa</div>
         ${(tracks.patrimonio||[]).map(rungRow).join('')}
       </div>
     </div>
   </div>` : '';
 
-  // ── Espelho do Porsche (custo de oportunidade) ──
-  const porscheG = (tracks.jornada||[]).find(g=>g.id==='goal-porsche');
-  const pCusto = porscheG ? porscheG.custo : 0;
-  const porscheHtml = (pCusto>0) ? `<div class="card mb16 porsche-mirror">
-    <span class="pm-ic">🏎️</span>
-    <div>
-      <div class="pm-t">O Porsche é consequência, não atalho</div>
-      <div class="pm-d">${fmtBrl(pCusto,0)} = <b>${Math.round(pCusto/mrrAlvo)} meses</b> do teu MRR-alvo. Primeiro a renda recorrente — o carro vem sozinho depois, conquistado lá nos EUA.</div>
+  // ── Adicionar objetivo (global, escolhe a categoria) ──
+  const addHtml = `<div class="card mb16">
+    <div class="card-title">Adicionar objetivo</div>
+    <div class="goal-add">
+      <input type="text" id="goal-nome" class="cli-inp" placeholder="Novo objetivo..." maxlength="120">
+      <input type="number" id="goal-custo" class="cli-inp cli-inp-val" placeholder="R$ (opcional)" step="100">
+      <input type="date" id="goal-prazo" class="cli-inp goal-sel" title="Data alvo">
+      <select id="goal-track" class="cli-inp goal-sel" title="Categoria">
+        <option value="sofia">Sofia</option>
+        <option value="experiencias">Experiências</option>
+        <option value="corpo">Corpo</option>
+        <option value="mentalidade">Mentalidade</option>
+        <option value="lideranca">Liderança</option>
+        <option value="idioma">Idiomas</option>
+        <option value="renda">Renda/mês</option>
+        <option value="patrimonio">Patrimônio</option>
+      </select>
+      <button class="meta-add-btn" data-action="add-goal" title="Adicionar">+</button>
     </div>
-  </div>` : '';
+  </div>`;
 
-  return heroHtml + mrrHtml + bussolaHtml + passoHtml + bilheteHtml + jornadaHtml + escadaHtml + corpoHtml + porscheHtml;
+  return heroHtml + mrrHtml + bussolaHtml + passoHtml + bilheteHtml
+    + sec('❤️ Sofia', tracks.sofia)
+    + financeiroHtml
+    + sec('✈️ Experiências', tracks.experiencias)
+    + sec('💪 Corpo', tracks.corpo)
+    + sec('🧠 Mentalidade', tracks.mentalidade)
+    + sec('👥 Liderança', tracks.lideranca)
+    + sec('🌎 Idiomas', tracks.idioma)
+    + addHtml;
 }
 
 // ── ÁREA MANUAL (Saúde e modelo futuro) ──
@@ -2883,13 +2899,14 @@ function bindDetailDelegation(areaId) {
       });
     } else if (action === 'add-goal') {
       const titulo = $('goal-nome')?.value?.trim();
-      if(!titulo){ toast('Dê um nome à meta'); return; }
+      if(!titulo){ toast('Dê um nome ao objetivo'); return; }
       const prazo = $('goal-prazo')?.value||null;
-      const track = $('goal-track')?.value||'jornada';
+      const custo = parseFloat($('goal-custo')?.value)||0;
+      const track = $('goal-track')?.value||'sofia';
       const fonteRitmo = track==='renda'?'mrr':track==='patrimonio'?'savings':null;
       await guard(async()=>{
-        await postJson(`/api/area/${encodeURIComponent(areaId)}/goal`,{titulo,prazo,track,fonteRitmo});
-        await load(false); toast('✓ Meta adicionada');
+        await postJson(`/api/area/${encodeURIComponent(areaId)}/goal`,{titulo,prazo,track,fonteRitmo,custo});
+        await load(false); toast('✓ Objetivo adicionado');
       });
     } else if (action === 'edit-prazo') {
       e.stopPropagation();
@@ -3025,13 +3042,14 @@ function bindDetailDelegation(areaId) {
     } else if (e.target.id && e.target.id.indexOf('goal-')===0) {
       e.preventDefault();
       const titulo = $('goal-nome')?.value?.trim();
-      if(!titulo){ toast('Dê um nome à meta'); return; }
+      if(!titulo){ toast('Dê um nome ao objetivo'); return; }
       const prazo = $('goal-prazo')?.value||null;
-      const track = $('goal-track')?.value||'jornada';
+      const custo = parseFloat($('goal-custo')?.value)||0;
+      const track = $('goal-track')?.value||'sofia';
       const fonteRitmo = track==='renda'?'mrr':track==='patrimonio'?'savings':null;
       await guard(async()=>{
-        await postJson(`/api/area/${encodeURIComponent(areaId)}/goal`,{titulo,prazo,track,fonteRitmo});
-        await load(false); toast('✓ Meta adicionada');
+        await postJson(`/api/area/${encodeURIComponent(areaId)}/goal`,{titulo,prazo,track,fonteRitmo,custo});
+        await load(false); toast('✓ Objetivo adicionado');
       });
     } else if (e.target.classList.contains('cli-inp')) {
       e.preventDefault();
