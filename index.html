@@ -866,6 +866,30 @@ html, body {
 .bilhete-txt { font-size:17px; line-height:1.5; color:#e6e0ee; padding:8px 30px 2px 34px; }
 .bilhete-edit { position:absolute; top:10px; right:10px; }
 
+/* chip de data clicável no horizonte */
+.hz-date { font-family: var(--mono); font-size:10px; padding:2px 7px; border-radius:20px; background: var(--surface-2); border:1px solid var(--border2); color: var(--text2); white-space:nowrap; cursor:pointer; transition: border-color var(--t-fast); }
+.hz-date:hover { border-color: var(--area-color); }
+.hz-date b { color:#f0f0f0; }
+.hz-date.ok { color: var(--green); border-color: color-mix(in srgb, var(--green) 40%, var(--border2)); }
+.hz-date.warn { color:#f59e0b; border-color: color-mix(in srgb, #f59e0b 40%, var(--border2)); }
+.hz-date.bad { color: var(--red); border-color: color-mix(in srgb, var(--red) 40%, var(--border2)); }
+
+/* Escada do dinheiro (2 trilhos) */
+.escada { display:grid; grid-template-columns:1fr 1fr; gap:20px; }
+.esc-col { display:flex; flex-direction:column; }
+.esc-head { font-size: var(--text-xs); text-transform:uppercase; letter-spacing:.08em; color: var(--text2); font-weight:700; margin-bottom:8px; }
+.esc-row { display:flex; align-items:center; gap:8px; padding:5px 2px; border-bottom:1px solid var(--border); }
+.esc-row.done .esc-val { color: var(--text3); text-decoration:line-through; }
+.esc-dot { width:16px; height:16px; flex-shrink:0; border-radius:50%; border:2px solid color-mix(in srgb, var(--area-color) 45%, var(--bg3)); background: var(--bg3); cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:8px; color:#fff; transition: transform var(--t-fast); }
+.esc-dot:hover { transform: scale(1.15); }
+.esc-dot.done { background: var(--green); border-color: var(--green); }
+.esc-val { flex:1; font-size: var(--text-sm); font-weight:700; color:#e8e8e8; font-family:var(--mono); white-space:nowrap; }
+.esc-date { font-size:10px; color: var(--text3); font-family:var(--mono); cursor:pointer; white-space:nowrap; }
+.esc-date:hover { color: var(--area-color); }
+.esc-cd { font-size:10px; font-family:var(--mono); color: var(--text2); min-width:36px; text-align:right; }
+.esc-cd.ok { color: var(--green); }
+.esc-cd.bad { color: var(--red); }
+
 @keyframes northPulse { from { opacity:.14; } to { opacity:.32; } }
 @keyframes hzLine { from { transform: scaleY(0); } to { transform: scaleY(1); } }
 
@@ -873,9 +897,10 @@ html, body {
   .norte-hero { flex-direction: column; align-items: flex-start; gap:14px; }
   .norte-ringwrap { align-self: center; }
   .bilhete-txt { padding-left:30px; font-size:16px; }
+  .escada { grid-template-columns:1fr; gap:8px; }
   .goal-add { flex-wrap: wrap; }
   .goal-add .cli-inp { flex-basis:100%; }
-  .goal-add .cli-inp-val, .goal-add .goal-sel { flex-basis:46%; }
+  .goal-add .goal-sel { flex-basis:46%; }
 }
 
 /* ── SPARKLINE ── */
@@ -2295,23 +2320,33 @@ function trabalhoCockpitHtml(area){
 }
 
 // ── COCKPIT METAS & SONHOS ("A Bússola do Norte") ──
+const MES_ABREV = ['jan','fev','mar','abr','mai','jun','jul','ago','set','out','nov','dez'];
+function fmtMes(p){ if(!p) return 'sem data'; const [y,m]=p.split('-'); return (MES_ABREV[(+m||1)-1]||'?')+'/'+y; }
+function fmtDias(d){
+  if(d==null) return '';
+  if(d<0) return 'venceu';
+  if(d===0) return 'hoje';
+  if(d<45) return d+'d';
+  if(d<400) return Math.round(d/30)+'m';
+  return (d/365).toFixed(1).replace('.',',')+'a';
+}
 function metasCockpitHtml(area){
   const d = area.detalhe||{};
   const meta = D.meta||{};
-  const goals = d.goals||[];
+  const tracks = d.tracks||{};
   const estrela = d.estrela;
   const mrr = d.mrr||0, mrrAlvo = d.mrrAlvo||5000, mrrPct = d.mrrPct||0;
+  const heroPct = d.heroPct||0;
   const cor = area.cor || '#a855f7';
 
-  // ── Hero Estrela-Norte ──
+  // ── Hero Estrela-Norte (Sofia, com data real) ──
   let heroHtml = '';
   if (estrela) {
     const tt = esc(estrela.titulo);
     const ws = tt.split(' ');
     const titleHtml = ws.length>1 ? `${ws.slice(0,-1).join(' ')} <b>${ws.slice(-1)}</b>` : `<b>${tt}</b>`;
     const dias = estrela.diasPrazo;
-    const pct = estrela.pct||0;
-    const metaLine = `${dias!=null?`faltam <b>${dias}</b> dias · `:''}${pct}% do caminho`;
+    const metaLine = `${estrela.prazo?`${fmtMes(estrela.prazo)} · `:''}${dias!=null&&dias>0?`faltam <b>${dias}</b> dias`:dias!=null?'é agora':'sem data'}`;
     heroHtml = `<div class="card mb16 norte-hero">
       <div class="norte-orb"></div>
       <div class="norte-info">
@@ -2319,20 +2354,19 @@ function metasCockpitHtml(area){
         <div class="norte-title serif">${titleHtml}</div>
         <div class="norte-meta">${metaLine}</div>
       </div>
-      <div class="norte-ringwrap">${ringHtml(pct,92,cor)}<div class="norte-ringnum">${pct}<small>%</small></div></div>
+      <div class="norte-ringwrap">${ringHtml(heroPct,92,cor)}<div class="norte-ringnum">${heroPct}<small>%</small></div></div>
     </div>`;
   }
 
-  // ── Ponte do MRR (a âncora) — tom firme com fé ──
+  // ── Ponte do MRR (onde tu está HOJE) — tom firme com fé ──
   let mrrMsg;
-  if (mrr<=0) mrrMsg = 'MRR zerado — o 1º cliente recorrente liga o relógio dos sonhos. Fé e disciplina: começa por R$1.';
+  if (mrr<=0) mrrMsg = 'MRR zerado — o 1º cliente recorrente liga o relógio. Fé e disciplina: começa por R$1.';
   else if (mrr>=mrrAlvo) mrrMsg = '🎉 R$5k/mês recorrente. Independência na mira — agora é escalar.';
-  else if (d.mrrGrowthEtaMeses!=null) mrrMsg = `Faltam ${fmtBrl(mrrAlvo-mrr,0)} · no ritmo atual, R$5k em ~${d.mrrGrowthEtaMeses} meses.`;
-  else mrrMsg = `Faltam ${fmtBrl(mrrAlvo-mrr,0)} de MRR. Registra a recorrência em Finanças pra ver o ritmo.`;
+  else mrrMsg = `Faltam ${fmtBrl(mrrAlvo-mrr,0)} de recorrente pra cobrir o básico. Registra em Finanças.`;
   const mrrHtml = `<div class="card mb16 mrr-anchor">
     <div class="mrr-top">
       <div>
-        <div class="dec-label">Renda recorrente — o motor dos sonhos</div>
+        <div class="dec-label">Onde tu está hoje — renda recorrente</div>
         <div class="mrr-val serif">${fmtBrl(mrr,0)} <small>de ${fmtBrl(mrrAlvo,0)}/mês</small></div>
       </div>
       <div class="mrr-pct">${mrrPct}%</div>
@@ -2342,19 +2376,18 @@ function metasCockpitHtml(area){
   </div>`;
 
   // ── Strip da bússola ──
-  const feitos = goals.filter(g=>g.feito).length, total = goals.length;
   const pm = d.proximoMarco;
   const caixaDias = diasAte(meta.caixaData);
   const cobre = d.cobreDespesa;
   const bussolaHtml = `<div class="decision-strip mb16">
-    <div class="dec-tile ${feitos>0?'ok':''}">
-      <div class="dec-label">Sonhos batidos</div>
-      <div class="dec-val">${feitos}<small> /${total}</small></div>
-      <div class="dec-sub">no horizonte</div>
+    <div class="dec-tile ${d.feitos>0?'ok':''}">
+      <div class="dec-label">Marcos batidos</div>
+      <div class="dec-val">${d.feitos||0}<small> /${d.total||0}</small></div>
+      <div class="dec-sub">de todas as metas</div>
     </div>
-    <div class="dec-tile ${pm&&pm.diasPrazo!=null?(pm.diasPrazo<0?'bad':pm.diasPrazo<=30?'warn':''):''}">
+    <div class="dec-tile ${pm&&pm.diasPrazo!=null?(pm.diasPrazo<0?'bad':pm.diasPrazo<=60?'warn':''):''}">
       <div class="dec-label">Próximo marco</div>
-      <div class="dec-val">${pm&&pm.diasPrazo!=null?(pm.diasPrazo<0?'venc.':pm.diasPrazo+'d'):'—'}</div>
+      <div class="dec-val">${pm&&pm.diasPrazo!=null?fmtDias(pm.diasPrazo):'—'}</div>
       <div class="dec-sub">${pm?esc(pm.titulo):'tudo conquistado'}</div>
     </div>
     <div class="dec-tile ${caixaDias!=null?(caixaDias<0?'bad':caixaDias<=7?'warn':''):''}">
@@ -2374,8 +2407,8 @@ function metasCockpitHtml(area){
   const passoHtml = `<div class="card mb16 passo-card ${d.passoFeito?'done':''}">
     <div class="passo-check ${d.passoFeito?'done':''}" data-action="passo-toggle" title="Marcar o passo da semana">${d.passoFeito?'✓':''}</div>
     <div class="passo-body">
-      <div class="dec-label">O passo desta semana rumo ao R$5k</div>
-      <div class="passo-text ${!passo?'empty':''}">${passo?esc(passo):'Escolhe UMA ação que aproxima a renda recorrente — não dez.'}</div>
+      <div class="dec-label">O passo desta semana rumo ao próximo marco</div>
+      <div class="passo-text ${!passo?'empty':''}">${passo?esc(passo):'Escolhe UMA ação que aproxima o próximo degrau — não dez.'}</div>
     </div>
     <button class="hz-act" data-action="edit-passo" data-cur="${esc(passo)}" title="Editar passo">✏️</button>
   </div>`;
@@ -2388,72 +2421,90 @@ function metasCockpitHtml(area){
     <button class="hz-act bilhete-edit" data-action="edit-porque" data-cur="${esc(porque)}" title="Editar o porquê">✏️</button>
   </div>`;
 
-  // ── Linha do Horizonte ──
-  function etaInfo(g){
-    if(g.feito) return {label:'conquistado', cls:'ok'};
-    if(g.fonteRitmo==='savings'){
-      if(g.temRitmo) return {label:`~${g.etaMeses} meses`, cls: g.etaMeses>24?'warn':''};
-      return (g.alvo>g.atual)?{label:'sem ritmo', cls:'warn'}:{label:'', cls:''};
-    }
-    if(g.fonteRitmo==='mrr'){
-      if(g.custo>0&&g.temRitmo) return {label:`~${g.etaMeses} meses`, cls: g.etaMeses>24?'warn':''};
-      return {label:'sem renda recorrente, sem data', cls:'warn'};
-    }
-    if(g.diasPrazo!=null) return {label:`${g.diasPrazo}d`, cls: g.diasPrazo<0?'bad':g.diasPrazo<=30?'warn':''};
-    return {label:'', cls:''};
-  }
-  function barOrPill(g){
-    if(!g.fonteRitmo) return '';
-    let sub='';
-    if(g.fonteRitmo==='savings') sub=`${fmtBrl(g.atual||0,0)} de ${fmtBrl(g.alvo||0,0)}`;
-    else if(g.fonteRitmo==='mrr'&&g.custo>0) sub=`custa ${fmtBrl(g.custo,0)} · no ritmo do teu MRR`;
-    return `<div class="fin-bar hz-bar"><div class="fin-bar-fill ${g.feito?'done':''}" style="width:${g.pct||0}%"></div></div>${sub?`<div class="hz-sub">${sub}</div>`:''}`;
-  }
-  const horizonRows = goals.map(g=>{
-    const eta = etaInfo(g);
-    return `<div class="hz-goal ${g.feito?'done':''}">
-      <div class="hz-node ${g.feito?'done':''} ${g.estrela?'star':''}" data-action="goal-feito" data-gid="${esc(g.id)}" title="${g.feito?'Concluído':'Marcar como conquistado'}">${g.feito?'✓':g.estrela?'★':''}</div>
+  // ── Linha do horizonte (marco com data fixa + countdown) ──
+  function hzRow(g){
+    const cd = fmtDias(g.diasPrazo);
+    const cdCls = g.atingido?'ok':g.diasPrazo!=null&&g.diasPrazo<0?'bad':g.diasPrazo!=null&&g.diasPrazo<90?'warn':'';
+    const bar = (g.fonteRitmo==='savings'&&g.pct!=null) ? `<div class="fin-bar hz-bar"><div class="fin-bar-fill ${g.atingido?'done':''}" style="width:${g.pct}%"></div></div>` : '';
+    return `<div class="hz-goal ${g.atingido?'done':''}">
+      <div class="hz-node ${g.atingido?'done':''} ${g.estrela?'star':''}" data-action="goal-feito" data-gid="${esc(g.id)}" title="${g.atingido?'Conquistado':'Marcar conquistado'}">${g.atingido?'✓':g.estrela?'★':''}</div>
       <div class="hz-body">
         <div class="hz-head">
           <span class="hz-title serif">${esc(g.emoji||'🎯')} ${esc(g.titulo)}</span>
-          ${eta.label?`<span class="hz-eta ${eta.cls}">${eta.label}</span>`:''}
+          <span class="hz-date ${cdCls}" data-action="edit-prazo" data-gid="${esc(g.id)}" data-cur="${esc(g.prazo||'')}" title="Editar data">${fmtMes(g.prazo)}${cd?` · <b>${cd}</b>`:''}</span>
         </div>
         ${g.porque?`<div class="hz-porque">${esc(g.porque)}</div>`:''}
-        ${barOrPill(g)}
+        ${bar}
       </div>
       <div class="hz-actions">
-        ${!g.estrela?`<button class="hz-act" data-action="goal-estrela" data-gid="${esc(g.id)}" title="Definir como sonho nº1">☆</button>`:''}
+        ${!g.estrela?`<button class="hz-act" data-action="goal-estrela" data-gid="${esc(g.id)}" title="Sonho nº1">☆</button>`:''}
         <button class="hz-act" data-action="edit-goal" data-gid="${esc(g.id)}" data-titulo="${esc(g.titulo)}" data-porque="${esc(g.porque||'')}" title="Editar">✏️</button>
         <button class="hz-act del" data-action="delete-goal" data-gid="${esc(g.id)}" data-titulo="${esc(g.titulo)}" title="Remover">🗑</button>
       </div>
     </div>`;
-  }).join('') || '<div class="cli-empty">Sem sonhos no horizonte. Adicione o primeiro abaixo.</div>';
-  const horizonHtml = `<div class="card mb16">
-    <div class="card-title">A linha do horizonte</div>
-    <div class="horizon"><div class="hz-line"></div>${horizonRows}</div>
-    <div class="goal-add">
-      <input type="text" id="goal-nome" class="cli-inp" placeholder="Novo sonho..." maxlength="120">
-      <input type="number" id="goal-custo" class="cli-inp cli-inp-val" placeholder="R$ custo" step="100">
-      <select id="goal-fonte" class="cli-inp goal-sel" title="Como progride">
-        <option value="">marco simples</option>
-        <option value="savings">poupança</option>
-        <option value="mrr">recorrência</option>
+  }
+  const horizonBlock = (titulo, arr, addTrack) => {
+    if(!arr||!arr.length){ if(!addTrack) return ''; }
+    const rows = (arr&&arr.length) ? arr.map(hzRow).join('') : '<div class="cli-empty">Vazio. Adicione abaixo.</div>';
+    const add = addTrack ? `<div class="goal-add">
+      <input type="text" id="goal-nome" class="cli-inp" placeholder="Nova meta..." maxlength="120">
+      <input type="date" id="goal-prazo" class="cli-inp goal-sel" title="Data alvo">
+      <select id="goal-track" class="cli-inp goal-sel" title="Trilho">
+        <option value="jornada">jornada</option>
+        <option value="corpo">corpo</option>
+        <option value="idioma">idioma</option>
+        <option value="renda">renda/mês</option>
+        <option value="patrimonio">patrimônio</option>
       </select>
-      <button class="meta-add-btn" data-action="add-goal" title="Adicionar sonho">+</button>
-    </div>
-  </div>`;
+      <button class="meta-add-btn" data-action="add-goal" title="Adicionar meta">+</button>
+    </div>` : '';
+    return `<div class="card mb16">
+      <div class="card-title">${titulo}</div>
+      <div class="horizon"><div class="hz-line"></div>${rows}</div>
+      ${add}
+    </div>`;
+  };
+  const jornadaHtml = horizonBlock('A jornada até a Sofia', tracks.jornada, true);
+  const corpoIdioma = [...(tracks.corpo||[]), ...(tracks.idioma||[])];
+  const corpoHtml = horizonBlock('Corpo & idioma', corpoIdioma, false);
 
-  // ── Espelho do Porsche (custo de oportunidade) ──
-  const pr = d.porscheReframe||{};
-  const porscheHtml = (pr.metaPorsche>0) ? `<div class="card mb16 porsche-mirror">
-    <span class="pm-ic">🏎️</span>
-    <div>
-      <div class="pm-t">O Porsche é consequência, não atalho</div>
-      <div class="pm-d">${fmtBrl(pr.metaPorsche,0)} = <b>${pr.mesesMrr} meses</b> do teu MRR-alvo. O carro custa <b>${pr.ratioVsSofia}×</b> a viagem pra Sofia. Primeiro a renda recorrente — o Porsche vem sozinho depois.</div>
+  // ── Escada do dinheiro (2 trilhos: renda/mês + patrimônio) ──
+  function rungRow(g){
+    const cd = fmtDias(g.diasPrazo);
+    const cdCls = g.atingido?'ok':g.diasPrazo!=null&&g.diasPrazo<0?'bad':'';
+    return `<div class="esc-row ${g.atingido?'done':''}">
+      <span class="esc-dot ${g.atingido?'done':''}" data-action="goal-feito" data-gid="${esc(g.id)}" title="${g.atingido?'Atingido':'Marcar atingido'}">${g.atingido?'✓':''}</span>
+      <span class="esc-val">${esc(g.titulo.replace('/mês',''))}</span>
+      <span class="esc-date" data-action="edit-prazo" data-gid="${esc(g.id)}" data-cur="${esc(g.prazo||'')}" title="Editar data">${fmtMes(g.prazo)}</span>
+      <span class="esc-cd ${cdCls}">${cd}</span>
+    </div>`;
+  }
+  const escadaHtml = ((tracks.renda&&tracks.renda.length)||(tracks.patrimonio&&tracks.patrimonio.length)) ? `<div class="card mb16">
+    <div class="card-title">A escada do dinheiro</div>
+    <div class="escada">
+      <div class="esc-col">
+        <div class="esc-head">💸 Renda / mês</div>
+        ${(tracks.renda||[]).map(rungRow).join('')}
+      </div>
+      <div class="esc-col">
+        <div class="esc-head">🏦 Patrimônio</div>
+        ${(tracks.patrimonio||[]).map(rungRow).join('')}
+      </div>
     </div>
   </div>` : '';
 
-  return heroHtml + mrrHtml + bussolaHtml + passoHtml + bilheteHtml + horizonHtml + porscheHtml;
+  // ── Espelho do Porsche (custo de oportunidade) ──
+  const porscheG = (tracks.jornada||[]).find(g=>g.id==='goal-porsche');
+  const pCusto = porscheG ? porscheG.custo : 0;
+  const porscheHtml = (pCusto>0) ? `<div class="card mb16 porsche-mirror">
+    <span class="pm-ic">🏎️</span>
+    <div>
+      <div class="pm-t">O Porsche é consequência, não atalho</div>
+      <div class="pm-d">${fmtBrl(pCusto,0)} = <b>${Math.round(pCusto/mrrAlvo)} meses</b> do teu MRR-alvo. Primeiro a renda recorrente — o carro vem sozinho depois, conquistado lá nos EUA.</div>
+    </div>
+  </div>` : '';
+
+  return heroHtml + mrrHtml + bussolaHtml + passoHtml + bilheteHtml + jornadaHtml + escadaHtml + corpoHtml + porscheHtml;
 }
 
 // ── ÁREA MANUAL (Saúde e modelo futuro) ──
@@ -2782,12 +2833,22 @@ function bindDetailDelegation(areaId) {
       });
     } else if (action === 'add-goal') {
       const titulo = $('goal-nome')?.value?.trim();
-      if(!titulo){ toast('Dê um nome ao sonho'); return; }
-      const custo = parseFloat($('goal-custo')?.value)||0;
-      const fonteRitmo = $('goal-fonte')?.value||null;
+      if(!titulo){ toast('Dê um nome à meta'); return; }
+      const prazo = $('goal-prazo')?.value||null;
+      const track = $('goal-track')?.value||'jornada';
+      const fonteRitmo = track==='renda'?'mrr':track==='patrimonio'?'savings':null;
       await guard(async()=>{
-        await postJson(`/api/area/${encodeURIComponent(areaId)}/goal`,{titulo,custo,fonteRitmo});
-        await load(false); toast('✓ Sonho adicionado ao horizonte');
+        await postJson(`/api/area/${encodeURIComponent(areaId)}/goal`,{titulo,prazo,track,fonteRitmo});
+        await load(false); toast('✓ Meta adicionada');
+      });
+    } else if (action === 'edit-prazo') {
+      e.stopPropagation();
+      const gid = el.dataset.gid;
+      const novo = prompt('Data alvo (AAAA-MM-DD) — vazio pra tirar a data:', el.dataset.cur||'');
+      if(novo===null) return;
+      await guard(async()=>{
+        await fetch(`/api/area/${encodeURIComponent(areaId)}/goal/${encodeURIComponent(gid)}`,{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify({prazo:novo.trim()})});
+        await load(false); toast('✓ Data atualizada');
       });
     } else if (action === 'goal-feito') {
       const gid = el.dataset.gid;
@@ -2862,12 +2923,13 @@ function bindDetailDelegation(areaId) {
     } else if (e.target.id && e.target.id.indexOf('goal-')===0) {
       e.preventDefault();
       const titulo = $('goal-nome')?.value?.trim();
-      if(!titulo){ toast('Dê um nome ao sonho'); return; }
-      const custo = parseFloat($('goal-custo')?.value)||0;
-      const fonteRitmo = $('goal-fonte')?.value||null;
+      if(!titulo){ toast('Dê um nome à meta'); return; }
+      const prazo = $('goal-prazo')?.value||null;
+      const track = $('goal-track')?.value||'jornada';
+      const fonteRitmo = track==='renda'?'mrr':track==='patrimonio'?'savings':null;
       await guard(async()=>{
-        await postJson(`/api/area/${encodeURIComponent(areaId)}/goal`,{titulo,custo,fonteRitmo});
-        await load(false); toast('✓ Sonho adicionado ao horizonte');
+        await postJson(`/api/area/${encodeURIComponent(areaId)}/goal`,{titulo,prazo,track,fonteRitmo});
+        await load(false); toast('✓ Meta adicionada');
       });
     } else if (e.target.classList.contains('cli-inp')) {
       e.preventDefault();
