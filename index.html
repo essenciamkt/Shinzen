@@ -890,6 +890,27 @@ html, body {
 .esc-cd.ok { color: var(--green); }
 .esc-cd.bad { color: var(--red); }
 
+/* Missões por meta (barra + contador + accordion) */
+.hz-prog { display:flex; align-items:center; gap:10px; margin-top:8px; cursor:pointer; }
+.hz-prog .hz-bar { flex:1; margin-top:0; }
+.hz-count { font-family:var(--mono); font-size:11px; color:var(--text2); white-space:nowrap; font-weight:700; }
+.hz-chev { color:var(--area-color); margin-left:5px; font-size:9px; }
+.hz-missoes { display:none; margin-top:10px; padding-left:10px; border-left:2px solid color-mix(in srgb, var(--area-color) 25%, var(--border)); }
+.hz-missoes.open { display:block; animation: detIn .25s var(--t-slow) both; }
+.mz-row { display:flex; align-items:center; gap:9px; padding:5px 2px; }
+.mz-row + .mz-row { border-top:1px solid var(--border); }
+.mz-check { width:20px; height:20px; flex-shrink:0; border-radius:6px; border:1.5px solid color-mix(in srgb, var(--area-color) 45%, var(--bg3)); background:var(--surface-2); cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:10px; font-family:var(--mono); color:var(--text3); transition:all var(--t-fast); }
+.mz-check:hover { border-color:var(--area-color); }
+.mz-check.done { background:var(--green); border-color:var(--green); color:#fff; }
+.mz-text { flex:1; font-size:var(--text-sm); color:var(--text); line-height:1.35; }
+.mz-row.done .mz-text { color:var(--text3); text-decoration:line-through; }
+.mz-acts { display:flex; gap:2px; flex-shrink:0; opacity:0; transition:opacity var(--t-fast); }
+.mz-row:hover .mz-acts { opacity:1; }
+.mz-empty { font-size:var(--text-xs); color:var(--text3); padding:6px 2px; }
+.mz-add { display:flex; gap:8px; align-items:center; margin-top:8px; }
+.mz-inp { flex:1; min-width:0; background:var(--surface-2); border:1px solid var(--border2); border-radius:var(--r); color:var(--text); font-size:var(--text-sm); padding:8px 10px; outline:none; transition:border-color var(--t-fast); }
+.mz-inp:focus { border-color:var(--area-color); }
+
 @keyframes northPulse { from { opacity:.14; } to { opacity:.32; } }
 @keyframes hzLine { from { transform: scaleY(0); } to { transform: scaleY(1); } }
 
@@ -901,6 +922,7 @@ html, body {
   .goal-add { flex-wrap: wrap; }
   .goal-add .cli-inp { flex-basis:100%; }
   .goal-add .goal-sel { flex-basis:46%; }
+  .hz-actions, .mz-acts { opacity:1; }
 }
 
 /* ── SPARKLINE ── */
@@ -2330,6 +2352,7 @@ function fmtDias(d){
   if(d<400) return Math.round(d/30)+'m';
   return (d/365).toFixed(1).replace('.',',')+'a';
 }
+const _metasExpanded = new Set(); // quais metas estão com as missões abertas (persiste entre re-renders)
 function metasCockpitHtml(area){
   const d = area.detalhe||{};
   const meta = D.meta||{};
@@ -2422,10 +2445,37 @@ function metasCockpitHtml(area){
   </div>`;
 
   // ── Linha do horizonte (marco com data fixa + countdown) ──
+  function misAccordion(g){
+    const open = _metasExpanded.has(g.id);
+    const rows = (g.missoes||[]).map((m,i)=>`<div class="mz-row ${m.feito?'done':''}">
+      <span class="mz-check ${m.feito?'done':''}" data-action="missao-toggle" data-gid="${esc(g.id)}" data-mid="${esc(m.id)}" title="${m.feito?'Feito':'Marcar feito'}">${m.feito?'✓':(i+1)}</span>
+      <span class="mz-text">${esc(m.texto)}</span>
+      <span class="mz-acts">
+        <button class="hz-act" data-action="edit-missao" data-gid="${esc(g.id)}" data-mid="${esc(m.id)}" data-cur="${esc(m.texto)}" title="Editar">✏️</button>
+        <button class="hz-act del" data-action="delete-missao" data-gid="${esc(g.id)}" data-mid="${esc(m.id)}" title="Remover">🗑</button>
+      </span>
+    </div>`).join('');
+    return `<div class="hz-missoes ${open?'open':''}" data-mz="${esc(g.id)}">
+      ${rows||'<div class="mz-empty">Sem missões ainda — adicione os passos abaixo.</div>'}
+      <div class="mz-add">
+        <input type="text" class="mz-inp" id="mz-inp-${esc(g.id)}" placeholder="Nova missão..." maxlength="140">
+        <button class="meta-add-btn" data-action="add-missao" data-gid="${esc(g.id)}" title="Adicionar missão">+</button>
+      </div>
+    </div>`;
+  }
   function hzRow(g){
     const cd = fmtDias(g.diasPrazo);
     const cdCls = g.atingido?'ok':g.diasPrazo!=null&&g.diasPrazo<0?'bad':g.diasPrazo!=null&&g.diasPrazo<90?'warn':'';
-    const bar = (g.fonteRitmo==='savings'&&g.pct!=null) ? `<div class="fin-bar hz-bar"><div class="fin-bar-fill ${g.atingido?'done':''}" style="width:${g.pct}%"></div></div>` : '';
+    const open = _metasExpanded.has(g.id);
+    let progBlock = '';
+    if (g.misTotal>0){
+      progBlock = `<div class="hz-prog" data-action="goal-missoes" data-gid="${esc(g.id)}" title="Ver as missões que faltam">
+        <div class="fin-bar hz-bar"><div class="fin-bar-fill ${g.atingido?'done':''}" style="width:${g.pct||0}%"></div></div>
+        <span class="hz-count">${g.misFeitas}/${g.misTotal}<span class="hz-chev">${open?'▾':'▸'}</span></span>
+      </div>${misAccordion(g)}`;
+    } else if (g.fonteRitmo==='savings' && g.pct!=null){
+      progBlock = `<div class="fin-bar hz-bar"><div class="fin-bar-fill ${g.atingido?'done':''}" style="width:${g.pct}%"></div></div>`;
+    }
     return `<div class="hz-goal ${g.atingido?'done':''}">
       <div class="hz-node ${g.atingido?'done':''} ${g.estrela?'star':''}" data-action="goal-feito" data-gid="${esc(g.id)}" title="${g.atingido?'Conquistado':'Marcar conquistado'}">${g.atingido?'✓':g.estrela?'★':''}</div>
       <div class="hz-body">
@@ -2434,7 +2484,7 @@ function metasCockpitHtml(area){
           <span class="hz-date ${cdCls}" data-action="edit-prazo" data-gid="${esc(g.id)}" data-cur="${esc(g.prazo||'')}" title="Editar data">${fmtMes(g.prazo)}${cd?` · <b>${cd}</b>`:''}</span>
         </div>
         ${g.porque?`<div class="hz-porque">${esc(g.porque)}</div>`:''}
-        ${bar}
+        ${progBlock}
       </div>
       <div class="hz-actions">
         ${!g.estrela?`<button class="hz-act" data-action="goal-estrela" data-gid="${esc(g.id)}" title="Sonho nº1">☆</button>`:''}
@@ -2882,6 +2932,47 @@ function bindDetailDelegation(areaId) {
         await fetch(`/api/area/${encodeURIComponent(areaId)}/goal/${encodeURIComponent(gid)}`,{method:'DELETE'});
         await load(false); toast('Sonho removido');
       });
+    } else if (action === 'goal-missoes') {
+      const gid = el.dataset.gid;
+      const cont = body.querySelector(`.hz-missoes[data-mz="${gid}"]`);
+      const chev = el.querySelector('.hz-chev');
+      if(_metasExpanded.has(gid)){ _metasExpanded.delete(gid); cont&&cont.classList.remove('open'); if(chev)chev.textContent='▸'; }
+      else { _metasExpanded.add(gid); cont&&cont.classList.add('open'); if(chev)chev.textContent='▾'; }
+    } else if (action === 'missao-toggle') {
+      const gid=el.dataset.gid, mid=el.dataset.mid;
+      _metasExpanded.add(gid);
+      await guard(async()=>{
+        await fetch(`/api/area/${encodeURIComponent(areaId)}/goal/${encodeURIComponent(gid)}/missao/${encodeURIComponent(mid)}`,{method:'PATCH',headers:{'Content-Type':'application/json'},body:'{}'});
+        await load(false);
+      });
+    } else if (action === 'add-missao') {
+      const gid=el.dataset.gid; const inp=$('mz-inp-'+gid);
+      const texto=inp?.value?.trim();
+      if(!texto){ toast('Escreve a missão'); return; }
+      _metasExpanded.add(gid);
+      await guard(async()=>{
+        inp.value='';
+        await postJson(`/api/area/${encodeURIComponent(areaId)}/goal/${encodeURIComponent(gid)}/missao`,{texto});
+        await load(false); toast('✓ Missão adicionada');
+      });
+    } else if (action === 'edit-missao') {
+      e.stopPropagation();
+      const gid=el.dataset.gid, mid=el.dataset.mid;
+      const novo=prompt('Editar missão:', el.dataset.cur||'');
+      if(novo===null||!novo.trim()) return;
+      _metasExpanded.add(gid);
+      await guard(async()=>{
+        await fetch(`/api/area/${encodeURIComponent(areaId)}/goal/${encodeURIComponent(gid)}/missao/${encodeURIComponent(mid)}`,{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify({texto:novo.trim()})});
+        await load(false); toast('✓ Missão atualizada');
+      });
+    } else if (action === 'delete-missao') {
+      e.stopPropagation();
+      const gid=el.dataset.gid, mid=el.dataset.mid;
+      _metasExpanded.add(gid);
+      await guard(async()=>{
+        await fetch(`/api/area/${encodeURIComponent(areaId)}/goal/${encodeURIComponent(gid)}/missao/${encodeURIComponent(mid)}`,{method:'DELETE'});
+        await load(false); toast('Missão removida');
+      });
     } else if (action === 'passo-toggle') {
       await guard(async()=>{
         const j = await postJson(`/api/area/${encodeURIComponent(areaId)}/missao/passo-semana`,{});
@@ -2919,6 +3010,17 @@ function bindDetailDelegation(areaId) {
         e.target.value='';
         await postJson(`/api/area/${encodeURIComponent(areaId)}/meta`,{texto});
         await load(false); toast('✓ Meta criada');
+      });
+    } else if (e.target.classList.contains('mz-inp')) {
+      e.preventDefault();
+      const gid = e.target.id.replace('mz-inp-','');
+      const texto = e.target.value.trim();
+      if(!texto) return;
+      _metasExpanded.add(gid);
+      await guard(async()=>{
+        e.target.value='';
+        await postJson(`/api/area/${encodeURIComponent(areaId)}/goal/${encodeURIComponent(gid)}/missao`,{texto});
+        await load(false); toast('✓ Missão adicionada');
       });
     } else if (e.target.id && e.target.id.indexOf('goal-')===0) {
       e.preventDefault();

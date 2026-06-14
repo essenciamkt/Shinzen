@@ -101,7 +101,59 @@
           "custo": 0,
           "prazo": "2027-07-01",
           "estrela": false,
-          "feito": false
+          "feito": false,
+          "missoes": [
+            {
+              "id": "m1",
+              "texto": "Faturar o 1º R$1k",
+              "feito": false
+            },
+            {
+              "id": "m2",
+              "texto": "Juntar 6 meses de reserva",
+              "feito": false
+            },
+            {
+              "id": "m3",
+              "texto": "Pesquisar emancipação",
+              "feito": false
+            },
+            {
+              "id": "m4",
+              "texto": "Conversar com os pais",
+              "feito": false
+            },
+            {
+              "id": "m5",
+              "texto": "Iniciar a emancipação",
+              "feito": false
+            },
+            {
+              "id": "m6",
+              "texto": "Bater R$10k/mês estável",
+              "feito": false
+            },
+            {
+              "id": "m7",
+              "texto": "Escolher a 1ª cidade",
+              "feito": false
+            },
+            {
+              "id": "m8",
+              "texto": "Montar setup remoto",
+              "feito": false
+            },
+            {
+              "id": "m9",
+              "texto": "Emancipação concluída",
+              "feito": false
+            },
+            {
+              "id": "m10",
+              "texto": "Fazer a mudança",
+              "feito": false
+            }
+          ]
         },
         {
           "id": "goal-airbnb",
@@ -113,7 +165,59 @@
           "custo": 0,
           "prazo": "2027-08-01",
           "estrela": false,
-          "feito": false
+          "feito": false,
+          "missoes": [
+            {
+              "id": "m1",
+              "texto": "Renda cobre aluguel + vida",
+              "feito": false
+            },
+            {
+              "id": "m2",
+              "texto": "Definir a 1ª cidade",
+              "feito": false
+            },
+            {
+              "id": "m3",
+              "texto": "Reservar o 1º Airbnb",
+              "feito": false
+            },
+            {
+              "id": "m4",
+              "texto": "Reduzir posses ao essencial",
+              "feito": false
+            },
+            {
+              "id": "m5",
+              "texto": "Rotina de trabalho remoto",
+              "feito": false
+            },
+            {
+              "id": "m6",
+              "texto": "1º mês fora completo",
+              "feito": false
+            },
+            {
+              "id": "m7",
+              "texto": "Mudar pra 2ª cidade",
+              "feito": false
+            },
+            {
+              "id": "m8",
+              "texto": "Rede de contatos local",
+              "feito": false
+            },
+            {
+              "id": "m9",
+              "texto": "6 meses nômade",
+              "feito": false
+            },
+            {
+              "id": "m10",
+              "texto": "Estilo de vida firmado",
+              "feito": false
+            }
+          ]
         },
         {
           "id": "goal-eua",
@@ -125,7 +229,59 @@
           "custo": 0,
           "prazo": "2028-07-01",
           "estrela": false,
-          "feito": false
+          "feito": false,
+          "missoes": [
+            {
+              "id": "m1",
+              "texto": "Tirar o passaporte",
+              "feito": false
+            },
+            {
+              "id": "m2",
+              "texto": "Juntar a grana da viagem",
+              "feito": false
+            },
+            {
+              "id": "m3",
+              "texto": "Preencher o DS-160",
+              "feito": false
+            },
+            {
+              "id": "m4",
+              "texto": "Agendar entrevista do visto",
+              "feito": false
+            },
+            {
+              "id": "m5",
+              "texto": "Reunir provas de vínculo/renda",
+              "feito": false
+            },
+            {
+              "id": "m6",
+              "texto": "Entrevista no consulado",
+              "feito": false
+            },
+            {
+              "id": "m7",
+              "texto": "Visto aprovado",
+              "feito": false
+            },
+            {
+              "id": "m8",
+              "texto": "Comprar a passagem",
+              "feito": false
+            },
+            {
+              "id": "m9",
+              "texto": "Reservar Airbnb nos EUA",
+              "feito": false
+            },
+            {
+              "id": "m10",
+              "texto": "Embarcar",
+              "feito": false
+            }
+          ]
         },
         {
           "id": "goal-porsche",
@@ -137,7 +293,59 @@
           "custo": 350000,
           "prazo": "2028-12-01",
           "estrela": false,
-          "feito": false
+          "feito": false,
+          "missoes": [
+            {
+              "id": "m1",
+              "texto": "Patrimônio de R$100k",
+              "feito": false
+            },
+            {
+              "id": "m2",
+              "texto": "Definir o modelo",
+              "feito": false
+            },
+            {
+              "id": "m3",
+              "texto": "Tirar a carteira",
+              "feito": false
+            },
+            {
+              "id": "m4",
+              "texto": "Patrimônio de R$500k",
+              "feito": false
+            },
+            {
+              "id": "m5",
+              "texto": "Reserva intacta pós-compra",
+              "feito": false
+            },
+            {
+              "id": "m6",
+              "texto": "Achar a unidade certa",
+              "feito": false
+            },
+            {
+              "id": "m7",
+              "texto": "Test drive",
+              "feito": false
+            },
+            {
+              "id": "m8",
+              "texto": "Negociar",
+              "feito": false
+            },
+            {
+              "id": "m9",
+              "texto": "Pagar à vista",
+              "feito": false
+            },
+            {
+              "id": "m10",
+              "texto": "Dirigir o Porsche",
+              "feito": false
+            }
+          ]
         },
         {
           "id": "goal-sofia",
@@ -149,7 +357,59 @@
           "custo": 0,
           "prazo": "2029-06-01",
           "estrela": true,
-          "feito": false
+          "feito": false,
+          "missoes": [
+            {
+              "id": "m1",
+              "texto": "Virar um homem de respeito",
+              "feito": false
+            },
+            {
+              "id": "m2",
+              "texto": "Inglês fluente",
+              "feito": false
+            },
+            {
+              "id": "m3",
+              "texto": "Corpo em forma",
+              "feito": false
+            },
+            {
+              "id": "m4",
+              "texto": "Estar nos EUA",
+              "feito": false
+            },
+            {
+              "id": "m5",
+              "texto": "Ter o Porsche",
+              "feito": false
+            },
+            {
+              "id": "m6",
+              "texto": "Ir até Utah",
+              "feito": false
+            },
+            {
+              "id": "m7",
+              "texto": "Primeiro contato",
+              "feito": false
+            },
+            {
+              "id": "m8",
+              "texto": "Primeiro encontro",
+              "feito": false
+            },
+            {
+              "id": "m9",
+              "texto": "Conquistar a confiança dela",
+              "feito": false
+            },
+            {
+              "id": "m10",
+              "texto": "Construir a vida juntos",
+              "feito": false
+            }
+          ]
         },
         {
           "id": "goal-renda-0",
@@ -161,7 +421,8 @@
           "custo": 10000,
           "prazo": "2026-11-01",
           "estrela": false,
-          "feito": false
+          "feito": false,
+          "missoes": []
         },
         {
           "id": "goal-renda-1",
@@ -173,7 +434,8 @@
           "custo": 20000,
           "prazo": "2027-02-01",
           "estrela": false,
-          "feito": false
+          "feito": false,
+          "missoes": []
         },
         {
           "id": "goal-renda-2",
@@ -185,7 +447,8 @@
           "custo": 30000,
           "prazo": "2027-04-01",
           "estrela": false,
-          "feito": false
+          "feito": false,
+          "missoes": []
         },
         {
           "id": "goal-renda-3",
@@ -197,7 +460,8 @@
           "custo": 50000,
           "prazo": "2027-07-01",
           "estrela": false,
-          "feito": false
+          "feito": false,
+          "missoes": []
         },
         {
           "id": "goal-renda-4",
@@ -209,7 +473,8 @@
           "custo": 80000,
           "prazo": "2027-10-01",
           "estrela": false,
-          "feito": false
+          "feito": false,
+          "missoes": []
         },
         {
           "id": "goal-renda-5",
@@ -221,7 +486,8 @@
           "custo": 100000,
           "prazo": "2027-12-01",
           "estrela": false,
-          "feito": false
+          "feito": false,
+          "missoes": []
         },
         {
           "id": "goal-renda-6",
@@ -233,7 +499,8 @@
           "custo": 150000,
           "prazo": "2028-03-01",
           "estrela": false,
-          "feito": false
+          "feito": false,
+          "missoes": []
         },
         {
           "id": "goal-renda-7",
@@ -245,7 +512,8 @@
           "custo": 200000,
           "prazo": "2028-06-01",
           "estrela": false,
-          "feito": false
+          "feito": false,
+          "missoes": []
         },
         {
           "id": "goal-renda-8",
@@ -257,7 +525,8 @@
           "custo": 300000,
           "prazo": "2028-11-01",
           "estrela": false,
-          "feito": false
+          "feito": false,
+          "missoes": []
         },
         {
           "id": "goal-renda-9",
@@ -269,7 +538,8 @@
           "custo": 500000,
           "prazo": "2029-06-01",
           "estrela": false,
-          "feito": false
+          "feito": false,
+          "missoes": []
         },
         {
           "id": "goal-renda-10",
@@ -281,7 +551,8 @@
           "custo": 700000,
           "prazo": "2029-12-01",
           "estrela": false,
-          "feito": false
+          "feito": false,
+          "missoes": []
         },
         {
           "id": "goal-renda-11",
@@ -293,7 +564,8 @@
           "custo": 1000000,
           "prazo": "2030-07-01",
           "estrela": false,
-          "feito": false
+          "feito": false,
+          "missoes": []
         },
         {
           "id": "goal-renda-12",
@@ -305,7 +577,8 @@
           "custo": 1500000,
           "prazo": "2031-02-01",
           "estrela": false,
-          "feito": false
+          "feito": false,
+          "missoes": []
         },
         {
           "id": "goal-renda-13",
@@ -317,7 +590,8 @@
           "custo": 2000000,
           "prazo": "2031-08-01",
           "estrela": false,
-          "feito": false
+          "feito": false,
+          "missoes": []
         },
         {
           "id": "goal-renda-14",
@@ -329,7 +603,8 @@
           "custo": 3000000,
           "prazo": "2032-05-01",
           "estrela": false,
-          "feito": false
+          "feito": false,
+          "missoes": []
         },
         {
           "id": "goal-renda-15",
@@ -341,7 +616,8 @@
           "custo": 5000000,
           "prazo": "2033-06-01",
           "estrela": false,
-          "feito": false
+          "feito": false,
+          "missoes": []
         },
         {
           "id": "goal-patr-0",
@@ -353,7 +629,8 @@
           "custo": 10000,
           "prazo": "2026-10-01",
           "estrela": false,
-          "feito": false
+          "feito": false,
+          "missoes": []
         },
         {
           "id": "goal-patr-1",
@@ -365,7 +642,8 @@
           "custo": 50000,
           "prazo": "2027-02-01",
           "estrela": false,
-          "feito": false
+          "feito": false,
+          "missoes": []
         },
         {
           "id": "goal-patr-2",
@@ -377,7 +655,8 @@
           "custo": 100000,
           "prazo": "2027-05-01",
           "estrela": false,
-          "feito": false
+          "feito": false,
+          "missoes": []
         },
         {
           "id": "goal-patr-3",
@@ -389,7 +668,8 @@
           "custo": 200000,
           "prazo": "2027-08-01",
           "estrela": false,
-          "feito": false
+          "feito": false,
+          "missoes": []
         },
         {
           "id": "goal-patr-4",
@@ -401,7 +681,8 @@
           "custo": 500000,
           "prazo": "2028-01-01",
           "estrela": false,
-          "feito": false
+          "feito": false,
+          "missoes": []
         },
         {
           "id": "goal-patr-5",
@@ -413,7 +694,8 @@
           "custo": 1000000,
           "prazo": "2028-07-01",
           "estrela": false,
-          "feito": false
+          "feito": false,
+          "missoes": []
         },
         {
           "id": "goal-patr-6",
@@ -425,7 +707,8 @@
           "custo": 2000000,
           "prazo": "2029-02-01",
           "estrela": false,
-          "feito": false
+          "feito": false,
+          "missoes": []
         },
         {
           "id": "goal-patr-7",
@@ -437,7 +720,8 @@
           "custo": 3000000,
           "prazo": "2029-07-01",
           "estrela": false,
-          "feito": false
+          "feito": false,
+          "missoes": []
         },
         {
           "id": "goal-patr-8",
@@ -449,7 +733,8 @@
           "custo": 4000000,
           "prazo": "2029-11-01",
           "estrela": false,
-          "feito": false
+          "feito": false,
+          "missoes": []
         },
         {
           "id": "goal-patr-9",
@@ -461,7 +746,8 @@
           "custo": 5000000,
           "prazo": "2030-03-01",
           "estrela": false,
-          "feito": false
+          "feito": false,
+          "missoes": []
         },
         {
           "id": "goal-patr-10",
@@ -473,7 +759,8 @@
           "custo": 10000000,
           "prazo": "2030-12-01",
           "estrela": false,
-          "feito": false
+          "feito": false,
+          "missoes": []
         },
         {
           "id": "goal-patr-11",
@@ -485,7 +772,8 @@
           "custo": 15000000,
           "prazo": "2031-08-01",
           "estrela": false,
-          "feito": false
+          "feito": false,
+          "missoes": []
         },
         {
           "id": "goal-patr-12",
@@ -497,7 +785,8 @@
           "custo": 20000000,
           "prazo": "2032-03-01",
           "estrela": false,
-          "feito": false
+          "feito": false,
+          "missoes": []
         },
         {
           "id": "goal-patr-13",
@@ -509,7 +798,8 @@
           "custo": 30000000,
           "prazo": "2033-01-01",
           "estrela": false,
-          "feito": false
+          "feito": false,
+          "missoes": []
         },
         {
           "id": "goal-patr-14",
@@ -521,7 +811,8 @@
           "custo": 50000000,
           "prazo": "2034-01-01",
           "estrela": false,
-          "feito": false
+          "feito": false,
+          "missoes": []
         },
         {
           "id": "goal-patr-15",
@@ -533,7 +824,8 @@
           "custo": 70000000,
           "prazo": "2034-11-01",
           "estrela": false,
-          "feito": false
+          "feito": false,
+          "missoes": []
         },
         {
           "id": "goal-patr-16",
@@ -545,7 +837,8 @@
           "custo": 100000000,
           "prazo": "2035-12-01",
           "estrela": false,
-          "feito": false
+          "feito": false,
+          "missoes": []
         },
         {
           "id": "goal-patr-17",
@@ -557,7 +850,8 @@
           "custo": 300000000,
           "prazo": "2037-06-01",
           "estrela": false,
-          "feito": false
+          "feito": false,
+          "missoes": []
         },
         {
           "id": "goal-patr-18",
@@ -569,7 +863,8 @@
           "custo": 500000000,
           "prazo": "2039-01-01",
           "estrela": false,
-          "feito": false
+          "feito": false,
+          "missoes": []
         },
         {
           "id": "goal-abdomen",
@@ -581,7 +876,59 @@
           "custo": 0,
           "prazo": "2027-07-01",
           "estrela": false,
-          "feito": false
+          "feito": false,
+          "missoes": [
+            {
+              "id": "m1",
+              "texto": "Montar o treino",
+              "feito": false
+            },
+            {
+              "id": "m2",
+              "texto": "Ajustar a dieta",
+              "feito": false
+            },
+            {
+              "id": "m3",
+              "texto": "Treinar 3x/sem por 1 mês",
+              "feito": false
+            },
+            {
+              "id": "m4",
+              "texto": "Cardio na rotina",
+              "feito": false
+            },
+            {
+              "id": "m5",
+              "texto": "Entrar em déficit",
+              "feito": false
+            },
+            {
+              "id": "m6",
+              "texto": "3 meses consistente",
+              "feito": false
+            },
+            {
+              "id": "m7",
+              "texto": "Reduzir % de gordura",
+              "feito": false
+            },
+            {
+              "id": "m8",
+              "texto": "Core forte",
+              "feito": false
+            },
+            {
+              "id": "m9",
+              "texto": "6 meses firme",
+              "feito": false
+            },
+            {
+              "id": "m10",
+              "texto": "Abdômen visível",
+              "feito": false
+            }
+          ]
         },
         {
           "id": "goal-musculoso",
@@ -593,7 +940,59 @@
           "custo": 0,
           "prazo": "2028-07-01",
           "estrela": false,
-          "feito": false
+          "feito": false,
+          "missoes": [
+            {
+              "id": "m1",
+              "texto": "Treino de hipertrofia",
+              "feito": false
+            },
+            {
+              "id": "m2",
+              "texto": "Comer em superávit",
+              "feito": false
+            },
+            {
+              "id": "m3",
+              "texto": "Progressão de carga",
+              "feito": false
+            },
+            {
+              "id": "m4",
+              "texto": "3 meses firme",
+              "feito": false
+            },
+            {
+              "id": "m5",
+              "texto": "Costas e ombros",
+              "feito": false
+            },
+            {
+              "id": "m6",
+              "texto": "Pernas pesadas",
+              "feito": false
+            },
+            {
+              "id": "m7",
+              "texto": "1 ano de treino",
+              "feito": false
+            },
+            {
+              "id": "m8",
+              "texto": "Braços e peito",
+              "feito": false
+            },
+            {
+              "id": "m9",
+              "texto": "Ajuste fino",
+              "feito": false
+            },
+            {
+              "id": "m10",
+              "texto": "Shape musculoso",
+              "feito": false
+            }
+          ]
         },
         {
           "id": "goal-espanhol",
@@ -605,7 +1004,59 @@
           "custo": 0,
           "prazo": "2028-01-01",
           "estrela": false,
-          "feito": false
+          "feito": false,
+          "missoes": [
+            {
+              "id": "m1",
+              "texto": "App todo dia",
+              "feito": false
+            },
+            {
+              "id": "m2",
+              "texto": "500 palavras",
+              "feito": false
+            },
+            {
+              "id": "m3",
+              "texto": "Gramática base",
+              "feito": false
+            },
+            {
+              "id": "m4",
+              "texto": "Série em espanhol",
+              "feito": false
+            },
+            {
+              "id": "m5",
+              "texto": "1ª conversa real",
+              "feito": false
+            },
+            {
+              "id": "m6",
+              "texto": "Pensar em espanhol",
+              "feito": false
+            },
+            {
+              "id": "m7",
+              "texto": "Ler um livro",
+              "feito": false
+            },
+            {
+              "id": "m8",
+              "texto": "Conversa fluida",
+              "feito": false
+            },
+            {
+              "id": "m9",
+              "texto": "Sotaque natural",
+              "feito": false
+            },
+            {
+              "id": "m10",
+              "texto": "Fluente",
+              "feito": false
+            }
+          ]
         },
         {
           "id": "goal-ingles",
@@ -617,7 +1068,59 @@
           "custo": 0,
           "prazo": "2028-04-01",
           "estrela": false,
-          "feito": false
+          "feito": false,
+          "missoes": [
+            {
+              "id": "m1",
+              "texto": "App todo dia",
+              "feito": false
+            },
+            {
+              "id": "m2",
+              "texto": "1000 palavras",
+              "feito": false
+            },
+            {
+              "id": "m3",
+              "texto": "Gramática base",
+              "feito": false
+            },
+            {
+              "id": "m4",
+              "texto": "Conteúdo só em inglês",
+              "feito": false
+            },
+            {
+              "id": "m5",
+              "texto": "1ª conversa real",
+              "feito": false
+            },
+            {
+              "id": "m6",
+              "texto": "Pensar em inglês",
+              "feito": false
+            },
+            {
+              "id": "m7",
+              "texto": "Ler um livro",
+              "feito": false
+            },
+            {
+              "id": "m8",
+              "texto": "Reunião em inglês",
+              "feito": false
+            },
+            {
+              "id": "m9",
+              "texto": "Sotaque natural",
+              "feito": false
+            },
+            {
+              "id": "m10",
+              "texto": "Fluente",
+              "feito": false
+            }
+          ]
         }
       ]
     },
