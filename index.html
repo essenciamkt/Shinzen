@@ -1327,6 +1327,44 @@ tr:hover td { background: var(--bg3); }
 .rt-count-ic { font-size:32px; opacity:.8; }
 @media (max-width:700px){ .rt-hero { justify-content:center; } }
 
+/* ── Mente & Hábitos (regulação emocional; rosa sereno #ec4899) ── */
+.mn-hero { display:flex; align-items:center; gap:20px; flex-wrap:wrap; background:radial-gradient(120% 140% at 0% 0%, #2a0f22 0%, var(--surface) 70%); border:1px solid #7a2952; }
+.mn-hero-g { flex-shrink:0; text-align:center; }
+.mn-hero-body { flex:1; min-width:200px; }
+.mn-hero-eye { font-size:11px; text-transform:uppercase; letter-spacing:.09em; font-weight:800; color:#ec4899; }
+.mn-hero-row { display:flex; gap:22px; margin-top:10px; }
+.mn-stat { }
+.mn-stat-v { font-size:24px; font-weight:900; font-family:var(--mono); letter-spacing:-.02em; color:#f9a8d4; }
+.mn-stat-v small { font-size:12px; color:var(--text3); font-weight:600; }
+.mn-stat-l { font-size:11px; text-transform:uppercase; letter-spacing:.06em; color:var(--text3); }
+.mn-alert { margin-top:14px; padding:12px 14px; border-radius:var(--r); background:linear-gradient(135deg,#7f1d1d,#9f1239); border:1px solid #f43f5e; display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; }
+.mn-alert-txt { font-size:13px; color:#ffe4e6; font-weight:600; }
+.mn-alert-btn { flex-shrink:0; background:#fff; color:#9f1239; border:none; border-radius:99px; padding:8px 16px; font-size:13px; font-weight:800; cursor:pointer; transition:transform var(--t-fast); }
+.mn-alert-btn:hover { transform:scale(1.04); }
+.mn-capsula { background:radial-gradient(120% 120% at 100% 0%, #2a1430 0%, #140a18 70%); border:1px solid #a855f7; }
+.mn-capsula-eye { font-size:11px; text-transform:uppercase; letter-spacing:.08em; font-weight:800; color:#c084fc; }
+.mn-capsula-msg { font-size:17px; font-weight:600; font-style:italic; color:#f3e8ff; margin-top:8px; line-height:1.45; }
+.mn-sysgrid { display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:10px; }
+/* overlay de respiração 4-7-8 */
+.mn-reset-overlay { position:fixed; inset:0; z-index:9999; background:rgba(10,6,12,.92); display:flex; flex-direction:column; align-items:center; justify-content:center; gap:24px; backdrop-filter:blur(8px); animation:mnFade .3s ease; }
+@keyframes mnFade { from{opacity:0} to{opacity:1} }
+.mn-breath { width:160px; height:160px; border-radius:50%; background:radial-gradient(circle, #ec4899 0%, #be185d 70%); box-shadow:0 0 60px rgba(236,72,153,.5); display:flex; align-items:center; justify-content:center; color:#fff; font-size:18px; font-weight:700; text-align:center; animation:mnBreath 19s ease-in-out infinite; }
+@keyframes mnBreath {
+  0%   { transform:scale(.55); }            /* início inspira */
+  21%  { transform:scale(1); }              /* 4s inspira → cheio */
+  58%  { transform:scale(1); }              /* 7s segura */
+  100% { transform:scale(.55); }            /* 8s solta */
+}
+.mn-breath-phase { font-size:22px; font-weight:800; color:#f9a8d4; min-height:30px; }
+.mn-reset-step { width:min(420px,90vw); }
+.mn-reset-step textarea { width:100%; min-height:70px; background:var(--surface-2); border:1px solid var(--border2); border-radius:var(--r); color:var(--text); font-size:14px; padding:10px; outline:none; resize:vertical; }
+.mn-reset-step textarea:focus { border-color:#ec4899; }
+.mn-reset-actions { display:flex; gap:10px; justify-content:center; margin-top:8px; }
+.mn-reset-close { background:#ec4899; color:#fff; border:none; border-radius:99px; padding:10px 22px; font-size:14px; font-weight:800; cursor:pointer; }
+.mn-reset-skip { background:transparent; color:var(--text3); border:1px solid var(--border2); border-radius:99px; padding:10px 18px; font-size:13px; cursor:pointer; }
+@media (prefers-reduced-motion: reduce){ .mn-breath{ animation:none; transform:scale(.85);} }
+@media (max-width:700px){ .mn-hero { justify-content:center; } }
+
 /* ── SECTION TITLE ── */
 .sec-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; color: var(--text3); margin-bottom: 10px; }
 
@@ -3239,6 +3277,152 @@ function rotinaCockpitHtml(area){
   return heroHtml + sysHtml + countHtml;
 }
 
+// ── COCKPIT MENTE & HÁBITOS (regulação emocional; reset 2min 4-7-8 + cápsula + listas) ──
+function menteCockpitHtml(area){
+  const d = area.detalhe||{};
+  const reg = d.regulacao||{};
+  const hab = d.habitos||[];
+  const grat = d.gratidoes||{itens:[],total:0,placas:[],proximaPlaca:null};
+  const journal = d.journal||[];
+  const capsula = d.capsula||[];
+  const capAtiva = d.capsulaAtiva;
+
+  // ── Hero: termômetro de calma + alerta condicional ──
+  const calmaTxt = reg.ansiedade!=null ? (10-reg.ansiedade) : '—';
+  const alerta = reg.precisaReset ? `<div class="mn-alert">
+    <span class="mn-alert-txt">🌊 Ansiedade alta hoje. Não rumine — faça uma pausa de 2 minutos.</span>
+    <button class="mn-alert-btn" data-action="mente-reset">Reset de 2 min</button>
+  </div>` : '';
+  const heroHtml = `<div class="card mb16 mn-hero">
+    <div class="mn-hero-g">${gaugeHtml(reg.calmaScore||0,'#ec4899')}<div class="mn-hero-eye">CALMA</div></div>
+    <div class="mn-hero-body">
+      <div class="mn-hero-eye">🧠 REGULAÇÃO · COMO VOCÊ ESTÁ</div>
+      <div class="mn-hero-row">
+        <div class="mn-stat"><div class="mn-stat-v">${calmaTxt}<small>/10 calma</small></div><div class="mn-stat-l">ansiedade ${reg.ansiedade!=null?reg.ansiedade:'—'}/10</div></div>
+        <div class="mn-stat"><div class="mn-stat-v">${reg.humor!=null?reg.humor:'—'}<small>/10</small></div><div class="mn-stat-l">humor</div></div>
+        <div class="mn-stat"><div class="mn-stat-v">${reg.diasCalmosStreak||0}</div><div class="mn-stat-l">dias calmos 🔥</div></div>
+      </div>
+      ${alerta}
+    </div>
+  </div>`;
+
+  // ── Cápsula do eu calmo (ressurge em ansiedade alta) + lista ──
+  const capAtivaHtml = capAtiva ? `<div class="card mb16 mn-capsula">
+    <div class="mn-capsula-eye">💌 RECADO DO SEU EU CALMO</div>
+    <div class="mn-capsula-msg">«${esc(capAtiva.texto)}»</div>
+  </div>` : '';
+  const capRows = capsula.map(it=>`<div class="mz-row">
+    <span class="mz-text">${esc(it.texto)}</span>
+    <span class="mz-acts">
+      <button class="hz-act" data-action="list-edit" data-lista="capsula" data-iid="${esc(it.id)}" data-cur="${esc(it.texto)}" title="Editar">✏️</button>
+      <button class="hz-act del" data-action="list-delete" data-lista="capsula" data-iid="${esc(it.id)}" title="Remover">🗑</button>
+    </span>
+  </div>`).join('');
+  const capsulaHtml = `<div class="card mb16">
+    <div class="card-title">💌 Cápsula do eu calmo</div>
+    <div style="font-size:12px;color:var(--text3);margin-bottom:8px">Nos dias bons, escreva um recado pro seu futuro-eu ansioso. Ele ressurge quando a ansiedade passa de 8.</div>
+    <div>${capRows||'<div class="mz-empty">Sem recados ainda.</div>'}</div>
+    <div class="mz-add">
+      <input type="text" class="list-inp" id="list-inp-capsula" data-lista="capsula" placeholder="Você já passou por isso antes..." maxlength="160">
+      <button class="meta-add-btn" data-action="list-add" data-lista="capsula" title="Adicionar">+</button>
+    </div>
+  </div>`;
+
+  // ── Hábitos mentais (chips) ──
+  const chips = hab.map(h=>`<button class="fe-hab ${h.hoje?'on':''}" data-action="fe-habito" data-campo="${esc(h.id)}" data-cur="${h.hoje?1:0}" title="${h.hoje?'Feito hoje':'Marcar feito'}">
+      <span class="fe-hab-ic">${h.icone}</span>
+      <span class="fe-hab-lb">${esc(h.label)}</span>
+      <span class="fe-hab-st">${h.streak>0?`🔥 ${h.streak}`:'—'}</span>
+      <span class="fe-hab-ck">${h.hoje?'✓':''}</span>
+    </button>`).join('');
+  const habHtml = `<div class="card mb16" style="--area-color:#ec4899">
+    <div class="card-title">Hábitos mentais de hoje</div>
+    <div class="mn-sysgrid">${chips}</div>
+  </div>`;
+
+  // ── Gratidão (lista + placas) ──
+  const gratRows = (grat.itens||[]).map(it=>`<div class="mz-row">
+    <span class="mz-text">${esc(it.texto)}</span>
+    <span class="mz-acts">
+      <button class="hz-act" data-action="list-edit" data-lista="gratidoes" data-iid="${esc(it.id)}" data-cur="${esc(it.texto)}" title="Editar">✏️</button>
+      <button class="hz-act del" data-action="list-delete" data-lista="gratidoes" data-iid="${esc(it.id)}" title="Remover">🗑</button>
+    </span>
+  </div>`).join('');
+  const gPlacas = grat.placas||[];
+  const gPlacaTier = { 10:'bronze', 50:'prata', 100:'ouro', 365:'diamante' };
+  const placasFaixa = gPlacas.length ? `<div class="placa-grid" style="margin-bottom:12px">
+    ${gPlacas.map(p=>`<div class="placa placa-${gPlacaTier[p.alvo]||'bronze'} ${p.destravada?'on':'off'}">
+      <div class="placa-sheen"></div>
+      <div class="placa-ic">${p.destravada?'★':'🔒'}</div>
+      <div class="placa-val">${p.alvo}</div>
+      <div class="placa-nome">${esc(p.nome)}</div>
+      <div class="placa-falta ${p.destravada?'on':''}">${p.destravada?'conquistada':'faltam '+Math.max(0,p.alvo-grat.total)}</div>
+    </div>`).join('')}
+  </div>` : '';
+  const gratHtml = `<div class="card mb16">
+    <div class="card-title">🙏 Diário de gratidão <span style="color:var(--text3);font-weight:400">(${grat.total})</span></div>
+    ${placasFaixa}
+    <div>${gratRows||'<div class="mz-empty">Pelo que você é grato hoje?</div>'}</div>
+    <div class="mz-add">
+      <input type="text" class="list-inp" id="list-inp-gratidoes" data-lista="gratidoes" placeholder="Sou grato por..." maxlength="160">
+      <button class="meta-add-btn" data-action="list-add" data-lista="gratidoes" title="Adicionar">+</button>
+    </div>
+  </div>`;
+
+  // ── Worry-dump / Journal ──
+  const jRows = journal.map(it=>`<div class="mz-row">
+    <span class="mz-text">${esc(it.texto)}</span>
+    <span class="mz-acts">
+      <button class="hz-act" data-action="list-edit" data-lista="journal" data-iid="${esc(it.id)}" data-cur="${esc(it.texto)}" title="Editar">✏️</button>
+      <button class="hz-act del" data-action="list-delete" data-lista="journal" data-iid="${esc(it.id)}" title="Remover">🗑</button>
+    </span>
+  </div>`).join('');
+  const journalHtml = `<div class="card mb16">
+    <div class="card-title">📓 Despejo da mente <span style="color:var(--text3);font-weight:400">(escrever alivia)</span></div>
+    <div>${jRows||'<div class="mz-empty">Joga aqui o que está pesando. Sem julgamento.</div>'}</div>
+    <div class="mz-add">
+      <input type="text" class="list-inp" id="list-inp-journal" data-lista="journal" placeholder="O que pesa hoje..." maxlength="160">
+      <button class="meta-add-btn" data-action="list-add" data-lista="journal" title="Adicionar">+</button>
+    </div>
+  </div>`;
+
+  return heroHtml + capAtivaHtml + capsulaHtml + habHtml + gratHtml + journalHtml;
+}
+
+// overlay de respiração 4-7-8 + próximo passo (reset de 2min)
+function abrirResetMente(areaId){
+  const ov = document.createElement('div');
+  ov.className = 'mn-reset-overlay';
+  ov.innerHTML = `
+    <div class="mn-breath-phase" id="mn-phase">Inspire…</div>
+    <div class="mn-breath">4-7-8</div>
+    <div class="mn-reset-step">
+      <div style="font-size:13px;color:var(--text3);margin-bottom:6px;text-align:center">Ou escreva seu único próximo passo (o resto pode esperar):</div>
+      <textarea id="mn-step" placeholder="A única coisa que vou fazer agora é..."></textarea>
+      <div class="mn-reset-actions">
+        <button class="mn-reset-close" data-mn="done">Pronto, respirei</button>
+        <button class="mn-reset-skip" data-mn="skip">Fechar</button>
+      </div>
+    </div>`;
+  document.body.appendChild(ov);
+  // ciclo de frases 4-7-8 (19s por ciclo): 0-4s inspira, 4-11s segura, 11-19s solta
+  const phaseEl = ov.querySelector('#mn-phase');
+  let t0 = 0;
+  const tick = ()=>{ const s = t0 % 19; phaseEl.textContent = s < 4 ? 'Inspire…' : s < 11 ? 'Segure…' : 'Solte devagar…'; t0++; };
+  tick();
+  const ticker = setInterval(tick, 1000);
+  const cleanup = ()=>{ clearInterval(ticker); ov.remove(); };
+  ov.addEventListener('click', async (e)=>{
+    const act = e.target.dataset.mn;
+    if(!act) return;
+    if(act==='done'){
+      cleanup();
+      try{ await postJson(`/api/area/${encodeURIComponent(areaId)}/history`,{campo:'fezReset',valor:1}); await load(false); }catch{}
+      toast('Você respirou. Como está agora? 🌸');
+    } else { cleanup(); }
+  });
+}
+
 // ── COCKPIT DE SAÚDE (Treinos com exercícios; registros+gráficos vêm do card Histórico) ──
 const TR_TIPO_LABEL = { forca:'💪 Força', cardio:'🏃 Cardio', mobilidade:'🧘 Mobilidade', outro:'⭐ Outro' };
 function saudeCockpitHtml(area){
@@ -3484,6 +3668,7 @@ function renderManualArea(area) {
     ${area.id==='igreja' ? igrejaCockpitHtml(area) : ''}
     ${area.id==='lazer' ? lazerCockpitHtml(area) : ''}
     ${area.id==='rotina' ? rotinaCockpitHtml(area) : ''}
+    ${area.id==='mente' ? menteCockpitHtml(area) : ''}
     <div class="kpi-row mb16">${kpiHtml}</div>
     ${checkinHtml}
     ${missoesHtml}
@@ -3857,6 +4042,9 @@ function bindDetailDelegation(areaId) {
         await fetch(`/api/area/${encodeURIComponent(areaId)}/lista/${encodeURIComponent(lista)}/${encodeURIComponent(iid)}`,{method:'DELETE'});
         await load(false); toast('Removido');
       });
+    } else if (action === 'mente-reset') {
+      e.stopPropagation();
+      abrirResetMente(areaId);
     } else if (action === 'skill-add') {
       const inp = $('skill-inp');
       const nome = inp?.value?.trim();
