@@ -5,7 +5,7 @@ const fs = require('fs');
 const path = require('path');
 const { build, CONFIG_PATH } = require('./lib/payload');
 const { clearCache } = require('./lib/scan');
-const { writeArea, pushHistory, addMeta, editMeta, deleteMeta, doCheckin, logMissao, addCliente, updateCliente, deleteCliente, addGoal, updateGoal, deleteGoal, addMissao, toggleMissao, editMissao, deleteMissao, addTreino, updateTreino, deleteTreino, addExercicio, toggleExercicio, editExercicio, deleteExercicio } = require('./lib/datastore');
+const { writeArea, pushHistory, addMeta, editMeta, deleteMeta, doCheckin, logMissao, addCliente, updateCliente, deleteCliente, addGoal, updateGoal, deleteGoal, addMissao, toggleMissao, editMissao, deleteMissao, addTreino, updateTreino, deleteTreino, addExercicio, toggleExercicio, editExercicio, deleteExercicio, addListItem, toggleListItem, editListItem, deleteListItem } = require('./lib/datastore');
 
 const PORT = 4317;
 const APP_DIR = path.resolve(__dirname);
@@ -369,6 +369,63 @@ const server = http.createServer(async (req, res) => {
     const areaId = decodeURIComponent(parts[3]), tid = decodeURIComponent(parts[5]), xid = decodeURIComponent(parts[7]);
     try {
       deleteExercicio(areaId, tid, xid);
+      _cachedPayload = null;
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ ok: true }));
+    } catch (err) {
+      res.writeHead(500, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ ok: false, error: String(err) }));
+    }
+    return;
+  }
+
+  // ── LISTAS GENÉRICAS (intenções/devoções/preparo-FAC — Igreja) ── (antes do PATCH genérico)
+  // POST /api/area/:id/lista/:lista — cria item
+  if (req.method === 'POST' && pathname.match(/^\/api\/area\/[^/]+\/lista\/[^/]+$/)) {
+    const parts = pathname.split('/');
+    const areaId = decodeURIComponent(parts[3]), lista = decodeURIComponent(parts[5]);
+    try {
+      const body = await readBody(req);
+      if (!body.texto || !String(body.texto).trim()) {
+        res.writeHead(400, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ ok: false, error: 'texto requerido' })); return;
+      }
+      const item = addListItem(areaId, lista, String(body.texto).trim());
+      if (!item) { res.writeHead(404, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ ok: false, error: 'lista inválida' })); return; }
+      _cachedPayload = null;
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ ok: true, item }));
+    } catch (err) {
+      res.writeHead(500, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ ok: false, error: String(err) }));
+    }
+    return;
+  }
+
+  // PATCH /api/area/:id/lista/:lista/:iid — texto (edita) ou toggle (sem texto)
+  if (req.method === 'PATCH' && pathname.match(/^\/api\/area\/[^/]+\/lista\/[^/]+\/[^/]+$/)) {
+    const parts = pathname.split('/');
+    const areaId = decodeURIComponent(parts[3]), lista = decodeURIComponent(parts[5]), iid = decodeURIComponent(parts[6]);
+    try {
+      const body = await readBody(req);
+      const item = (body.texto !== undefined) ? editListItem(areaId, lista, iid, String(body.texto).trim()) : toggleListItem(areaId, lista, iid);
+      if (!item) { res.writeHead(404, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ ok: false, error: 'item não encontrado' })); return; }
+      _cachedPayload = null;
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ ok: true, item }));
+    } catch (err) {
+      res.writeHead(500, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ ok: false, error: String(err) }));
+    }
+    return;
+  }
+
+  // DELETE /api/area/:id/lista/:lista/:iid — remove item
+  if (req.method === 'DELETE' && pathname.match(/^\/api\/area\/[^/]+\/lista\/[^/]+\/[^/]+$/)) {
+    const parts = pathname.split('/');
+    const areaId = decodeURIComponent(parts[3]), lista = decodeURIComponent(parts[5]), iid = decodeURIComponent(parts[6]);
+    try {
+      deleteListItem(areaId, lista, iid);
       _cachedPayload = null;
       res.writeHead(200, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ ok: true }));

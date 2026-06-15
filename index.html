@@ -1225,6 +1225,45 @@ tr:hover td { background: var(--bg3); }
   .placa.on .placa-sheen { opacity:0; }
 }
 
+/* ── Igreja & Fé (reverente, dourado, sóbrio) ── */
+.fe-hero { position:relative; text-align:center; padding:28px 22px; background:radial-gradient(120% 130% at 50% 0%, #2a2208 0%, #0c0a04 70%); border:1px solid color-mix(in srgb, #eab308 30%, var(--border)); }
+.fe-cross { font-size:30px; color:#eab308; opacity:.9; margin-bottom:8px; }
+.fe-eyebrow { font-size:10px; font-family:var(--mono); letter-spacing:.18em; color:#c9a227; }
+.fe-vers { font-size:19px; line-height:1.5; color:#f4ecd6; max-width:640px; margin:10px auto 0; font-style:italic; }
+.fe-hero-edit { position:absolute; top:12px; right:12px; }
+.fe-habgrid { display:grid; grid-template-columns:repeat(auto-fit,minmax(120px,1fr)); gap:10px; }
+.fe-hab { display:flex; flex-direction:column; align-items:center; gap:4px; padding:14px 8px; border-radius:12px; cursor:pointer; background:var(--bg3); border:1px solid var(--border); color:var(--text2); transition:all var(--t-fast); position:relative; }
+.fe-hab:hover { border-color:#eab308; }
+.fe-hab.on { background:linear-gradient(160deg, color-mix(in srgb,#eab308 22%, var(--surface)), var(--surface)); border-color:#eab308; color:#fff; }
+.fe-hab-ic { font-size:22px; }
+.fe-hab-lb { font-size:12px; font-weight:700; }
+.fe-hab-st { font-size:10px; font-family:var(--mono); color:var(--text3); }
+.fe-hab.on .fe-hab-st { color:#f0c33a; }
+.fe-hab-ck { position:absolute; top:6px; right:8px; color:#eab308; font-weight:800; font-size:12px; }
+.fe-sacgrid { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+.fe-sac { display:flex; align-items:center; gap:12px; padding:13px; border-radius:12px; background:var(--bg3); border:1px solid var(--border); }
+.fe-sac.late { border-color: color-mix(in srgb, #f59e0b 45%, var(--border)); background:color-mix(in srgb,#f59e0b 8%, var(--bg3)); }
+.fe-sac-ic { font-size:24px; flex-shrink:0; }
+.fe-sac-body { flex:1; }
+.fe-sac-lb { font-size:11px; text-transform:uppercase; letter-spacing:.06em; color:var(--text3); font-weight:700; }
+.fe-sac-val { font-size:16px; color:var(--text); margin-top:2px; }
+.fe-sac-val b { color:#eab308; }
+.fe-sac-sub { font-size:11px; font-family:var(--mono); color:var(--text3); margin-top:2px; }
+.fe-sac-warn { font-size:11px; color:#f59e0b; font-weight:700; margin-top:2px; }
+.fe-fac { background:radial-gradient(120% 120% at 100% 0%, color-mix(in srgb,#eab308 12%, var(--surface)) 0%, var(--surface) 65%); border:1px solid color-mix(in srgb,#eab308 25%, var(--border)); }
+.fe-fac.soon { border-color: color-mix(in srgb,#eab308 50%, var(--border)); box-shadow:0 4px 22px rgba(234,179,8,.18); }
+.fe-fac.past { opacity:.85; }
+.fe-fac-top { display:flex; align-items:center; justify-content:space-between; gap:14px; }
+.fe-fac-d { font-size:22px; font-weight:800; color:#f4ecd6; }
+.fe-fac-d b { color:#eab308; }
+.fe-fac-ic { font-size:34px; }
+.fe-editlink { color:#c9a227; cursor:pointer; text-decoration:underline; margin-left:4px; }
+.fe-fac-prep { margin-top:14px; border-top:1px solid var(--border); padding-top:10px; }
+.fe-fac-prep-t { font-size:11px; text-transform:uppercase; letter-spacing:.06em; color:var(--text3); font-weight:700; margin-bottom:6px; }
+.list-inp { flex:1; min-width:0; background:var(--surface-2); border:1px solid var(--border2); border-radius:var(--r); color:var(--text); font-size:var(--text-sm); padding:8px 10px; outline:none; transition:border-color var(--t-fast); }
+.list-inp:focus { border-color:#eab308; }
+@media (max-width:700px){ .fe-sacgrid { grid-template-columns:1fr; } }
+
 /* ── SECTION TITLE ── */
 .sec-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; color: var(--text3); margin-bottom: 10px; }
 
@@ -2833,6 +2872,107 @@ function metasCockpitHtml(area){
     + addHtml;
 }
 
+// ── COCKPIT DE IGREJA & FÉ (devocional) ──
+function igrejaCockpitHtml(area){
+  const d = area.detalhe||{};
+  const cor = area.cor||'#eab308';
+  const habitos = d.habitos||[];
+  const sac = d.sacramental||{};
+  const fac = d.fac||{};
+  const intencoes = d.intencoes||[];
+  const devocoes = d.devocoes||[];
+  const facPrep = d.facPrep||[];
+
+  // Hero
+  const versiculo = d.versiculo||'';
+  const heroHtml = `<div class="card mb16 fe-hero">
+    <div class="fe-cross">✝</div>
+    <div class="fe-eyebrow">FÉ ACIMA DA ANSIEDADE</div>
+    <div class="fe-vers serif">${versiculo?esc(versiculo):'Defina um versículo ou intenção pra te ancorar hoje.'}</div>
+    <button class="hz-act fe-hero-edit" data-action="edit-versiculo" data-cur="${esc(versiculo)}" title="Editar">✏️</button>
+  </div>`;
+
+  // Hábitos de hoje (toggle + streak)
+  const habHtml = `<div class="card mb16" style="--area-color:${esc(cor)}">
+    <div class="card-title">Hábitos de hoje</div>
+    <div class="fe-habgrid">
+      ${habitos.map(h=>`<button class="fe-hab ${h.hoje?'on':''}" data-action="fe-habito" data-campo="${esc(h.id)}" data-cur="${h.hoje?1:0}" title="${h.hoje?'Feito hoje':'Marcar feito'}">
+        <span class="fe-hab-ic">${h.icone}</span>
+        <span class="fe-hab-lb">${esc(h.label)}</span>
+        <span class="fe-hab-st">${h.streak>0?`🔥 ${h.streak}`:'—'}</span>
+        <span class="fe-hab-ck">${h.hoje?'✓':''}</span>
+      </button>`).join('')}
+    </div>
+  </div>`;
+
+  // Vida sacramental
+  const sacCard = (lb, ic, dias, dataStr, campo, atras) => `<div class="fe-sac ${atras?'late':''}">
+    <div class="fe-sac-ic">${ic}</div>
+    <div class="fe-sac-body">
+      <div class="fe-sac-lb">${lb}</div>
+      <div class="fe-sac-val">${dias!=null?`há <b>${dias}</b> ${dias===1?'dia':'dias'}`:'—'}</div>
+      ${atras?'<div class="fe-sac-warn">⚠️ hora de confessar</div>':(dataStr?`<div class="fe-sac-sub">${fmtDia(dataStr)}</div>`:'')}
+    </div>
+    <button class="hz-act" data-action="edit-data-fe" data-campo="${campo}" data-cur="${esc(dataStr||'')}" title="Editar data">✏️</button>
+  </div>`;
+  const sacHtml = `<div class="card mb16">
+    <div class="card-title">Vida sacramental</div>
+    <div class="fe-sacgrid">
+      ${sacCard('Última confissão','🕊️',sac.confissaoDias,sac.confissaoData,'ultimaConfissao',sac.confissaoAtrasada)}
+      ${sacCard('Última comunhão','🍞',sac.comunhaoDias,sac.comunhaoData,'ultimaComunhao',false)}
+    </div>
+  </div>`;
+
+  // lista genérica reutilizável (intenções / devoções / preparo FAC)
+  function listaHtml(lista, itens, titulo, placeholder, checkLabel){
+    const rows = itens.map(it=>`<div class="mz-row ${it.feito?'done':''}">
+      <span class="mz-check ${it.feito?'done':''}" data-action="list-toggle" data-lista="${lista}" data-iid="${esc(it.id)}" title="${it.feito?checkLabel.done:checkLabel.todo}">${it.feito?'✓':''}</span>
+      <span class="mz-text">${esc(it.texto)}</span>
+      <span class="mz-acts">
+        <button class="hz-act" data-action="list-edit" data-lista="${lista}" data-iid="${esc(it.id)}" data-cur="${esc(it.texto)}" title="Editar">✏️</button>
+        <button class="hz-act del" data-action="list-delete" data-lista="${lista}" data-iid="${esc(it.id)}" title="Remover">🗑</button>
+      </span>
+    </div>`).join('');
+    return `<div class="card mb16">
+      <div class="card-title">${titulo}</div>
+      <div>${rows||`<div class="mz-empty">${placeholder.empty}</div>`}</div>
+      <div class="mz-add">
+        <input type="text" class="list-inp" id="list-inp-${lista}" data-lista="${lista}" placeholder="${placeholder.input}" maxlength="160">
+        <button class="meta-add-btn" data-action="list-add" data-lista="${lista}" title="Adicionar">+</button>
+      </div>
+    </div>`;
+  }
+
+  // Retiro FAC
+  const facCls = fac.dias!=null ? (fac.dias<0?'past':fac.dias<=30?'soon':'') : '';
+  const facHtml = `<div class="card mb16 fe-fac ${facCls}">
+    <div class="fe-fac-top">
+      <div>
+        <div class="fe-eyebrow">RETIRO FAC · COORDENAÇÃO</div>
+        <div class="fe-fac-d serif">${fac.dias!=null?(fac.dias<0?'Retiro vivido 🙏':`faltam <b>${fac.dias}</b> dias`):'sem data'}</div>
+        <div class="fe-sac-sub">${fmtDia(fac.data)} <span data-action="edit-data-fe" data-campo="facData" data-cur="${esc(fac.data||'')}" class="fe-editlink" title="Editar data">editar</span></div>
+      </div>
+      <div class="fe-fac-ic">⛺</div>
+    </div>
+    <div class="fe-fac-prep">
+      <div class="fe-fac-prep-t">Preparação${facPrep.length?` · ${facPrep.filter(p=>p.feito).length}/${facPrep.length}`:''}</div>
+      ${facPrep.map(p=>`<div class="mz-row ${p.feito?'done':''}">
+        <span class="mz-check ${p.feito?'done':''}" data-action="list-toggle" data-lista="facPrep" data-iid="${esc(p.id)}" title="${p.feito?'Feito':'Marcar feito'}">${p.feito?'✓':''}</span>
+        <span class="mz-text">${esc(p.texto)}</span>
+        <span class="mz-acts"><button class="hz-act del" data-action="list-delete" data-lista="facPrep" data-iid="${esc(p.id)}" title="Remover">🗑</button></span>
+      </div>`).join('')||'<div class="mz-empty">Adicione os passos de preparo do retiro.</div>'}
+      <div class="mz-add">
+        <input type="text" class="list-inp" id="list-inp-facPrep" data-lista="facPrep" placeholder="Passo de preparo (ex: escalar equipe)..." maxlength="160">
+        <button class="meta-add-btn" data-action="list-add" data-lista="facPrep" title="Adicionar">+</button>
+      </div>
+    </div>
+  </div>`;
+
+  return heroHtml + habHtml + sacHtml + facHtml
+    + listaHtml('intencoes', intencoes, '🕯️ Intenções de oração', {empty:'Nenhuma intenção. Por quem ou o que você reza?', input:'Rezar por...'}, {todo:'Marcar atendida', done:'Atendida'})
+    + listaHtml('devocoes', devocoes, '📿 Devoções', {empty:'Sem devoções.', input:'Nova devoção...'}, {todo:'Marcar rezada', done:'Rezada'});
+}
+
 // ── COCKPIT DE SAÚDE (Treinos com exercícios; registros+gráficos vêm do card Histórico) ──
 const TR_TIPO_LABEL = { forca:'💪 Força', cardio:'🏃 Cardio', mobilidade:'🧘 Mobilidade', outro:'⭐ Outro' };
 function saudeCockpitHtml(area){
@@ -3075,6 +3215,7 @@ function renderManualArea(area) {
     ${area.id==='trabalho' ? trabalhoCockpitHtml(area) : ''}
     ${area.id==='metas' ? metasCockpitHtml(area) : ''}
     ${area.id==='saude' ? saudeCockpitHtml(area) : ''}
+    ${area.id==='igreja' ? igrejaCockpitHtml(area) : ''}
     <div class="kpi-row mb16">${kpiHtml}</div>
     ${checkinHtml}
     ${missoesHtml}
@@ -3390,6 +3531,64 @@ function bindDetailDelegation(areaId) {
         await fetch(`/api/area/${encodeURIComponent(areaId)}/treino/${encodeURIComponent(tid)}/exercicio/${encodeURIComponent(xid)}`,{method:'DELETE'});
         await load(false); toast('Exercício removido');
       });
+    } else if (action === 'fe-habito') {
+      const campo = el.dataset.campo;
+      const novo = (Number(el.dataset.cur)>=1) ? 0 : 1;
+      await guard(async()=>{
+        await postJson(`/api/area/${encodeURIComponent(areaId)}/history`,{campo,valor:novo});
+        await load(false); toast(novo?'✓ Marcado hoje':'Desmarcado');
+      });
+    } else if (action === 'edit-versiculo') {
+      e.stopPropagation();
+      const novo = prompt('Versículo ou intenção do dia:', el.dataset.cur||'');
+      if(novo===null) return;
+      await guard(async()=>{
+        await fetch(`/api/area/${encodeURIComponent(areaId)}/meta/versiculo`,{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify({texto:novo.trim()})});
+        await load(false); toast('✓ Atualizado');
+      });
+    } else if (action === 'edit-data-fe') {
+      e.stopPropagation();
+      const campo = el.dataset.campo;
+      const cur = el.dataset.cur ? el.dataset.cur.split('-').reverse().join('/') : '';
+      const novo = prompt('Data (DD/MM/AAAA) — vazio pra tirar:', cur);
+      if(novo===null) return;
+      const iso = parseDataBR(novo);
+      if(iso===null){ toast('Data inválida — use DD/MM/AAAA'); return; }
+      await guard(async()=>{
+        await fetch(`/api/area/${encodeURIComponent(areaId)}`,{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify({campos:{[campo]:iso}})});
+        await load(false); toast('✓ Data atualizada');
+      });
+    } else if (action === 'list-toggle') {
+      const lista=el.dataset.lista, iid=el.dataset.iid;
+      await guard(async()=>{
+        await fetch(`/api/area/${encodeURIComponent(areaId)}/lista/${encodeURIComponent(lista)}/${encodeURIComponent(iid)}`,{method:'PATCH',headers:{'Content-Type':'application/json'},body:'{}'});
+        await load(false);
+      });
+    } else if (action === 'list-add') {
+      const lista=el.dataset.lista; const inp=$('list-inp-'+lista);
+      const texto=inp?.value?.trim();
+      if(!texto){ toast('Escreve algo'); return; }
+      await guard(async()=>{
+        inp.value='';
+        await postJson(`/api/area/${encodeURIComponent(areaId)}/lista/${encodeURIComponent(lista)}`,{texto});
+        await load(false); toast('✓ Adicionado');
+      });
+    } else if (action === 'list-edit') {
+      e.stopPropagation();
+      const lista=el.dataset.lista, iid=el.dataset.iid;
+      const novo=prompt('Editar:', el.dataset.cur||'');
+      if(novo===null||!novo.trim()) return;
+      await guard(async()=>{
+        await fetch(`/api/area/${encodeURIComponent(areaId)}/lista/${encodeURIComponent(lista)}/${encodeURIComponent(iid)}`,{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify({texto:novo.trim()})});
+        await load(false); toast('✓ Atualizado');
+      });
+    } else if (action === 'list-delete') {
+      e.stopPropagation();
+      const lista=el.dataset.lista, iid=el.dataset.iid;
+      await guard(async()=>{
+        await fetch(`/api/area/${encodeURIComponent(areaId)}/lista/${encodeURIComponent(lista)}/${encodeURIComponent(iid)}`,{method:'DELETE'});
+        await load(false); toast('Removido');
+      });
     } else if (action === 'passo-toggle') {
       await guard(async()=>{
         const j = await postJson(`/api/area/${encodeURIComponent(areaId)}/missao/passo-semana`,{});
@@ -3461,6 +3660,16 @@ function bindDetailDelegation(areaId) {
         e.target.value='';
         await postJson(`/api/area/${encodeURIComponent(areaId)}/treino/${encodeURIComponent(tid)}/exercicio`,{texto});
         await load(false); toast('✓ Exercício adicionado');
+      });
+    } else if (e.target.classList.contains('list-inp')) {
+      e.preventDefault();
+      const lista = e.target.dataset.lista;
+      const texto = e.target.value.trim();
+      if(!texto) return;
+      await guard(async()=>{
+        e.target.value='';
+        await postJson(`/api/area/${encodeURIComponent(areaId)}/lista/${encodeURIComponent(lista)}`,{texto});
+        await load(false); toast('✓ Adicionado');
       });
     } else if (e.target.id && e.target.id.indexOf('treino-')===0) {
       e.preventDefault();

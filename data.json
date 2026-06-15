@@ -115,7 +115,9 @@
       },
       "metasTexto": {},
       "progresso": {
-        "checkins": [],
+        "checkins": [
+          "2026-06-15"
+        ],
         "recordeStreak": 1,
         "badgesUnlocked": [],
         "missoesLog": {}
@@ -2043,15 +2045,16 @@
         }
       ],
       "seedV": 5,
-      "clientes": []
+      "clientes": [],
+      "treinos": []
     },
     "igreja": {
       "campos": {
-        "missasSemanais": null,
-        "missaMeta": 1,
+        "missasSemanais": 0,
+        "missaMeta": 0,
         "oracao": null,
         "biblia": null,
-        "voluntariado": null
+        "voluntariado": 0
       },
       "historico": {},
       "metasManual": {},
@@ -2059,9 +2062,15 @@
       "progresso": {
         "checkins": [],
         "recordeStreak": 0,
-        "badgesUnlocked": [],
+        "badgesUnlocked": [
+          "missa-dia",
+          "voluntario"
+        ],
         "missoesLog": {}
-      }
+      },
+      "clientes": [],
+      "goals": [],
+      "treinos": []
     },
     "lazer": {
       "campos": {
