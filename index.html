@@ -60,6 +60,49 @@
   --t-slow: 0.45s ease;
 }
 
+/* ── Temas escuros (trocam só chrome neutro; identidade por área é hardcoded e não muda) ── */
+:root[data-theme="meianoite"] {
+  --surface-0:#060812; --surface-1:#0c1020; --surface-2:#141a30; --surface-3:#1d2540;
+  --bg:var(--surface-0); --bg2:var(--surface-1); --bg3:var(--surface-2); --bg4:var(--surface-3);
+  --border:#1c2440; --border2:#2b3760;
+  --text:#eaf0ff; --text2:#8a96c0; --text3:#4d5780;
+  --red:#4f7cff; --red2:#6f9bff; --red3:rgba(79,124,255,0.16);
+  --glow-red:rgba(79,124,255,0.20); --glow-red-sm:rgba(79,124,255,0.09);
+}
+:root[data-theme="sepia"] {
+  --surface-0:#0f0b07; --surface-1:#17110a; --surface-2:#211810; --surface-3:#2c2016;
+  --bg:var(--surface-0); --bg2:var(--surface-1); --bg3:var(--surface-2); --bg4:var(--surface-3);
+  --border:#2a2014; --border2:#3d2f1d;
+  --text:#f3ead9; --text2:#b09a78; --text3:#6e5d44;
+  --red:#d98a3d; --red2:#f0a85a; --red3:rgba(217,138,61,0.16);
+  --glow-red:rgba(217,138,61,0.20); --glow-red-sm:rgba(217,138,61,0.09);
+}
+
+/* ── Configurações ── */
+.cfg-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:14px; }
+.cfg-field { }
+.cfg-lb { font-size:11px; color:var(--text3); margin-bottom:4px; text-transform:uppercase; letter-spacing:.04em; }
+.cfg-edit { font-size:16px; font-weight:700; }
+.cfg-hint { font-size:11px; color:var(--text3); margin-top:8px; }
+.cfg-themes { display:flex; gap:10px; flex-wrap:wrap; }
+.cfg-theme { display:flex; align-items:center; gap:8px; background:var(--surface-2); border:1px solid var(--border2); border-radius:var(--r); color:var(--text2); font-size:13px; font-weight:600; padding:9px 14px; cursor:pointer; transition:all var(--t-fast); }
+.cfg-theme:hover { border-color:var(--red); color:var(--text); }
+.cfg-theme.on { border-color:var(--red); color:var(--text); background:var(--red3); }
+.cfg-sw { width:16px; height:16px; border-radius:50%; border:1px solid rgba(255,255,255,.2); }
+.sw-carvao { background:linear-gradient(135deg,#141414,#e11d2a); }
+.sw-meianoite { background:linear-gradient(135deg,#0c1020,#4f7cff); }
+.sw-sepia { background:linear-gradient(135deg,#17110a,#d98a3d); }
+.cfg-proj { display:flex; align-items:center; gap:10px; padding:8px 0; border-bottom:1px solid var(--border); }
+.cfg-proj:last-child { border-bottom:none; }
+.cfg-proj-name { flex:1; min-width:0; font-size:13px; color:var(--text); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.cfg-proj-sess { font-size:11px; color:var(--text3); font-family:var(--mono); flex-shrink:0; }
+.cfg-sel { flex-shrink:0; background:var(--surface-2); border:1px solid var(--border2); border-radius:6px; color:var(--text); font-size:12px; padding:5px 8px; cursor:pointer; outline:none; }
+.cfg-sel.tag-caixa { border-color:#22c55e; color:#4ade80; }
+.cfg-sel.tag-dispersao { border-color:#ef4444; color:#f87171; }
+.cfg-sel.tag-infra { border-color:#64748b; color:#94a3b8; }
+.cfg-btn { background:var(--surface-2); border:1px solid var(--border2); border-radius:var(--r); color:var(--text); font-size:13px; font-weight:600; padding:10px 16px; cursor:pointer; transition:all var(--t-fast); }
+.cfg-btn:hover { border-color:var(--red); color:var(--text); }
+
 html, body {
   height: 100%;
   background: var(--bg);
@@ -1649,26 +1692,74 @@ tr:hover td { background: var(--bg3); }
 
       <!-- ── SETTINGS ── -->
       <div class="page" id="page-settings">
-        <div style="padding:24px;">
+        <div style="padding:24px;max-width:760px;">
+
           <div class="card mb16">
-            <div class="card-title">Perfil</div>
-            <div style="display:flex;flex-direction:column;gap:12px;">
-              <div>
-                <div style="font-size:11px;color:var(--text3);margin-bottom:4px;">Nome</div>
-                <div contenteditable="true" class="editable" id="cfg-name" style="font-size:16px;font-weight:700;">—</div>
-                <div style="font-size:11px;color:var(--text3);margin-top:2px;">Enter para salvar</div>
+            <div class="card-title">👤 Perfil</div>
+            <div class="cfg-grid">
+              <div class="cfg-field">
+                <div class="cfg-lb">Nome</div>
+                <div contenteditable="true" class="editable cfg-edit" id="cfg-name">—</div>
               </div>
-              <div>
-                <div style="font-size:11px;color:var(--text3);margin-bottom:4px;">USD → BRL</div>
-                <div contenteditable="true" class="editable" id="cfg-usd" style="font-size:16px;font-weight:700;">5.40</div>
-                <div style="font-size:11px;color:var(--text3);margin-top:2px;">Enter para salvar</div>
+              <div class="cfg-field">
+                <div class="cfg-lb">USD → BRL</div>
+                <div contenteditable="true" class="editable cfg-edit" id="cfg-usd">5.40</div>
               </div>
             </div>
+            <div class="cfg-hint">Enter para salvar.</div>
           </div>
+
+          <div class="card mb16">
+            <div class="card-title">🎯 Missão de caixa</div>
+            <div class="cfg-hint" style="margin-top:0;margin-bottom:12px">Alimenta os countdowns e gauges de Finanças, Metas & Sonhos e Claude Code.</div>
+            <div class="cfg-grid">
+              <div class="cfg-field">
+                <div class="cfg-lb">Meta de caixa (R$)</div>
+                <div contenteditable="true" class="editable cfg-edit" id="cfg-caixa-valor">—</div>
+              </div>
+              <div class="cfg-field">
+                <div class="cfg-lb">Prazo da meta (DD/MM/AAAA)</div>
+                <div contenteditable="true" class="editable cfg-edit" id="cfg-caixa-data">—</div>
+              </div>
+              <div class="cfg-field">
+                <div class="cfg-lb">MRR alvo (R$)</div>
+                <div contenteditable="true" class="editable cfg-edit" id="cfg-mrr">—</div>
+              </div>
+              <div class="cfg-field">
+                <div class="cfg-lb">Data Claude off (DD/MM/AAAA)</div>
+                <div contenteditable="true" class="editable cfg-edit" id="cfg-claudeoff">—</div>
+              </div>
+            </div>
+            <div class="cfg-hint">Enter para salvar.</div>
+          </div>
+
+          <div class="card mb16">
+            <div class="card-title">🎨 Tema</div>
+            <div class="cfg-themes" id="cfg-themes">
+              <button class="cfg-theme" data-action="set-theme" data-theme="carvao"><span class="cfg-sw sw-carvao"></span>Carvão</button>
+              <button class="cfg-theme" data-action="set-theme" data-theme="meianoite"><span class="cfg-sw sw-meianoite"></span>Meia-noite</button>
+              <button class="cfg-theme" data-action="set-theme" data-theme="sepia"><span class="cfg-sw sw-sepia"></span>Sépia</button>
+            </div>
+            <div class="cfg-hint">As cores de cada área (dourado da Igreja, rosa da Mente…) não mudam — é a identidade delas.</div>
+          </div>
+
+          <div class="card mb16">
+            <div class="card-title">🏷️ Foco dos projetos</div>
+            <div class="cfg-hint" style="margin-top:0;margin-bottom:12px">Marque cada projeto. Alimenta a visão foco-vs-dispersão do Claude Code.</div>
+            <div id="cfg-projects"></div>
+          </div>
+
+          <div class="card mb16">
+            <div class="card-title">💾 Backup</div>
+            <div class="cfg-hint" style="margin-top:0;margin-bottom:12px">Baixe uma cópia do seu histórico (metas, conquistas, registros). Guarde fora do PC.</div>
+            <button class="cfg-btn" data-action="export-backup">⬇ Baixar backup (.json)</button>
+          </div>
+
           <div class="card">
-            <div class="card-title">Diagnóstico</div>
+            <div class="card-title">🩺 Diagnóstico</div>
             <div id="health-block" style="font-size:12px;color:var(--text2);line-height:2;"></div>
           </div>
+
         </div>
       </div>
 
@@ -1873,6 +1964,7 @@ async function load(fresh) {
     const r = await fetch(fresh?'/api/dashboard?fresh=1':'/api/dashboard');
     D = await r.json();
     if (!D.ok) throw new Error(D.error||'erro');
+    document.documentElement.dataset.theme = D.theme||'carvao';
     renderAll();
     const ts = new Date(D.generatedAt);
     const hh=ts.getHours().toString().padStart(2,'0');
@@ -4262,11 +4354,34 @@ async function patchArea(areaId, patch) {
 }
 
 // ── SETTINGS ──
+async function cfgPatch(body){
+  await fetch('/api/config',{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+}
+// listener idempotente: usa propriedade (.onkeydown) — não acumula entre loads
+function cfgEditable(id, saveFn){
+  const el=$(id); if(!el) return;
+  el.onkeydown = async e=>{
+    if(e.key==='Enter'){ e.preventDefault(); el.blur();
+      try{ await saveFn(el.textContent.trim()); toast('Salvo ✓'); }catch(err){ toast('Erro: '+err.message); } }
+    if(e.key==='Escape') el.blur();
+  };
+}
+
 function renderSettings() {
   const prof = D.claudeRaw?.overview?.profile||{};
   const h = D.health||{};
+  const meta = D.meta||{};
+
+  // Perfil
   $('cfg-name').textContent = prof.name||'';
   $('cfg-usd').textContent = (D.claudeRaw?.overview?.cost?.rate||5.4).toFixed(2);
+  // Missão de caixa
+  $('cfg-caixa-valor').textContent = meta.caixaValor!=null ? meta.caixaValor : '';
+  $('cfg-caixa-data').textContent  = meta.caixaData ? fmtDia(meta.caixaData) : '';
+  $('cfg-mrr').textContent         = meta.mrrAlvo!=null ? meta.mrrAlvo : '';
+  $('cfg-claudeoff').textContent   = meta.claudeOffData ? fmtDia(meta.claudeOffData) : '';
+
+  // Diagnóstico
   $('health-block').innerHTML = [
     `Parseadas: <b style="color:var(--text)">${h.filesParsed}</b> sessões (${h.cacheHits} do cache)`,
     `Parse: <b style="color:var(--text)">${h.parseMs}ms</b>`,
@@ -4276,24 +4391,50 @@ function renderSettings() {
     h.warnings?.length?`<span style="color:var(--yellow)">⚠ ${esc(h.warnings.join(' · '))}</span>`:'',
   ].filter(Boolean).join('<br>');
 
-  function setupEditable(id, saveFn) {
-    const el=$(id);
-    el.addEventListener('keydown',async e=>{
-      if(e.key==='Enter'){e.preventDefault();el.blur();try{await saveFn(el.textContent.trim());toast('Salvo ✓');}catch(err){toast('Erro: '+err.message);}}
-      if(e.key==='Escape') el.blur();
-    });
-  }
-  setupEditable('cfg-name',async val=>{
-    await fetch('/api/config',{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify({profileName:val})});
-    await load(false);
+  // Editáveis
+  cfgEditable('cfg-name', async val=>{ await cfgPatch({profileName:val}); await load(false); });
+  cfgEditable('cfg-usd', async val=>{ const n=parseFloat(val.replace(',','.')); if(!isNaN(n)&&n>0){ await cfgPatch({usdToBrl:n}); await load(true);} });
+  cfgEditable('cfg-caixa-valor', async val=>{ const n=parseFloat(val.replace(/[^\d.,]/g,'').replace(',','.')); if(!isNaN(n)&&n>=0){ await cfgPatch({meta:{caixaValor:n}}); await load(false);} });
+  cfgEditable('cfg-mrr', async val=>{ const n=parseFloat(val.replace(/[^\d.,]/g,'').replace(',','.')); if(!isNaN(n)&&n>=0){ await cfgPatch({meta:{mrrAlvo:n}}); await load(false);} });
+  cfgEditable('cfg-caixa-data', async val=>{ const iso=parseDataBR(val); if(iso===null){ toast('Data inválida — DD/MM/AAAA'); return; } await cfgPatch({meta:{caixaData:iso}}); await load(false); });
+  cfgEditable('cfg-claudeoff', async val=>{ const iso=parseDataBR(val); if(iso===null){ toast('Data inválida — DD/MM/AAAA'); return; } await cfgPatch({meta:{claudeOffData:iso}}); await load(false); });
+
+  // Tema — marcar ativo
+  const tema = D.theme||'carvao';
+  document.querySelectorAll('#cfg-themes .cfg-theme').forEach(b=>b.classList.toggle('on', b.dataset.theme===tema));
+
+  // Foco dos projetos
+  const projs = (D.claudeRaw?.projects?.projects||[]).slice().sort((a,b)=>(b.sessions||0)-(a.sessions||0)).slice(0,12);
+  const TAGS = [['','— sem tag —'],['caixa','💰 Caixa'],['dispersao','🌀 Dispersão'],['infra','🔧 Infra']];
+  $('cfg-projects').innerHTML = projs.length ? projs.map(p=>`
+    <div class="cfg-proj">
+      <span class="cfg-proj-name" title="${esc(p.name)}">${esc(p.name)}</span>
+      <span class="cfg-proj-sess">${p.sessions||0} ses.</span>
+      <select class="cfg-sel ${p.tag?'tag-'+p.tag:''}" data-proj="${esc(p.id)}">
+        ${TAGS.map(([v,lb])=>`<option value="${v}" ${(p.tag||'')===v?'selected':''}>${lb}</option>`).join('')}
+      </select>
+    </div>`).join('') : '<div class="mz-empty">Nenhum projeto detectado.</div>';
+  $('cfg-projects').querySelectorAll('.cfg-sel').forEach(sel=>{
+    sel.onchange = async ()=>{
+      const id=sel.dataset.proj, val=sel.value;
+      try{ await cfgPatch({projectTags:{[id]: val||null}}); await load(false); toast('Tag salva ✓'); }
+      catch(err){ toast('Erro: '+err.message); }
+    };
   });
-  setupEditable('cfg-usd',async val=>{
-    const n=parseFloat(val.replace(',','.'));
-    if(!isNaN(n)&&n>0){
-      await fetch('/api/config',{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify({usdToBrl:n})});
-      await load(true);
-    }
+
+  // Tema — clique aplica na hora + salva
+  document.querySelectorAll('#cfg-themes .cfg-theme').forEach(b=>{
+    b.onclick = async ()=>{
+      const t=b.dataset.theme;
+      document.documentElement.dataset.theme = t; // aplica imediato
+      document.querySelectorAll('#cfg-themes .cfg-theme').forEach(x=>x.classList.toggle('on', x===b));
+      try{ await cfgPatch({theme:t}); toast('Tema aplicado ✓'); }catch(err){ toast('Erro: '+err.message); }
+    };
   });
+
+  // Backup
+  const expBtn = document.querySelector('[data-action="export-backup"]');
+  if (expBtn) expBtn.onclick = ()=>{ window.location.href = '/api/export'; };
 }
 
 // ── INIT ──

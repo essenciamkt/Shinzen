@@ -5,7 +5,7 @@ const fs = require('fs');
 const path = require('path');
 const { build, CONFIG_PATH } = require('./lib/payload');
 const { clearCache } = require('./lib/scan');
-const { writeArea, pushHistory, addMeta, editMeta, deleteMeta, doCheckin, logMissao, addCliente, updateCliente, deleteCliente, addGoal, updateGoal, deleteGoal, addMissao, toggleMissao, editMissao, deleteMissao, addTreino, updateTreino, deleteTreino, addExercicio, toggleExercicio, editExercicio, deleteExercicio, addListItem, toggleListItem, editListItem, deleteListItem, addSkill, skillXp, editSkill, deleteSkill } = require('./lib/datastore');
+const { writeArea, pushHistory, addMeta, editMeta, deleteMeta, doCheckin, logMissao, addCliente, updateCliente, deleteCliente, addGoal, updateGoal, deleteGoal, addMissao, toggleMissao, editMissao, deleteMissao, addTreino, updateTreino, deleteTreino, addExercicio, toggleExercicio, editExercicio, deleteExercicio, addListItem, toggleListItem, editListItem, deleteListItem, addSkill, skillXp, editSkill, deleteSkill, readData, DATA_PATH } = require('./lib/datastore');
 
 const PORT = 4317;
 const APP_DIR = path.resolve(__dirname);
@@ -680,10 +680,34 @@ const server = http.createServer(async (req, res) => {
           if (!isNaN(n) && n >= 0) config.meta.mrrAlvo = n;
         }
       }
+      // tema do app (escuro): carvao (default) | meianoite | sepia
+      if (body.theme !== undefined) {
+        const TEMAS = ['carvao', 'meianoite', 'sepia'];
+        if (TEMAS.includes(body.theme)) config.theme = body.theme;
+      }
       fs.writeFileSync(CONFIG_PATH, JSON.stringify(config, null, 2), 'utf8');
       _cachedPayload = null;
       res.writeHead(200, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ ok: true }));
+    } catch (err) {
+      res.writeHead(500, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ ok: false, error: String(err) }));
+    }
+    return;
+  }
+
+  // GET /api/export — baixa backup (config + data) num JSON único
+  if (req.method === 'GET' && pathname === '/api/export') {
+    try {
+      let config; try { config = JSON.parse(fs.readFileSync(CONFIG_PATH, 'utf8')); } catch { config = {}; }
+      const data = readData();
+      const stamp = new Date().toISOString().slice(0, 10);
+      const out = JSON.stringify({ exportedAt: new Date().toISOString(), config, data }, null, 2);
+      res.writeHead(200, {
+        'Content-Type': 'application/json',
+        'Content-Disposition': `attachment; filename="shinzen-backup-${stamp}.json"`,
+      });
+      res.end(out);
     } catch (err) {
       res.writeHead(500, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ ok: false, error: String(err) }));
