@@ -1302,6 +1302,31 @@ tr:hover td { background: var(--bg3); }
 .lz-recarga-note { margin-top:8px; font-size:12px; color:var(--text3); font-style:italic; }
 @media (max-width:700px){ .lz-recarga { justify-content:center; } }
 
+/* ── Rotina & Energia (execução = caixa direto; laranja/âmbar disciplina) ── */
+.rt-hero { display:flex; align-items:center; gap:20px; flex-wrap:wrap; background:radial-gradient(120% 140% at 0% 0%, #2a1c05 0%, var(--surface) 70%); border:1px solid #6b4e08; }
+.rt-hero-g { flex-shrink:0; text-align:center; }
+.rt-hero-body { flex:1; min-width:200px; }
+.rt-hero-eye { font-size:11px; text-transform:uppercase; letter-spacing:.09em; font-weight:800; color:#f59e0b; }
+.rt-hero-frase { font-size:18px; font-weight:700; color:#f4ecd6; margin-top:6px; line-height:1.35; }
+.rt-hero-frase b { color:#fbbf24; }
+.rt-exec-bar { height:9px; background:var(--bg); border-radius:99px; overflow:hidden; margin-top:12px; }
+.rt-exec-bar > div { height:100%; background:linear-gradient(90deg,#d97706,#fbbf24); border-radius:99px; transition:width var(--t-slow); }
+.rt-exec-meta { display:flex; align-items:baseline; justify-content:space-between; gap:8px; margin-top:7px; }
+.rt-exec-hrs { font-size:24px; font-weight:900; font-family:var(--mono); letter-spacing:-.02em; color:#fbbf24; }
+.rt-exec-hrs small { font-size:13px; color:var(--text3); font-weight:600; }
+.rt-exec-st { font-size:12px; color:var(--text3); }
+.rt-sysgrid { display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:10px; }
+.rt-manha { display:inline-flex; align-items:center; gap:6px; margin-top:12px; padding:6px 12px; border-radius:99px; font-size:12px; font-weight:700; }
+.rt-manha.won { background:linear-gradient(135deg,#f59e0b,#d97706); color:#1a1206; }
+.rt-manha.pend { background:var(--surface-2); color:var(--text3); border:1px solid var(--border); }
+.rt-count { background:radial-gradient(120% 120% at 100% 0%, #1a1a22 0%, #0a0a0e 70%); border:1px solid #3a3a4a; }
+.rt-count-top { display:flex; align-items:center; justify-content:space-between; gap:14px; }
+.rt-count-d { font-size:24px; font-weight:800; color:#e2e8f0; }
+.rt-count-d b { color:#fbbf24; }
+.rt-count-sub { font-size:12px; color:var(--text3); margin-top:3px; }
+.rt-count-ic { font-size:32px; opacity:.8; }
+@media (max-width:700px){ .rt-hero { justify-content:center; } }
+
 /* ── SECTION TITLE ── */
 .sec-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; color: var(--text3); margin-bottom: 10px; }
 
@@ -3142,6 +3167,78 @@ function lazerCockpitHtml(area){
   return crescHtml + skillsHtml + estanteHtml + recargaHtml;
 }
 
+// ── COCKPIT ROTINA & ENERGIA (execução=caixa direto; reusa fe-habito + edit-data-fe, zero rota nova) ──
+function rotinaCockpitHtml(area){
+  const d = area.detalhe||{};
+  const ex = d.execucao||{};
+  const sis = d.sistema||[];
+  const manha = d.manha||{};
+  const cd = d.countdown;
+
+  // ── Hero: Score do Dia + frase de dono ──
+  const horasTxt = ex.horas!=null ? ex.horas : '—';
+  const frase = ex.horas!=null
+    ? `Hoje você atacou caixa por <b>${ex.horas}</b>h. Streak: <b>${ex.streak||0}</b> ${ex.streak===1?'dia':'dias'}.`
+    : `Registre suas horas de execução. <b>Empurrou o caixa hoje?</b>`;
+  const heroHtml = `<div class="card mb16 rt-hero">
+    <div class="rt-hero-g">${gaugeHtml(d.scoreDia||0,'#f59e0b')}<div class="rt-hero-eye">SCORE DO DIA</div></div>
+    <div class="rt-hero-body">
+      <div class="rt-hero-eye">⚡ EXECUÇÃO · O QUE MOVE CAIXA</div>
+      <div class="rt-hero-frase">${frase}</div>
+      <div class="rt-exec-bar"><div style="width:${Math.min(100,ex.pct||0)}%"></div></div>
+      <div class="rt-exec-meta">
+        <span class="rt-exec-hrs">${horasTxt}<small>/${ex.meta||3}h meta</small></span>
+        <span class="rt-exec-st">${ex.bateuHoje?'✅ meta batida':'deep-work voltado a produto vendável'}</span>
+      </div>
+    </div>
+  </div>`;
+
+  // ── Check do Sistema (5 chips) + Win the Morning ──
+  const chips = sis.map(s=>`<button class="fe-hab ${s.hoje?'on':''}" data-action="fe-habito" data-campo="${esc(s.id)}" data-cur="${s.hoje?1:0}" title="${s.hoje?'Feito hoje':'Marcar feito'}">
+      <span class="fe-hab-ic">${s.icone}</span>
+      <span class="fe-hab-lb">${esc(s.label)}</span>
+      <span class="fe-hab-st">${s.streak>0?`🔥 ${s.streak}`:'—'}</span>
+      <span class="fe-hab-ck">${s.hoje?'✓':''}</span>
+    </button>`).join('');
+  const manhaSelo = manha.venci
+    ? `<div class="rt-manha won">🌅 Venceu a manhã</div>`
+    : `<div class="rt-manha pend">🌙 Manhã ainda não vencida</div>`;
+  const sysHtml = `<div class="card mb16" style="--area-color:#f59e0b">
+    <div class="card-title">⚙️ Check do Sistema <span style="color:var(--text3);font-weight:400">(${sis.filter(s=>s.hoje).length}/5 hoje)</span></div>
+    <div class="rt-sysgrid">${chips}</div>
+    ${manhaSelo}
+  </div>`;
+
+  // ── Countdown adolescência produtiva ──
+  let countHtml = '';
+  if (cd) {
+    const dias = cd.diasAte18;
+    countHtml = `<div class="card mb16 rt-count">
+      <div class="rt-count-top">
+        <div>
+          <div class="rt-hero-eye" style="color:#94a3b8">ADOLESCÊNCIA PRODUTIVA</div>
+          <div class="rt-count-d">${dias>0?`restam <b>${dias}</b> dias até os 18`:'18 anos chegaram'}</div>
+          <div class="rt-count-sub">${cd.anos} anos hoje · use cada dia <span data-action="edit-data-fe" data-campo="nascimento" data-cur="${esc(cd.nascimento||'')}" class="fe-editlink">editar</span></div>
+        </div>
+        <div class="rt-count-ic">⏳</div>
+      </div>
+    </div>`;
+  } else {
+    countHtml = `<div class="card mb16 rt-count">
+      <div class="rt-count-top">
+        <div>
+          <div class="rt-hero-eye" style="color:#94a3b8">ADOLESCÊNCIA PRODUTIVA</div>
+          <div class="rt-count-d">Quanto tempo até os 18?</div>
+          <div class="rt-count-sub">Defina sua data de nascimento pra ligar o cronômetro.</div>
+        </div>
+        <button class="hz-act" data-action="edit-data-fe" data-campo="nascimento" data-cur="" title="Definir nascimento">📅</button>
+      </div>
+    </div>`;
+  }
+
+  return heroHtml + sysHtml + countHtml;
+}
+
 // ── COCKPIT DE SAÚDE (Treinos com exercícios; registros+gráficos vêm do card Histórico) ──
 const TR_TIPO_LABEL = { forca:'💪 Força', cardio:'🏃 Cardio', mobilidade:'🧘 Mobilidade', outro:'⭐ Outro' };
 function saudeCockpitHtml(area){
@@ -3386,6 +3483,7 @@ function renderManualArea(area) {
     ${area.id==='saude' ? saudeCockpitHtml(area) : ''}
     ${area.id==='igreja' ? igrejaCockpitHtml(area) : ''}
     ${area.id==='lazer' ? lazerCockpitHtml(area) : ''}
+    ${area.id==='rotina' ? rotinaCockpitHtml(area) : ''}
     <div class="kpi-row mb16">${kpiHtml}</div>
     ${checkinHtml}
     ${missoesHtml}
