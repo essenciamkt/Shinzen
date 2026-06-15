@@ -26,12 +26,23 @@
       "metasTexto": {},
       "progresso": {
         "checkins": [],
-        "recordeStreak": 0,
+        "recordeStreak": 1,
         "badgesUnlocked": [],
         "missoesLog": {}
       },
       "clientes": [],
-      "goals": []
+      "goals": [],
+      "treinos": [
+        {
+          "id": "treino-1781489925827",
+          "nome": "q",
+          "tipo": "forca",
+          "dia": "q",
+          "duracao": 1,
+          "feito": false,
+          "exercicios": []
+        }
+      ]
     },
     "financas": {
       "campos": {
