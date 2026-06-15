@@ -5,7 +5,7 @@ const fs = require('fs');
 const path = require('path');
 const { build, CONFIG_PATH } = require('./lib/payload');
 const { clearCache } = require('./lib/scan');
-const { writeArea, pushHistory, addMeta, editMeta, deleteMeta, doCheckin, logMissao, addCliente, updateCliente, deleteCliente, addGoal, updateGoal, deleteGoal, addMissao, toggleMissao, editMissao, deleteMissao } = require('./lib/datastore');
+const { writeArea, pushHistory, addMeta, editMeta, deleteMeta, doCheckin, logMissao, addCliente, updateCliente, deleteCliente, addGoal, updateGoal, deleteGoal, addMissao, toggleMissao, editMissao, deleteMissao, addTreino, updateTreino, deleteTreino, addExercicio, toggleExercicio, editExercicio, deleteExercicio } = require('./lib/datastore');
 
 const PORT = 4317;
 const APP_DIR = path.resolve(__dirname);
@@ -256,6 +256,119 @@ const server = http.createServer(async (req, res) => {
     const areaId = decodeURIComponent(parts[3]), gid = decodeURIComponent(parts[5]), mid = decodeURIComponent(parts[7]);
     try {
       deleteMissao(areaId, gid, mid);
+      _cachedPayload = null;
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ ok: true }));
+    } catch (err) {
+      res.writeHead(500, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ ok: false, error: String(err) }));
+    }
+    return;
+  }
+
+  // ── TREINOS (área Saúde) ── (antes do PATCH genérico)
+  // POST /api/area/:id/treino — cria treino
+  if (req.method === 'POST' && pathname.match(/^\/api\/area\/[^/]+\/treino$/)) {
+    const areaId = decodeURIComponent(pathname.split('/')[3]);
+    try {
+      const body = await readBody(req);
+      if (!body.nome || !String(body.nome).trim()) {
+        res.writeHead(400, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ ok: false, error: 'nome requerido' }));
+        return;
+      }
+      const treino = addTreino(areaId, body);
+      _cachedPayload = null;
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ ok: true, treino }));
+    } catch (err) {
+      res.writeHead(500, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ ok: false, error: String(err) }));
+    }
+    return;
+  }
+
+  // PATCH /api/area/:id/treino/:tid — atualiza treino
+  if (req.method === 'PATCH' && pathname.match(/^\/api\/area\/[^/]+\/treino\/[^/]+$/)) {
+    const parts = pathname.split('/');
+    const areaId = decodeURIComponent(parts[3]), tid = decodeURIComponent(parts[5]);
+    try {
+      const body = await readBody(req);
+      const treino = updateTreino(areaId, tid, body || {});
+      if (!treino) { res.writeHead(404, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ ok: false, error: 'treino não encontrado' })); return; }
+      _cachedPayload = null;
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ ok: true, treino }));
+    } catch (err) {
+      res.writeHead(500, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ ok: false, error: String(err) }));
+    }
+    return;
+  }
+
+  // DELETE /api/area/:id/treino/:tid — remove treino
+  if (req.method === 'DELETE' && pathname.match(/^\/api\/area\/[^/]+\/treino\/[^/]+$/)) {
+    const parts = pathname.split('/');
+    const areaId = decodeURIComponent(parts[3]), tid = decodeURIComponent(parts[5]);
+    try {
+      deleteTreino(areaId, tid);
+      _cachedPayload = null;
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ ok: true }));
+    } catch (err) {
+      res.writeHead(500, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ ok: false, error: String(err) }));
+    }
+    return;
+  }
+
+  // ── EXERCÍCIOS de um treino ── (antes do PATCH genérico)
+  // POST /api/area/:id/treino/:tid/exercicio — cria exercício
+  if (req.method === 'POST' && pathname.match(/^\/api\/area\/[^/]+\/treino\/[^/]+\/exercicio$/)) {
+    const parts = pathname.split('/');
+    const areaId = decodeURIComponent(parts[3]), tid = decodeURIComponent(parts[5]);
+    try {
+      const body = await readBody(req);
+      if (!body.texto || !String(body.texto).trim()) {
+        res.writeHead(400, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ ok: false, error: 'texto requerido' })); return;
+      }
+      const ex = addExercicio(areaId, tid, String(body.texto).trim());
+      if (!ex) { res.writeHead(404, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ ok: false, error: 'treino não encontrado' })); return; }
+      _cachedPayload = null;
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ ok: true, exercicio: ex }));
+    } catch (err) {
+      res.writeHead(500, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ ok: false, error: String(err) }));
+    }
+    return;
+  }
+
+  // PATCH /api/area/:id/treino/:tid/exercicio/:xid — texto (edita) ou toggle (sem texto)
+  if (req.method === 'PATCH' && pathname.match(/^\/api\/area\/[^/]+\/treino\/[^/]+\/exercicio\/[^/]+$/)) {
+    const parts = pathname.split('/');
+    const areaId = decodeURIComponent(parts[3]), tid = decodeURIComponent(parts[5]), xid = decodeURIComponent(parts[7]);
+    try {
+      const body = await readBody(req);
+      const ex = (body.texto !== undefined) ? editExercicio(areaId, tid, xid, String(body.texto).trim()) : toggleExercicio(areaId, tid, xid);
+      if (!ex) { res.writeHead(404, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ ok: false, error: 'exercício não encontrado' })); return; }
+      _cachedPayload = null;
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ ok: true, exercicio: ex }));
+    } catch (err) {
+      res.writeHead(500, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ ok: false, error: String(err) }));
+    }
+    return;
+  }
+
+  // DELETE /api/area/:id/treino/:tid/exercicio/:xid — remove exercício
+  if (req.method === 'DELETE' && pathname.match(/^\/api\/area\/[^/]+\/treino\/[^/]+\/exercicio\/[^/]+$/)) {
+    const parts = pathname.split('/');
+    const areaId = decodeURIComponent(parts[3]), tid = decodeURIComponent(parts[5]), xid = decodeURIComponent(parts[7]);
+    try {
+      deleteExercicio(areaId, tid, xid);
       _cachedPayload = null;
       res.writeHead(200, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ ok: true }));

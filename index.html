@@ -937,6 +937,27 @@ html, body {
 .mz-add { display:flex; gap:8px; align-items:center; margin-top:8px; }
 .mz-inp { flex:1; min-width:0; background:var(--surface-2); border:1px solid var(--border2); border-radius:var(--r); color:var(--text); font-size:var(--text-sm); padding:8px 10px; outline:none; transition:border-color var(--t-fast); }
 .mz-inp:focus { border-color:var(--area-color); }
+.ex-inp { flex:1; min-width:0; background:var(--surface-2); border:1px solid var(--border2); border-radius:var(--r); color:var(--text); font-size:var(--text-sm); padding:8px 10px; outline:none; transition:border-color var(--t-fast); }
+.ex-inp:focus { border-color:var(--area-color); }
+
+/* Treinos (Saúde) */
+.tr-list { display:flex; flex-direction:column; gap:8px; }
+.tr-card { border:1px solid var(--border); border-radius:var(--r); padding:4px 4px 0; }
+.tr-card.done { border-color: color-mix(in srgb, var(--green) 40%, var(--border)); }
+.tr-head { display:flex; align-items:center; gap:8px; padding:9px 8px; cursor:pointer; }
+.tr-head:hover { background: color-mix(in srgb, var(--area-color) 6%, transparent); border-radius:var(--r); }
+.tr-chev { color:var(--area-color); font-size:10px; flex-shrink:0; }
+.tr-nome { font-weight:700; font-size:var(--text-sm); color:#e8e8e8; }
+.tr-card.done .tr-nome { text-decoration:line-through; color:var(--text3); }
+.tr-tipo { font-size:11px; color:var(--text2); }
+.tr-meta { font-size:10px; font-family:var(--mono); color:var(--text3); }
+.tr-count { margin-left:auto; font-family:var(--mono); font-size:11px; font-weight:700; color:var(--text2); }
+.tr-acts { display:flex; gap:2px; flex-shrink:0; }
+.tr-card .hz-missoes { padding-left:18px; }
+.tr-add { display:flex; gap:8px; align-items:center; margin-top:12px; flex-wrap:wrap; }
+.tr-add .cli-inp { flex:1; min-width:120px; }
+.tr-add .cli-inp-val { max-width:80px; flex:0 0 80px; }
+.tr-add .goal-sel { flex:0 0 auto; }
 
 @keyframes northPulse { from { opacity:.14; } to { opacity:.32; } }
 @keyframes hzLine { from { transform: scaleY(0); } to { transform: scaleY(1); } }
@@ -1136,6 +1157,18 @@ tr:hover td { background: var(--bg3); }
 .skill-item { background: var(--bg3); border: 1px solid var(--border); border-radius: var(--r); padding: 10px 12px; }
 .skill-name { font-size: 13px; font-weight: 600; color: var(--text); }
 .skill-type { font-size: 11px; color: var(--text3); }
+/* Crew — agentes criados (read-only) */
+.crew-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px,1fr)); gap: 10px; }
+.crew-item { background: var(--bg3); border: 1px solid var(--border); border-radius: var(--r); padding: 12px 13px; display: flex; flex-direction: column; gap: 6px; }
+.crew-item.dormente { opacity: .62; border-style: dashed; }
+.crew-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.crew-name { font-size: 13px; font-weight: 700; color: var(--text); font-family: var(--mono); }
+.crew-model { font-size: 10px; font-weight: 700; color: var(--area-color, #6366f1); background: color-mix(in srgb, var(--area-color, #6366f1) 14%, transparent); padding: 2px 7px; border-radius: 99px; flex-shrink: 0; }
+.crew-desc { font-size: 12px; color: var(--text2); line-height: 1.4; }
+.crew-foot { display: flex; align-items: center; justify-content: space-between; font-size: 11px; font-family: var(--mono); color: var(--text3); margin-top: 2px; }
+.crew-uso { color: var(--green); font-weight: 700; }
+.crew-uso.zero { color: var(--text3); font-weight: 400; }
+.crew-aviso { font-size: 12px; color: #f59e0b; background: color-mix(in srgb, #f59e0b 10%, transparent); border: 1px solid color-mix(in srgb, #f59e0b 30%, transparent); border-radius: var(--r); padding: 8px 11px; margin-bottom: 12px; }
 
 /* ── SECTION TITLE ── */
 .sec-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; color: var(--text3); margin-bottom: 10px; }
@@ -2058,6 +2091,11 @@ function renderClaudeArea(area) {
       <div class="card"><div class="card-title">Por modelo</div><div id="cc-models"></div></div>
       <div class="card"><div class="card-title">Custo por semana (últimas 12)</div><div id="cc-costweek"></div></div>
     </div>
+    <div class="card mb16">
+      <div class="card-title">Crew — Agentes Criados <span id="cc-agentes-count" style="color:var(--text3);font-weight:400"></span></div>
+      <div id="cc-agentes-aviso"></div>
+      <div class="crew-grid" id="cc-agentes"></div>
+    </div>
     <div class="grid2 mb16">
       <div class="card"><div class="card-title">Skills</div><div class="skill-grid" id="cc-skills"></div></div>
       <div class="card"><div class="card-title">MCPs conectados</div><div class="skill-grid" id="cc-mcps"></div></div>
@@ -2198,6 +2236,32 @@ function renderClaudeArea(area) {
   $('cc-mcps').innerHTML = (sk.connectedMcp||[]).length
     ? sk.connectedMcp.map(m=>`<div class="skill-item"><div class="skill-name">${esc(m.name||m.server||'MCP')}</div><div class="skill-type">MCP</div></div>`).join('')
     : '<div style="color:var(--text3);font-size:12px">Nenhum</div>';
+
+  // Crew — agentes criados (read-only): roster + uso + dormentes
+  const agentes = det.agentes||[];
+  const modelLabel = m => { m=(m||'inherit'); if(/haiku/i.test(m))return'Haiku'; if(/sonnet/i.test(m))return'Sonnet'; if(/opus/i.test(m))return'Opus'; if(m==='inherit')return'herda'; return esc(m); };
+  const crewAtivos = agentes.filter(a=>!a.dormente).length;
+  const crewDormentes = agentes.filter(a=>a.dormente).length;
+  $('cc-agentes-count').textContent = agentes.length ? `(${crewAtivos} ativos / ${agentes.length})` : '';
+  $('cc-agentes-aviso').innerHTML = crewDormentes>0
+    ? `<div class="crew-aviso">⚠️ ${crewDormentes} ${crewDormentes>1?'agentes criados e nunca usados':'agente criado e nunca usado'} — deploya ou deleta (não acumule o que não usa).</div>`
+    : '';
+  $('cc-agentes').innerHTML = agentes.length
+    ? agentes.map(a=>{
+        const desc = (a.description||'').split(/(?<=[.!?])\s/)[0].slice(0,120);
+        return `<div class="crew-item ${a.dormente?'dormente':''}">
+          <div class="crew-head">
+            <span class="crew-name">${esc(a.name)}</span>
+            <span class="crew-model">${modelLabel(a.model)}</span>
+          </div>
+          <div class="crew-desc">${esc(desc)}</div>
+          <div class="crew-foot">
+            <span class="crew-tools">🛠 ${a.nTools} tools</span>
+            <span class="crew-uso ${a.dormente?'zero':''}">${a.dormente?'😴 dormente':'▶ '+a.uso+'x usado'}</span>
+          </div>
+        </div>`;
+      }).join('')
+    : '<div style="color:var(--text3);font-size:12px">Nenhum agente criado ainda. Use /agent-creator pra criar.</div>';
 
   // Cost by week
   $('cc-costweek').innerHTML = barRows((cost.weekly||[]).slice(-12),'weekStart','usd',fmtUsd);
@@ -2641,6 +2705,66 @@ function metasCockpitHtml(area){
     + addHtml;
 }
 
+// ── COCKPIT DE SAÚDE (Treinos com exercícios; registros+gráficos vêm do card Histórico) ──
+const TR_TIPO_LABEL = { forca:'💪 Força', cardio:'🏃 Cardio', mobilidade:'🧘 Mobilidade', outro:'⭐ Outro' };
+function saudeCockpitHtml(area){
+  const d = area.detalhe||{};
+  const treinos = d.treinos||[];
+  function exAccordion(t){
+    const open = _metasExpanded.has(t.id);
+    const rows = (t.exercicios||[]).map((x,i)=>`<div class="mz-row ${x.feito?'done':''}">
+      <span class="mz-check ${x.feito?'done':''}" data-action="exercicio-toggle" data-tid="${esc(t.id)}" data-xid="${esc(x.id)}" title="${x.feito?'Feito':'Marcar feito'}">${x.feito?'✓':(i+1)}</span>
+      <span class="mz-text">${esc(x.texto)}</span>
+      <span class="mz-acts">
+        <button class="hz-act" data-action="edit-exercicio" data-tid="${esc(t.id)}" data-xid="${esc(x.id)}" data-cur="${esc(x.texto)}" title="Editar">✏️</button>
+        <button class="hz-act del" data-action="delete-exercicio" data-tid="${esc(t.id)}" data-xid="${esc(x.id)}" title="Remover">🗑</button>
+      </span>
+    </div>`).join('');
+    return `<div class="hz-missoes ${open?'open':''}" data-tx="${esc(t.id)}">
+      ${rows||'<div class="mz-empty">Sem exercícios ainda — adicione abaixo.</div>'}
+      <div class="mz-add">
+        <input type="text" class="ex-inp" id="ex-inp-${esc(t.id)}" placeholder="Novo exercício (ex: Supino 4x10)..." maxlength="140">
+        <button class="meta-add-btn" data-action="add-exercicio" data-tid="${esc(t.id)}" title="Adicionar exercício">+</button>
+      </div>
+    </div>`;
+  }
+  const treinoRows = treinos.map(t=>{
+    const open = _metasExpanded.has(t.id);
+    const total=(t.exercicios||[]).length, feitos=(t.exercicios||[]).filter(x=>x.feito).length;
+    return `<div class="tr-card ${t.feito?'done':''}">
+      <div class="tr-head" data-action="treino-exercicios" data-tid="${esc(t.id)}">
+        <span class="tr-chev hz-chev">${open?'▾':'▸'}</span>
+        <span class="tr-nome">${esc(t.nome)}</span>
+        <span class="tr-tipo">${TR_TIPO_LABEL[t.tipo]||esc(t.tipo)}</span>
+        ${t.dia?`<span class="tr-meta">${esc(t.dia)}</span>`:''}
+        ${t.duracao?`<span class="tr-meta">${t.duracao}min</span>`:''}
+        <span class="tr-count">${feitos}/${total}</span>
+        <span class="tr-acts">
+          <button class="hz-act" data-action="edit-treino" data-tid="${esc(t.id)}" data-nome="${esc(t.nome)}" title="Renomear">✏️</button>
+          <button class="hz-act del" data-action="delete-treino" data-tid="${esc(t.id)}" data-nome="${esc(t.nome)}" title="Remover treino">🗑</button>
+        </span>
+      </div>
+      ${exAccordion(t)}
+    </div>`;
+  }).join('');
+  return `<div class="card mb16" style="--area-color:${esc(area.cor)}">
+    <div class="card-title">🏋️ Meus Treinos</div>
+    <div class="tr-list">${treinoRows||'<div class="mz-empty">Nenhum treino ainda. Monte o primeiro abaixo.</div>'}</div>
+    <div class="tr-add">
+      <input type="text" id="treino-nome" class="cli-inp" placeholder="Nome do treino (ex: Peito & Tríceps)" maxlength="120">
+      <select id="treino-tipo" class="cli-inp goal-sel" title="Tipo">
+        <option value="forca">💪 Força</option>
+        <option value="cardio">🏃 Cardio</option>
+        <option value="mobilidade">🧘 Mobilidade</option>
+        <option value="outro">⭐ Outro</option>
+      </select>
+      <input type="text" id="treino-dia" class="cli-inp goal-sel" placeholder="Dia (ex: Seg)" maxlength="12">
+      <input type="number" id="treino-duracao" class="cli-inp cli-inp-val" placeholder="min" step="5">
+      <button class="meta-add-btn" data-action="add-treino" title="Criar treino">+</button>
+    </div>
+  </div>`;
+}
+
 // ── ÁREA MANUAL (Saúde e modelo futuro) ──
 function renderManualArea(area) {
   const det = area.detalhe||{};
@@ -2822,6 +2946,7 @@ function renderManualArea(area) {
     ${area.id==='financas' ? financasCockpitHtml(area) : ''}
     ${area.id==='trabalho' ? trabalhoCockpitHtml(area) : ''}
     ${area.id==='metas' ? metasCockpitHtml(area) : ''}
+    ${area.id==='saude' ? saudeCockpitHtml(area) : ''}
     <div class="kpi-row mb16">${kpiHtml}</div>
     ${checkinHtml}
     ${missoesHtml}
@@ -3069,6 +3194,74 @@ function bindDetailDelegation(areaId) {
         await fetch(`/api/area/${encodeURIComponent(areaId)}/goal/${encodeURIComponent(gid)}/missao/${encodeURIComponent(mid)}`,{method:'DELETE'});
         await load(false); toast('Missão removida');
       });
+    } else if (action === 'treino-exercicios') {
+      const tid = el.dataset.tid;
+      const cont = body.querySelector(`.hz-missoes[data-tx="${tid}"]`);
+      const chev = el.querySelector('.hz-chev');
+      if(_metasExpanded.has(tid)){ _metasExpanded.delete(tid); cont&&cont.classList.remove('open'); if(chev)chev.textContent='▸'; }
+      else { _metasExpanded.add(tid); cont&&cont.classList.add('open'); if(chev)chev.textContent='▾'; }
+    } else if (action === 'add-treino') {
+      const nome = $('treino-nome')?.value?.trim();
+      if(!nome){ toast('Dê um nome ao treino'); return; }
+      const tipo = $('treino-tipo')?.value||'forca';
+      const dia = $('treino-dia')?.value?.trim()||'';
+      const duracao = parseFloat($('treino-duracao')?.value)||0;
+      await guard(async()=>{
+        await postJson(`/api/area/${encodeURIComponent(areaId)}/treino`,{nome,tipo,dia,duracao});
+        await load(false); toast('✓ Treino criado');
+      });
+    } else if (action === 'edit-treino') {
+      e.stopPropagation();
+      const tid = el.dataset.tid;
+      const novo = prompt('Nome do treino:', el.dataset.nome||'');
+      if(novo===null||!novo.trim()) return;
+      await guard(async()=>{
+        await fetch(`/api/area/${encodeURIComponent(areaId)}/treino/${encodeURIComponent(tid)}`,{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify({nome:novo.trim()})});
+        await load(false); toast('✓ Treino atualizado');
+      });
+    } else if (action === 'delete-treino') {
+      e.stopPropagation();
+      const tid = el.dataset.tid;
+      if(!confirm(`Remover o treino "${el.dataset.nome||tid}"?`)) return;
+      await guard(async()=>{
+        await fetch(`/api/area/${encodeURIComponent(areaId)}/treino/${encodeURIComponent(tid)}`,{method:'DELETE'});
+        await load(false); toast('Treino removido');
+      });
+    } else if (action === 'exercicio-toggle') {
+      const tid=el.dataset.tid, xid=el.dataset.xid;
+      _metasExpanded.add(tid);
+      await guard(async()=>{
+        await fetch(`/api/area/${encodeURIComponent(areaId)}/treino/${encodeURIComponent(tid)}/exercicio/${encodeURIComponent(xid)}`,{method:'PATCH',headers:{'Content-Type':'application/json'},body:'{}'});
+        await load(false);
+      });
+    } else if (action === 'add-exercicio') {
+      const tid=el.dataset.tid; const inp=$('ex-inp-'+tid);
+      const texto=inp?.value?.trim();
+      if(!texto){ toast('Escreve o exercício'); return; }
+      _metasExpanded.add(tid);
+      await guard(async()=>{
+        inp.value='';
+        await postJson(`/api/area/${encodeURIComponent(areaId)}/treino/${encodeURIComponent(tid)}/exercicio`,{texto});
+        await load(false); toast('✓ Exercício adicionado');
+      });
+    } else if (action === 'edit-exercicio') {
+      e.stopPropagation();
+      const tid=el.dataset.tid, xid=el.dataset.xid;
+      const novo=prompt('Editar exercício:', el.dataset.cur||'');
+      if(novo===null||!novo.trim()) return;
+      _metasExpanded.add(tid);
+      await guard(async()=>{
+        await fetch(`/api/area/${encodeURIComponent(areaId)}/treino/${encodeURIComponent(tid)}/exercicio/${encodeURIComponent(xid)}`,{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify({texto:novo.trim()})});
+        await load(false); toast('✓ Exercício atualizado');
+      });
+    } else if (action === 'delete-exercicio') {
+      e.stopPropagation();
+      const tid=el.dataset.tid, xid=el.dataset.xid;
+      _metasExpanded.add(tid);
+      await guard(async()=>{
+        await fetch(`/api/area/${encodeURIComponent(areaId)}/treino/${encodeURIComponent(tid)}/exercicio/${encodeURIComponent(xid)}`,{method:'DELETE'});
+        await load(false); toast('Exercício removido');
+      });
     } else if (action === 'passo-toggle') {
       await guard(async()=>{
         const j = await postJson(`/api/area/${encodeURIComponent(areaId)}/missao/passo-semana`,{});
@@ -3129,6 +3322,28 @@ function bindDetailDelegation(areaId) {
       await guard(async()=>{
         await postJson(`/api/area/${encodeURIComponent(areaId)}/goal`,{titulo,prazo,track,fonteRitmo,custo});
         await load(false); toast('✓ Objetivo adicionado');
+      });
+    } else if (e.target.classList.contains('ex-inp')) {
+      e.preventDefault();
+      const tid = e.target.id.replace('ex-inp-','');
+      const texto = e.target.value.trim();
+      if(!texto) return;
+      _metasExpanded.add(tid);
+      await guard(async()=>{
+        e.target.value='';
+        await postJson(`/api/area/${encodeURIComponent(areaId)}/treino/${encodeURIComponent(tid)}/exercicio`,{texto});
+        await load(false); toast('✓ Exercício adicionado');
+      });
+    } else if (e.target.id && e.target.id.indexOf('treino-')===0) {
+      e.preventDefault();
+      const nome = $('treino-nome')?.value?.trim();
+      if(!nome){ toast('Dê um nome ao treino'); return; }
+      const tipo = $('treino-tipo')?.value||'forca';
+      const dia = $('treino-dia')?.value?.trim()||'';
+      const duracao = parseFloat($('treino-duracao')?.value)||0;
+      await guard(async()=>{
+        await postJson(`/api/area/${encodeURIComponent(areaId)}/treino`,{nome,tipo,dia,duracao});
+        await load(false); toast('✓ Treino criado');
       });
     } else if (e.target.classList.contains('cli-inp')) {
       e.preventDefault();

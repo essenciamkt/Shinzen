@@ -4,7 +4,7 @@
       "campos": {
         "peso": 72,
         "pesoAlvo": null,
-        "sonoH": 7.5,
+        "sonoH": 6.5,
         "treinosSemana": 2,
         "treinosMeta": 3
       },
@@ -15,7 +15,12 @@
             "v": 72
           }
         ],
-        "sonoH": []
+        "sonoH": [
+          {
+            "d": "2026-06-15",
+            "v": 6.5
+          }
+        ]
       },
       "metasManual": {},
       "metasTexto": {},
@@ -24,7 +29,9 @@
         "recordeStreak": 0,
         "badgesUnlocked": [],
         "missoesLog": {}
-      }
+      },
+      "clientes": [],
+      "goals": []
     },
     "financas": {
       "campos": {
@@ -68,7 +75,19 @@
         "recordeStreak": 0,
         "badgesUnlocked": [],
         "missoesLog": {}
-      }
+      },
+      "clientes": [
+        {
+          "id": "cli-1781486357520",
+          "nome": "dAVI",
+          "produto": "Site",
+          "valor": 0,
+          "estagio": "pago",
+          "proximaAcao": "",
+          "prazo": null
+        }
+      ],
+      "goals": []
     },
     "metas": {
       "campos": {
