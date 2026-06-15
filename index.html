@@ -1264,6 +1264,44 @@ tr:hover td { background: var(--bg3); }
 .list-inp:focus { border-color:#eab308; }
 @media (max-width:700px){ .fe-sacgrid { grid-template-columns:1fr; } }
 
+/* ── Lazer & Crescimento (2 eixos: crescimento cyan/foco · lazer calmo) ── */
+.lz-axis { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:6px; }
+.lz-axis-eye { font-size:11px; text-transform:uppercase; letter-spacing:.09em; font-weight:800; }
+.lz-axis-eye.cresc { color:#06b6d4; }
+.lz-axis-eye.lz { color:#22c55e; }
+.lz-axis-sub { font-size:12px; color:var(--text3); }
+.lz-axis-score { font-size:24px; font-weight:900; font-family:var(--mono); letter-spacing:-.02em; }
+.lz-foco { display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-top:12px; padding:10px 12px; background:var(--surface-2); border:1px solid var(--border); border-radius:var(--r); }
+.lz-foco-lb { font-size:11px; text-transform:uppercase; letter-spacing:.06em; color:var(--text3); font-weight:700; }
+.lz-foco-val { font-size:15px; font-weight:700; color:#22d3ee; }
+.lz-foco-val.empty { color:var(--text3); font-weight:400; font-style:italic; }
+.lz-apliquei { margin-top:10px; }
+.lz-apliquei .fe-hab { width:100%; }
+.lz-skillgrid { display:grid; grid-template-columns:repeat(auto-fill,minmax(180px,1fr)); gap:11px; }
+.lz-skill { background:var(--surface-2); border:1px solid var(--border); border-radius:var(--r); padding:12px; display:flex; flex-direction:column; gap:8px; }
+.lz-skill-top { display:flex; align-items:center; justify-content:space-between; gap:8px; }
+.lz-skill-nome { font-size:14px; font-weight:700; color:var(--text); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.lz-skill-lvl { flex-shrink:0; font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:.05em; color:#04222a; background:linear-gradient(135deg,#22d3ee,#0891b2); padding:3px 7px; border-radius:99px; }
+.lz-skill-bar { height:7px; background:var(--bg); border-radius:99px; overflow:hidden; }
+.lz-skill-bar > div { height:100%; background:linear-gradient(90deg,#0891b2,#22d3ee); border-radius:99px; transition:width var(--t-slow); }
+.lz-skill-meta { display:flex; align-items:center; justify-content:space-between; gap:6px; font-size:11px; color:var(--text3); font-family:var(--mono); }
+.lz-skill-acts { display:flex; gap:4px; }
+.lz-xp-btn { background:var(--surface); border:1px solid var(--border2); border-radius:6px; color:var(--text2); font-size:11px; font-weight:700; cursor:pointer; padding:2px 7px; transition:all var(--t-fast); }
+.lz-xp-btn:hover { border-color:#22d3ee; color:#22d3ee; }
+.lz-xp-btn.minus:hover { border-color:#ef4444; color:#ef4444; }
+.skill-inp { flex:1; min-width:0; background:var(--surface-2); border:1px solid var(--border2); border-radius:var(--r); color:var(--text); font-size:var(--text-sm); padding:8px 10px; outline:none; transition:border-color var(--t-fast); }
+.skill-inp:focus { border-color:#22d3ee; }
+.lz-recarga { display:flex; align-items:center; gap:18px; flex-wrap:wrap; }
+.lz-recarga-g { flex-shrink:0; text-align:center; }
+.lz-recarga-info { flex:1; min-width:160px; }
+.lz-recarga-hrs { font-size:26px; font-weight:900; font-family:var(--mono); letter-spacing:-.02em; }
+.lz-recarga-hrs small { font-size:13px; font-weight:600; color:var(--text3); }
+.lz-recarga-st { margin-top:4px; font-size:13px; font-weight:700; }
+.lz-recarga-st.ok { color:#22c55e; }
+.lz-recarga-st.debt { color:#ef4444; }
+.lz-recarga-note { margin-top:8px; font-size:12px; color:var(--text3); font-style:italic; }
+@media (max-width:700px){ .lz-recarga { justify-content:center; } }
+
 /* ── SECTION TITLE ── */
 .sec-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; color: var(--text3); margin-bottom: 10px; }
 
@@ -2973,6 +3011,137 @@ function igrejaCockpitHtml(area){
     + listaHtml('devocoes', devocoes, '📿 Devoções', {empty:'Sem devoções.', input:'Nova devoção...'}, {todo:'Marcar rezada', done:'Rezada'});
 }
 
+// ── COCKPIT LAZER & CRESCIMENTO (2 eixos que não se somam: crescimento=aplicação · lazer=recarga com teto) ──
+const LZ_PLACA_TIER = { 10:'bronze', 25:'prata', 50:'ouro', 100:'diamante' };
+function lazerCockpitHtml(area){
+  const d = area.detalhe||{};
+  const cr = d.crescimento||{};
+  const lz = d.lazer||{};
+  const livros = d.livros||{itens:[],lidos:0,placas:[],proximaPlaca:null};
+  const skills = d.skills||[];
+
+  // ── EIXO 1: CRESCIMENTO ──
+  const focoVal = cr.skillFoco ? `<span class="lz-foco-val">${esc(cr.skillFoco)}</span>` : `<span class="lz-foco-val empty">defina a skill da vez</span>`;
+  const aplicTxt = cr.oQueApliquei ? esc(cr.oQueApliquei) : 'O que você aplicou no Safra hoje? (registre)';
+  const crescHtml = `<div class="card mb16" style="--area-color:#06b6d4">
+    <div class="lz-axis">
+      <div>
+        <div class="lz-axis-eye cresc">⚡ CRESCIMENTO · APLICAÇÃO</div>
+        <div class="lz-axis-sub">Aprender só conta se vira ação no Safra.</div>
+      </div>
+      <div class="lz-axis-score" style="color:#22d3ee">${cr.score}</div>
+    </div>
+    <div class="lz-apliquei">
+      <button class="fe-hab ${cr.apliqueiHoje?'on':''}" data-action="fe-habito" data-campo="apliquei" data-cur="${cr.apliqueiHoje?1:0}" title="${cr.apliqueiHoje?'Aplicou hoje':'Marcar que aplicou'}">
+        <span class="fe-hab-ic">⚡</span>
+        <span class="fe-hab-lb">Apliquei no Safra hoje</span>
+        <span class="fe-hab-st">${cr.apliqueiStreak>0?`🔥 ${cr.apliqueiStreak}`:'—'}</span>
+        <span class="fe-hab-ck">${cr.apliqueiHoje?'✓':''}</span>
+      </button>
+    </div>
+    <div class="lz-foco">
+      <span class="lz-foco-lb">Skill foco</span>${focoVal}
+      <button class="hz-act" data-action="edit-skillfoco" data-cur="${esc(cr.skillFoco||'')}" title="Editar skill foco" style="margin-left:auto">✏️</button>
+    </div>
+    <div class="lz-foco" style="margin-top:8px">
+      <span class="lz-foco-lb">Apliquei</span>
+      <span style="flex:1;font-size:13px;color:var(--text2)">${aplicTxt}</span>
+      <button class="hz-act" data-action="edit-aplicacao" data-cur="${esc(cr.oQueApliquei||'')}" title="Editar">✏️</button>
+    </div>
+  </div>`;
+
+  // ── Skill tree ──
+  const skillCards = skills.map(s=>{
+    const pct = Math.min(100, Math.round((s.xpNivel/s.xpProx)*100));
+    return `<div class="lz-skill">
+      <div class="lz-skill-top">
+        <span class="lz-skill-nome" title="${esc(s.nome)}">${esc(s.nome)}</span>
+        <span class="lz-skill-lvl">Nv ${s.nivel}</span>
+      </div>
+      <div class="lz-skill-bar"><div style="width:${pct}%"></div></div>
+      <div class="lz-skill-meta">
+        <span>${s.xpNivel}/${s.xpProx} XP</span>
+        <span class="lz-skill-acts">
+          <button class="lz-xp-btn minus" data-action="skill-xp" data-sid="${esc(s.id)}" data-delta="-25" title="−25 XP">−</button>
+          <button class="lz-xp-btn" data-action="skill-xp" data-sid="${esc(s.id)}" data-delta="25" title="+25 XP">+25</button>
+          <button class="hz-act" data-action="skill-edit" data-sid="${esc(s.id)}" data-cur="${esc(s.nome)}" title="Renomear">✏️</button>
+          <button class="hz-act del" data-action="skill-delete" data-sid="${esc(s.id)}" title="Remover">🗑</button>
+        </span>
+      </div>
+    </div>`;
+  }).join('');
+  const skillsHtml = `<div class="card mb16" style="--area-color:#06b6d4">
+    <div class="card-title">🌳 Árvore de skills</div>
+    <div class="lz-skillgrid">${skillCards||'<div class="mz-empty">Nenhuma skill. Adicione uma pra subir de nível (violão, inglês, código...).</div>'}</div>
+    <div class="mz-add" style="margin-top:11px">
+      <input type="text" class="skill-inp" id="skill-inp" placeholder="Nova skill..." maxlength="60">
+      <button class="meta-add-btn" data-action="skill-add" title="Adicionar">+</button>
+    </div>
+  </div>`;
+
+  // ── Estante de livros (lista 'livros' via CRUD genérico) + placas ──
+  const livRows = (livros.itens||[]).map(it=>`<div class="mz-row ${it.feito?'done':''}">
+    <span class="mz-check ${it.feito?'done':''}" data-action="list-toggle" data-lista="livros" data-iid="${esc(it.id)}" title="${it.feito?'Lido':'Marcar lido'}">${it.feito?'✓':''}</span>
+    <span class="mz-text">${esc(it.texto)}</span>
+    <span class="mz-acts">
+      <button class="hz-act" data-action="list-edit" data-lista="livros" data-iid="${esc(it.id)}" data-cur="${esc(it.texto)}" title="Editar">✏️</button>
+      <button class="hz-act del" data-action="list-delete" data-lista="livros" data-iid="${esc(it.id)}" title="Remover">🗑</button>
+    </span>
+  </div>`).join('');
+  const placas = livros.placas||[];
+  const prox = livros.proximaPlaca;
+  const placasFaixa = placas.length ? `<div class="placa-grid" style="margin-bottom:12px">
+    ${placas.map(p=>`<div class="placa placa-${LZ_PLACA_TIER[p.alvo]||'bronze'} ${p.destravada?'on':'off'}">
+      <div class="placa-sheen"></div>
+      <div class="placa-ic">${p.destravada?'★':'🔒'}</div>
+      <div class="placa-val">${p.alvo}</div>
+      <div class="placa-nome">${esc(p.nome)}</div>
+      <div class="placa-falta ${p.destravada?'on':''}">${p.destravada?'conquistada':'faltam '+Math.max(0,p.alvo-livros.lidos)}</div>
+    </div>`).join('')}
+  </div>` : '';
+  const estanteHtml = `<div class="card mb16">
+    <div class="card-title">📚 Estante de livros <span style="color:var(--text3);font-weight:400">(${livros.lidos} lidos${prox?` · próx: ${prox.alvo}`:' · tudo!'})</span></div>
+    ${placasFaixa}
+    <div>${livRows||'<div class="mz-empty">Sem livros. Adicione os que está lendo / leu.</div>'}</div>
+    <div class="mz-add">
+      <input type="text" class="list-inp" id="list-inp-livros" data-lista="livros" placeholder="Título do livro..." maxlength="160">
+      <button class="meta-add-btn" data-action="list-add" data-lista="livros" title="Adicionar">+</button>
+    </div>
+  </div>`;
+
+  // ── EIXO 2: LAZER / RECARGA ──
+  const debt = lz.debito;
+  const stCls = lz.emDebito ? 'debt' : (lz.horasSemana!=null ? 'ok' : '');
+  const stTxt = lz.horasSemana==null ? 'sem registro de descanso'
+    : lz.emDebito ? `⚠️ em débito de ${debt}h de descanso`
+    : 'recarga em dia';
+  const recargaHtml = `<div class="card mb16" style="--area-color:#22c55e">
+    <div class="lz-axis">
+      <div>
+        <div class="lz-axis-eye lz">🌿 LAZER · RECARGA</div>
+        <div class="lz-axis-sub">Descanso é insumo, tem teto — não é meta de produzir.</div>
+      </div>
+      <div class="lz-axis-score" style="color:#22c55e">${lz.score}</div>
+    </div>
+    <div class="lz-recarga" style="margin-top:14px">
+      <div class="lz-recarga-g">${gaugeHtml(lz.score,'#22c55e')}</div>
+      <div class="lz-recarga-info">
+        <div class="lz-recarga-hrs">${lz.horasSemana!=null?lz.horasSemana:'—'}<small>/${lz.teto}h por semana</small></div>
+        <div class="lz-recarga-st ${stCls}">${stTxt}</div>
+        <button class="fe-hab ${lz.descanseiHoje?'on':''}" data-action="fe-habito" data-campo="descansei" data-cur="${lz.descanseiHoje?1:0}" title="${lz.descanseiHoje?'Descansou hoje':'Marcar descanso'}" style="margin-top:10px;width:100%">
+          <span class="fe-hab-ic">🌿</span>
+          <span class="fe-hab-lb">Descansei de verdade hoje</span>
+          <span class="fe-hab-st">${lz.descanseiStreak>0?`🔥 ${lz.descanseiStreak}`:'—'}</span>
+          <span class="fe-hab-ck">${lz.descanseiHoje?'✓':''}</span>
+        </button>
+        <div class="lz-recarga-note">Descansar não é preguiça — é dever de quem quer durar.</div>
+      </div>
+    </div>
+  </div>`;
+
+  return crescHtml + skillsHtml + estanteHtml + recargaHtml;
+}
+
 // ── COCKPIT DE SAÚDE (Treinos com exercícios; registros+gráficos vêm do card Histórico) ──
 const TR_TIPO_LABEL = { forca:'💪 Força', cardio:'🏃 Cardio', mobilidade:'🧘 Mobilidade', outro:'⭐ Outro' };
 function saudeCockpitHtml(area){
@@ -3216,6 +3385,7 @@ function renderManualArea(area) {
     ${area.id==='metas' ? metasCockpitHtml(area) : ''}
     ${area.id==='saude' ? saudeCockpitHtml(area) : ''}
     ${area.id==='igreja' ? igrejaCockpitHtml(area) : ''}
+    ${area.id==='lazer' ? lazerCockpitHtml(area) : ''}
     <div class="kpi-row mb16">${kpiHtml}</div>
     ${checkinHtml}
     ${missoesHtml}
@@ -3589,6 +3759,54 @@ function bindDetailDelegation(areaId) {
         await fetch(`/api/area/${encodeURIComponent(areaId)}/lista/${encodeURIComponent(lista)}/${encodeURIComponent(iid)}`,{method:'DELETE'});
         await load(false); toast('Removido');
       });
+    } else if (action === 'skill-add') {
+      const inp = $('skill-inp');
+      const nome = inp?.value?.trim();
+      if(!nome){ toast('Escreve o nome da skill'); return; }
+      await guard(async()=>{
+        inp.value='';
+        await postJson(`/api/area/${encodeURIComponent(areaId)}/skill`,{nome});
+        await load(false); toast('✓ Skill adicionada');
+      });
+    } else if (action === 'skill-xp') {
+      const sid=el.dataset.sid, delta=Number(el.dataset.delta);
+      await guard(async()=>{
+        const j = await (await fetch(`/api/area/${encodeURIComponent(areaId)}/skill/${encodeURIComponent(sid)}`,{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify({xp:delta})})).json();
+        await load(false);
+        if(j.skill) toast(delta>0?`+${delta} XP · Nv ${j.skill.nivel}`:`${delta} XP`);
+      });
+    } else if (action === 'skill-edit') {
+      e.stopPropagation();
+      const sid=el.dataset.sid;
+      const novo=prompt('Renomear skill:', el.dataset.cur||'');
+      if(novo===null||!novo.trim()) return;
+      await guard(async()=>{
+        await fetch(`/api/area/${encodeURIComponent(areaId)}/skill/${encodeURIComponent(sid)}`,{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify({nome:novo.trim()})});
+        await load(false); toast('✓ Atualizado');
+      });
+    } else if (action === 'skill-delete') {
+      e.stopPropagation();
+      const sid=el.dataset.sid;
+      await guard(async()=>{
+        await fetch(`/api/area/${encodeURIComponent(areaId)}/skill/${encodeURIComponent(sid)}`,{method:'DELETE'});
+        await load(false); toast('Removida');
+      });
+    } else if (action === 'edit-skillfoco') {
+      e.stopPropagation();
+      const novo = prompt('Skill foco da vez (UMA — ex: inglês, código):', el.dataset.cur||'');
+      if(novo===null) return;
+      await guard(async()=>{
+        await fetch(`/api/area/${encodeURIComponent(areaId)}`,{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify({campos:{skillFoco:novo.trim()}})});
+        await load(false); toast('✓ Foco atualizado');
+      });
+    } else if (action === 'edit-aplicacao') {
+      e.stopPropagation();
+      const novo = prompt('O que você aplicou no Safra:', el.dataset.cur||'');
+      if(novo===null||!novo.trim()) return;
+      await guard(async()=>{
+        await fetch(`/api/area/${encodeURIComponent(areaId)}/meta/aplicacao`,{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify({texto:novo.trim()})});
+        await load(false); toast('✓ Registrado');
+      });
     } else if (action === 'passo-toggle') {
       await guard(async()=>{
         const j = await postJson(`/api/area/${encodeURIComponent(areaId)}/missao/passo-semana`,{});
@@ -3670,6 +3888,15 @@ function bindDetailDelegation(areaId) {
         e.target.value='';
         await postJson(`/api/area/${encodeURIComponent(areaId)}/lista/${encodeURIComponent(lista)}`,{texto});
         await load(false); toast('✓ Adicionado');
+      });
+    } else if (e.target.classList.contains('skill-inp')) {
+      e.preventDefault();
+      const nome = e.target.value.trim();
+      if(!nome) return;
+      await guard(async()=>{
+        e.target.value='';
+        await postJson(`/api/area/${encodeURIComponent(areaId)}/skill`,{nome});
+        await load(false); toast('✓ Skill adicionada');
       });
     } else if (e.target.id && e.target.id.indexOf('treino-')===0) {
       e.preventDefault();

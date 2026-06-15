@@ -5,7 +5,7 @@ const fs = require('fs');
 const path = require('path');
 const { build, CONFIG_PATH } = require('./lib/payload');
 const { clearCache } = require('./lib/scan');
-const { writeArea, pushHistory, addMeta, editMeta, deleteMeta, doCheckin, logMissao, addCliente, updateCliente, deleteCliente, addGoal, updateGoal, deleteGoal, addMissao, toggleMissao, editMissao, deleteMissao, addTreino, updateTreino, deleteTreino, addExercicio, toggleExercicio, editExercicio, deleteExercicio, addListItem, toggleListItem, editListItem, deleteListItem } = require('./lib/datastore');
+const { writeArea, pushHistory, addMeta, editMeta, deleteMeta, doCheckin, logMissao, addCliente, updateCliente, deleteCliente, addGoal, updateGoal, deleteGoal, addMissao, toggleMissao, editMissao, deleteMissao, addTreino, updateTreino, deleteTreino, addExercicio, toggleExercicio, editExercicio, deleteExercicio, addListItem, toggleListItem, editListItem, deleteListItem, addSkill, skillXp, editSkill, deleteSkill } = require('./lib/datastore');
 
 const PORT = 4317;
 const APP_DIR = path.resolve(__dirname);
@@ -436,8 +436,64 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
+  // POST /api/area/:id/skill — cria skill (skill tree, área Lazer)
+  if (req.method === 'POST' && pathname.match(/^\/api\/area\/[^/]+\/skill$/)) {
+    const parts = pathname.split('/');
+    const areaId = decodeURIComponent(parts[3]);
+    try {
+      const body = await readBody(req);
+      if (!body.nome || !String(body.nome).trim()) {
+        res.writeHead(400, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ ok: false, error: 'nome requerido' })); return;
+      }
+      const skill = addSkill(areaId, String(body.nome).trim());
+      _cachedPayload = null;
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ ok: true, skill }));
+    } catch (err) {
+      res.writeHead(500, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ ok: false, error: String(err) }));
+    }
+    return;
+  }
+
+  // PATCH /api/area/:id/skill/:sid — nome (edita) ou xp (delta)
+  if (req.method === 'PATCH' && pathname.match(/^\/api\/area\/[^/]+\/skill\/[^/]+$/)) {
+    const parts = pathname.split('/');
+    const areaId = decodeURIComponent(parts[3]), sid = decodeURIComponent(parts[5]);
+    try {
+      const body = await readBody(req);
+      const skill = (body.xp !== undefined) ? skillXp(areaId, sid, Number(body.xp))
+        : editSkill(areaId, sid, String(body.nome || '').trim());
+      if (!skill) { res.writeHead(404, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ ok: false, error: 'skill não encontrada' })); return; }
+      _cachedPayload = null;
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ ok: true, skill }));
+    } catch (err) {
+      res.writeHead(500, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ ok: false, error: String(err) }));
+    }
+    return;
+  }
+
+  // DELETE /api/area/:id/skill/:sid — remove skill
+  if (req.method === 'DELETE' && pathname.match(/^\/api\/area\/[^/]+\/skill\/[^/]+$/)) {
+    const parts = pathname.split('/');
+    const areaId = decodeURIComponent(parts[3]), sid = decodeURIComponent(parts[5]);
+    try {
+      deleteSkill(areaId, sid);
+      _cachedPayload = null;
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ ok: true }));
+    } catch (err) {
+      res.writeHead(500, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ ok: false, error: String(err) }));
+    }
+    return;
+  }
+
   // PATCH /api/area/:id — atualiza campos/metasManual de uma área manual
-  if (req.method === 'PATCH' && pathname.startsWith('/api/area/')) {
+  if (req.method === 'PATCH' && pathname.match(/^\/api\/area\/[^/]+$/)) {
     const areaId = decodeURIComponent(pathname.slice('/api/area/'.length));
     try {
       const body = await readBody(req);
