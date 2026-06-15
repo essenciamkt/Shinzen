@@ -998,6 +998,11 @@ tr:hover td { background: var(--bg3); }
 .ach-desc { font-size: 11px; color: var(--text3); margin-top: 1px; line-height: 1.3; }
 .ach-pbar { height: 2px; background: var(--bg); border-radius: 1px; overflow: hidden; margin-top: 5px; }
 .ach-pfill { height: 100%; background: var(--red); }
+.ach-more { margin-top: 12px; }
+.ach-more > summary { cursor: pointer; font-size: var(--text-sm); color: var(--area-color, var(--red)); font-weight: 700; padding: 8px 0; list-style: none; user-select: none; }
+.ach-more > summary::-webkit-details-marker { display: none; }
+.ach-more > summary::before { content: '▸ '; }
+.ach-more[open] > summary::before { content: '▾ '; }
 
 /* ── HEATMAP ── */
 .heatmap { display: grid; grid-template-columns: 28px repeat(7,1fr); gap: 2px; font-size: 10px; color: var(--text3); }
@@ -2762,25 +2767,33 @@ function renderManualArea(area) {
   </div>` : '';
 
   const badges = prog.badges||[];
+  const achCard = (b)=>{
+    let pbar='';
+    if (!b.conquistada && b.progresso && b.progresso.meta>0) {
+      const pct = Math.min(100, Math.round((b.progresso.atual/b.progresso.meta)*100));
+      pbar = `<div class="ach-pbar"><div class="ach-pfill" style="width:${pct}%"></div></div>`;
+    }
+    return `<div class="ach-item ${b.conquistada?'earned':''}" style="${b.conquistada?'':'opacity:.55'}">
+      <span class="ach-icon">${b.conquistada?b.icone:'🔒'}</span>
+      <div style="flex:1">
+        <div class="ach-name">${esc(b.nome)}</div>
+        <div class="ach-desc">${esc(b.desc)}</div>
+        ${pbar}
+      </div>
+    </div>`;
+  };
+  // Conquistadas + as mais perto de desbloquear no topo; resto bloqueado escondido.
+  const _prog = b => (b.progresso && b.progresso.meta>0) ? (b.progresso.atual/b.progresso.meta) : 0;
+  const ganhas = badges.filter(b=>b.conquistada);
+  const perto = badges.filter(b=>!b.conquistada && b.progresso && b.progresso.meta>0).sort((a,b)=>_prog(b)-_prog(a));
+  const semBarra = badges.filter(b=>!b.conquistada && !(b.progresso && b.progresso.meta>0));
+  const pertoTop = perto.slice(0,12);
+  const escondidas = perto.slice(12).concat(semBarra);
+  const visiveis = ganhas.concat(pertoTop);
   const badgesHtml = badges.length ? `<div class="card mb16">
-    <div class="card-title">Conquistas <span style="color:var(--text3);font-weight:400">(${badges.filter(b=>b.conquistada).length}/${badges.length})</span></div>
-    <div class="ach-grid">
-      ${badges.map(b=>{
-        let pbar = '';
-        if (!b.conquistada && b.progresso && b.progresso.meta>0) {
-          const pct = Math.min(100, Math.round((b.progresso.atual/b.progresso.meta)*100));
-          pbar = `<div class="ach-pbar"><div class="ach-pfill" style="width:${pct}%"></div></div>`;
-        }
-        return `<div class="ach-item ${b.conquistada?'earned':''}" style="${b.conquistada?'':'opacity:.55'}">
-          <span class="ach-icon">${b.conquistada?b.icone:'🔒'}</span>
-          <div style="flex:1">
-            <div class="ach-name">${esc(b.nome)}</div>
-            <div class="ach-desc">${esc(b.desc)}</div>
-            ${pbar}
-          </div>
-        </div>`;
-      }).join('')}
-    </div>
+    <div class="card-title">Conquistas <span style="color:var(--text3);font-weight:400">(${ganhas.length}/${badges.length})</span></div>
+    <div class="ach-grid">${(visiveis.length?visiveis:escondidas.slice(0,12)).map(achCard).join('')}</div>
+    ${escondidas.length ? `<details class="ach-more"><summary>+${escondidas.length} conquistas bloqueadas</summary><div class="ach-grid" style="margin-top:10px">${escondidas.map(achCard).join('')}</div></details>` : ''}
   </div>` : '';
 
   // Na área Metas, o horizonte (cockpit) substitui a lista genérica de metas;
