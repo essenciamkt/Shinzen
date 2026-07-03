@@ -1712,16 +1712,34 @@ tr:hover td { background: var(--bg3); }
 }
 .diario-entry-tools { position: absolute; top: 28px; right: 0; display: flex; gap: 6px; opacity: 0; transition: opacity var(--t-fast); }
 .diario-entry:hover .diario-entry-tools { opacity: 1; }
-.diario-composer { margin-top: 12px; padding-top: 20px; border-top: 1px solid rgba(212,175,106,.25); display: flex; flex-direction: column; gap: 10px; }
-.diario-composer input[type=date] { align-self: flex-start; background: var(--surface-2); border: 1px solid var(--border2); border-radius: var(--r); color: var(--text2); font-family: var(--mono); font-size: 12px; padding: 6px 10px; }
-.diario-composer textarea { min-height: 110px; background: var(--surface-1); border: 1px solid var(--border2); border-radius: var(--r); color: var(--diario-paper); font-family: var(--serif, Georgia, serif); font-size: 16px; line-height: 1.7; padding: 14px; resize: vertical; outline: none; }
-.diario-composer textarea:focus { border-color: var(--diario-gold); }
-.diario-composer-btn { align-self: flex-end; background: var(--diario-gold); color: #241305; border: none; border-radius: var(--r); font-weight: 700; font-size: 13px; padding: 9px 20px; cursor: pointer; transition: filter var(--t-fast); }
+.diario-write-btn {
+  margin-left: auto; background: transparent; border: 1px solid var(--diario-gold); color: var(--diario-gold);
+  border-radius: var(--r); font-family: var(--font); font-weight: 600; font-size: 13px; padding: 8px 16px;
+  cursor: pointer; transition: background var(--t-fast), color var(--t-fast);
+}
+.diario-write-btn:hover { background: var(--diario-gold); color: #241305; }
+
+/* Tela 5 — Escrever: página cheia, sem card, sem sidebar de dados — só o
+   papel e o cursor. É a única tela do Diário que ocupa a largura toda. */
+.diario-writer { display: flex; flex-direction: column; height: calc(100vh - 160px); min-height: 480px; max-width: 860px; }
+.diario-writer-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; flex-shrink: 0; }
+.diario-writer-head input[type=date] { background: var(--surface-2); border: 1px solid var(--border2); border-radius: var(--r); color: var(--text2); font-family: var(--mono); font-size: 12px; padding: 7px 12px; }
+.diario-writer-area {
+  flex: 1; width: 100%; background: transparent; border: none; outline: none; resize: none;
+  color: var(--diario-paper); font-family: var(--serif, Georgia, 'Iowan Old Style', 'Times New Roman', serif);
+  font-size: 20px; line-height: 1.85; padding: 8px 2px;
+}
+.diario-writer-area::placeholder { color: var(--diario-paper-dim); opacity: .5; }
+.diario-writer-foot { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-top: 16px; border-top: 1px solid rgba(212,175,106,.25); flex-shrink: 0; }
+.diario-writer-hint { font-family: var(--mono); font-size: 10px; color: var(--text3); }
+.diario-composer-btn { background: var(--diario-gold); color: #241305; border: none; border-radius: var(--r); font-weight: 700; font-size: 13px; padding: 10px 24px; cursor: pointer; transition: filter var(--t-fast); }
 .diario-composer-btn:hover { filter: brightness(1.08); }
 
 @media (max-width: 640px) {
   .diario-shelf { grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 14px; }
   .diario-entry-body { font-size: 16px; }
+  .diario-writer { height: calc(100vh - 220px); }
+  .diario-writer-area { font-size: 17px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -3654,11 +3672,13 @@ function menteCockpitHtml(area){
 }
 
 // ── COCKPIT DIÁRIO — imersivo: Estante (capas 2010→hoje) → Livro (capas de
-// capítulo) → Capítulo (cartões de aventura) → Leitura (feed contínuo). ──
-let _diarioScreen = 'estante'; // 'estante' | 'livro' | 'capitulo' | 'leitura'
+// capítulo) → Capítulo (cartões de aventura) → Leitura (feed contínuo) →
+// Escrever (tela cheia de escritor, sem distração). ──
+let _diarioScreen = 'estante'; // 'estante' | 'livro' | 'capitulo' | 'leitura' | 'escrever'
 let _diarioSelYear = null;
 let _diarioSelCap = null;
 let _diarioSelAv = null;
+let _diarioEditEntId = null; // null = entrada nova; senão, id da entrada em edição
 
 const DIARIO_ANO_INICIO = 2010;
 const MESES_PT = ['jan','fev','mar','abr','mai','jun','jul','ago','set','out','nov','dez'];
@@ -3698,12 +3718,14 @@ function diarioCockpitHtml(area){
   if (_diarioSelAv && !aventuras.some(a=>a.id===_diarioSelAv)) _diarioSelAv = null;
   if (_diarioScreen==='livro' && !_diarioSelYear) _diarioScreen='estante';
   if (_diarioScreen==='capitulo' && (!_diarioSelYear || !_diarioSelCap)) _diarioScreen = _diarioSelYear ? 'livro' : 'estante';
-  if (_diarioScreen==='leitura' && (!_diarioSelYear || !_diarioSelCap || !_diarioSelAv)) _diarioScreen = _diarioSelCap ? 'capitulo' : (_diarioSelYear ? 'livro' : 'estante');
+  if ((_diarioScreen==='leitura'||_diarioScreen==='escrever') && (!_diarioSelYear || !_diarioSelCap || !_diarioSelAv)) _diarioScreen = _diarioSelCap ? 'capitulo' : (_diarioSelYear ? 'livro' : 'estante');
+  if (_diarioScreen==='escrever' && _diarioEditEntId && !entradas.some(e=>e.id===_diarioEditEntId)) _diarioEditEntId = null;
 
-  const introHtml = `<div class="diario-intro">
+  // Fora da Estante o dashboard genérico some — sem preâmbulo, só o livro.
+  const introHtml = _diarioScreen==='estante' ? `<div class="diario-intro">
     <div class="diario-intro-title">📔 Diário</div>
     <div class="diario-intro-sub">${d.streak>0?`🔥 ${d.streak} dia${d.streak===1?'':'s'} seguido${d.streak===1?'':'s'} escrevendo`:'Escreva hoje e comece a sequência.'} · ${entradas.length} entrada${entradas.length===1?'':'s'}</div>
-  </div>`;
+  </div>` : '';
 
   // ══════════════ TELA 1 — ESTANTE (capas por ano, 2010→hoje) ══════════════
   if (_diarioScreen==='estante') {
@@ -3794,31 +3816,44 @@ function diarioCockpitHtml(area){
   // ══════════════ TELA 4 — LEITURA (feed contínuo de uma aventura) ══════════════
   const aventura = aventuras.find(a=>a.id===_diarioSelAv);
   const capituloDaLeitura = capitulos.find(c=>c.id===_diarioSelCap);
-  const feed = entradas
-    .filter(e=>e.aventuraId===_diarioSelAv && (e.data||'').slice(0,4)===String(_diarioSelYear))
-    .sort((x,y)=>x.data<y.data?1:x.data>y.data?-1:0);
-  const feedHtml = feed.map(e=>{
-    const [y,m,dia] = (e.data||'').split('-');
-    return `<article class="diario-entry">
-      <div class="diario-entry-date"><span class="diario-entry-day">${dia||'—'}</span> <span class="diario-entry-month">${MESES_PT[(parseInt(m,10)||1)-1]}</span></div>
-      <div class="diario-entry-body">${esc(e.corpo).replace(/\n/g,'<br>')}</div>
-      <div class="diario-entry-tools">
-        <button class="hz-act" data-action="diario-edit-ent" data-eid="${esc(e.id)}" data-cur="${esc(e.corpo)}" title="Editar">✏️</button>
-        <button class="hz-act del" data-action="diario-del-ent" data-eid="${esc(e.id)}" title="Remover">🗑</button>
-      </div>
-    </article>`;
-  }).join('');
+  if (_diarioScreen==='leitura') {
+    const feed = entradas
+      .filter(e=>e.aventuraId===_diarioSelAv && (e.data||'').slice(0,4)===String(_diarioSelYear))
+      .sort((x,y)=>x.data<y.data?1:x.data>y.data?-1:0);
+    const feedHtml = feed.map(e=>{
+      const [y,m,dia] = (e.data||'').split('-');
+      return `<article class="diario-entry">
+        <div class="diario-entry-date"><span class="diario-entry-day">${dia||'—'}</span> <span class="diario-entry-month">${MESES_PT[(parseInt(m,10)||1)-1]}</span></div>
+        <div class="diario-entry-body">${esc(e.corpo).replace(/\n/g,'<br>')}</div>
+        <div class="diario-entry-tools">
+          <button class="hz-act" data-action="diario-open-write-edit" data-eid="${esc(e.id)}" data-cur="${esc(e.corpo)}" data-data="${esc(e.data)}" title="Editar">✏️</button>
+          <button class="hz-act del" data-action="diario-del-ent" data-eid="${esc(e.id)}" title="Remover">🗑</button>
+        </div>
+      </article>`;
+    }).join('');
 
-  return introHtml + `<div class="diario-reading-wrap diario-fade">
-    <div class="diario-reading-head">
-      <button class="diario-back" data-action="diario-back-cap">‹ ${esc(capituloDaLeitura?capituloDaLeitura.titulo:'Capítulo')}</button>
-      <div class="diario-reading-title">${esc(aventura?aventura.titulo:'')}</div>
+    return introHtml + `<div class="diario-reading-wrap diario-fade">
+      <div class="diario-reading-head">
+        <button class="diario-back" data-action="diario-back-cap">‹ ${esc(capituloDaLeitura?capituloDaLeitura.titulo:'Capítulo')}</button>
+        <div class="diario-reading-title">${esc(aventura?aventura.titulo:'')}</div>
+        <button class="diario-write-btn" data-action="diario-open-write" title="Nova entrada">✎ Escrever</button>
+      </div>
+      <div class="diario-reading-feed">${feedHtml||'<div class="mz-empty">Nenhuma entrada de '+_diarioSelYear+' aqui ainda. Escreva a primeira.</div>'}</div>
+    </div>`;
+  }
+
+  // ══════════════ TELA 5 — ESCREVER (tela cheia de escritor, sem distração) ══════════════
+  const entEdit = _diarioEditEntId ? entradas.find(e=>e.id===_diarioEditEntId) : null;
+  const dataInicial = entEdit ? entEdit.data : (_diarioSelYear===anoAtual ? todayIsoBr() : _diarioSelYear+'-01-01');
+  return `<div class="diario-writer diario-fade">
+    <div class="diario-writer-head">
+      <button class="diario-back" data-action="diario-back-leitura">‹ ${esc(aventura?aventura.titulo:'')}</button>
+      <input type="date" id="diario-inp-ent-data" value="${esc(dataInicial)}">
     </div>
-    <div class="diario-reading-feed">${feedHtml||'<div class="mz-empty">Nenhuma entrada de '+_diarioSelYear+' aqui ainda. Escreva a primeira.</div>'}</div>
-    <div class="diario-composer">
-      <input type="date" id="diario-inp-ent-data" value="${_diarioSelYear===anoAtual?todayIsoBr():_diarioSelYear+'-01-01'}">
-      <textarea id="diario-inp-ent" placeholder="Escreva sua entrada..." maxlength="8000"></textarea>
-      <button class="diario-composer-btn" data-action="diario-add-ent" data-aid="${esc(_diarioSelAv)}" title="Adicionar">Escrever</button>
+    <textarea id="diario-inp-ent" class="diario-writer-area" placeholder="Escreva à vontade..." maxlength="8000" autofocus>${entEdit?esc(entEdit.corpo):''}</textarea>
+    <div class="diario-writer-foot">
+      <span class="diario-writer-hint">${capituloDaLeitura?esc(capituloDaLeitura.titulo):''} · ${aventura?esc(aventura.titulo):''}</span>
+      <button class="diario-composer-btn" data-action="diario-save-write" data-aid="${esc(_diarioSelAv)}" data-eid="${esc(_diarioEditEntId||'')}">${entEdit?'Salvar':'Publicar'}</button>
     </div>
   </div>`;
 }
@@ -4094,7 +4129,12 @@ function renderManualArea(area) {
       </div>
     </div>`;
 
-  body.innerHTML = `
+  // Diário imersivo: fora da Estante, o dashboard genérico (KPIs, check-in,
+  // missões, registrar/editar, conquistas, histórico) só atrapalha a leitura/
+  // escrita — some assim que um livro é aberto. Só reaparece na Estante.
+  const diarioImersivo = area.id==='diario' && _diarioScreen!=='estante';
+
+  body.innerHTML = diarioImersivo ? diarioCockpitHtml(area) : `
     ${area.id==='financas' ? financasCockpitHtml(area) : ''}
     ${area.id==='trabalho' ? trabalhoCockpitHtml(area) : ''}
     ${area.id==='metas' ? metasCockpitHtml(area) : ''}
@@ -4122,6 +4162,12 @@ function renderManualArea(area) {
   });
 
   bindDetailDelegation(area.id);
+
+  // Tela de escritor: foco imediato no papel, cursor no fim do texto (edição).
+  if (area.id==='diario' && _diarioScreen==='escrever') {
+    const ta = $('diario-inp-ent');
+    if (ta) { ta.focus(); const p=ta.value.length; ta.setSelectionRange(p,p); }
+  }
 }
 
 // Delegação única em #detail-body. Um listener despacha por data-action.
@@ -4548,23 +4594,29 @@ function bindDetailDelegation(areaId) {
         if(_diarioSelAv===aid){ _diarioSelAv=null; _diarioScreen='capitulo'; }
         await load(false); toast('Aventura removida');
       });
-    } else if (action === 'diario-add-ent') {
-      const aid = el.dataset.aid; const inp = $('diario-inp-ent'); const dataInp = $('diario-inp-ent-data');
+    } else if (action === 'diario-open-write') {
+      _diarioEditEntId = null; _diarioScreen = 'escrever';
+      await load(false);
+    } else if (action === 'diario-open-write-edit') {
+      e.stopPropagation();
+      _diarioEditEntId = el.dataset.eid; _diarioScreen = 'escrever';
+      await load(false);
+    } else if (action === 'diario-back-leitura') {
+      _diarioScreen = 'leitura'; _diarioEditEntId = null;
+      await load(false);
+    } else if (action === 'diario-save-write') {
+      const aid = el.dataset.aid; const eid = el.dataset.eid;
+      const inp = $('diario-inp-ent'); const dataInp = $('diario-inp-ent-data');
       const corpo = inp?.value?.trim();
       if(!corpo){ toast('Escreve algo'); return; }
       await guard(async()=>{
-        inp.value='';
-        await postJson(`/api/area/${encodeURIComponent(areaId)}/aventura/${encodeURIComponent(aid)}/entrada`,{corpo, data:dataInp?.value||undefined});
-        await load(false); toast('✓ Entrada salva');
-      });
-    } else if (action === 'diario-edit-ent') {
-      e.stopPropagation();
-      const eid = el.dataset.eid;
-      const novo = prompt('Editar entrada:', el.dataset.cur||'');
-      if(novo===null||!novo.trim()) return;
-      await guard(async()=>{
-        await fetch(`/api/area/${encodeURIComponent(areaId)}/entrada/${encodeURIComponent(eid)}`,{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify({corpo:novo.trim()})});
-        await load(false); toast('✓ Atualizado');
+        if (eid) {
+          await fetch(`/api/area/${encodeURIComponent(areaId)}/entrada/${encodeURIComponent(eid)}`,{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify({corpo, data:dataInp?.value||undefined})});
+        } else {
+          await postJson(`/api/area/${encodeURIComponent(areaId)}/aventura/${encodeURIComponent(aid)}/entrada`,{corpo, data:dataInp?.value||undefined});
+        }
+        _diarioScreen = 'leitura'; _diarioEditEntId = null;
+        await load(false); toast(eid?'✓ Entrada atualizada':'✓ Entrada publicada');
       });
     } else if (action === 'diario-del-ent') {
       e.stopPropagation();

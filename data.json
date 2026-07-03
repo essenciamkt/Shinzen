@@ -2982,9 +2982,10 @@
       "metasTexto": {},
       "progresso": {
         "checkins": [
-          "2026-07-02"
+          "2026-07-02",
+          "2026-07-03"
         ],
-        "recordeStreak": 1,
+        "recordeStreak": 2,
         "badgesUnlocked": [],
         "missoesLog": {
           "escrever": "2026-07-03"
