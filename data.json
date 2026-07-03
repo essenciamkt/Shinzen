@@ -4,10 +4,10 @@
       "campos": {
         "peso": 71,
         "pesoAlvo": 65,
-        "sonoH": 10,
+        "sonoH": null,
         "treinosSemana": 5,
         "treinosMeta": 3,
-        "aguaL": 2,
+        "aguaL": null,
         "calorias": null
       },
       "historico": {
@@ -2442,10 +2442,10 @@
       "campos": {
         "horasLazer": 16,
         "metaLazer": 5,
-        "leituraMin": 30,
+        "leituraMin": null,
         "aprendizadoHoje": null,
         "apliquei": null,
-        "descansei": 1,
+        "descansei": null,
         "tetoLazerSemana": 12,
         "skillFoco": "Autonomy"
       },
@@ -2575,18 +2575,18 @@
     },
     "rotina": {
       "campos": {
-        "acordouCedo": 12,
+        "acordouCedo": null,
         "aguaL": null,
         "metaAgua": 2,
-        "celularH": 7,
-        "produtividadeH": 1,
+        "celularH": null,
+        "produtividadeH": null,
         "nascimento": "2010-08-05",
-        "sysAcordar": 0,
-        "sysDormir": 1,
+        "sysAcordar": null,
+        "sysDormir": null,
         "metaExecucao": 8,
-        "sysPlano": 1,
-        "sysBloco": 0,
-        "sysOrar": 1
+        "sysPlano": null,
+        "sysBloco": null,
+        "sysOrar": null
       },
       "historico": {
         "aguaL": [],
@@ -2742,13 +2742,13 @@
     },
     "mente": {
       "campos": {
-        "humor": 7,
-        "ansiedade": 2,
+        "humor": null,
+        "ansiedade": null,
         "meditacao": null,
         "gratidao": null,
         "journalHoje": 0,
-        "fezReset": 1,
-        "gratidaoHoje": 1
+        "fezReset": null,
+        "gratidaoHoje": null
       },
       "historico": {
         "humor": [
@@ -2971,6 +2971,10 @@
           {
             "d": "2026-07-02",
             "v": 1
+          },
+          {
+            "d": "2026-07-03",
+            "v": 1
           }
         ]
       },
@@ -2982,7 +2986,9 @@
         ],
         "recordeStreak": 1,
         "badgesUnlocked": [],
-        "missoesLog": {}
+        "missoesLog": {
+          "escrever": "2026-07-03"
+        }
       },
       "clientes": [],
       "goals": [],
@@ -3157,9 +3163,25 @@
         "mente": 86,
         "diario": 73
       }
+    },
+    {
+      "date": "2026-07-03",
+      "overall": 44,
+      "areas": {
+        "claude-code": 41,
+        "saude": 57,
+        "financas": 24,
+        "trabalho": 28,
+        "metas": 1,
+        "igreja": 80,
+        "lazer": 69,
+        "rotina": 40,
+        "mente": 50,
+        "diario": 76
+      }
     }
   ],
-  "lastDay": "2026-07-02",
+  "lastDay": "2026-07-03",
   "lastWeek": "2026-W27",
   "changelog": []
 }
