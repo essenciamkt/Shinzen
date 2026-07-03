@@ -2,33 +2,134 @@
   "areas": {
     "saude": {
       "campos": {
-        "peso": 72,
-        "pesoAlvo": null,
-        "sonoH": 6.5,
-        "treinosSemana": 2,
-        "treinosMeta": 3
+        "peso": 71,
+        "pesoAlvo": 65,
+        "sonoH": 10,
+        "treinosSemana": 5,
+        "treinosMeta": 3,
+        "aguaL": 2,
+        "calorias": null
       },
       "historico": {
         "peso": [
           {
             "d": "2026-06-09",
             "v": 72
+          },
+          {
+            "d": "2026-06-24",
+            "v": 71
           }
         ],
         "sonoH": [
           {
             "d": "2026-06-15",
             "v": 6.5
+          },
+          {
+            "d": "2026-06-17",
+            "v": 9
+          },
+          {
+            "d": "2026-06-18",
+            "v": 10
+          },
+          {
+            "d": "2026-06-23",
+            "v": 6.5
+          },
+          {
+            "d": "2026-06-24",
+            "v": 6
+          },
+          {
+            "d": "2026-06-25",
+            "v": 6
+          },
+          {
+            "d": "2026-06-29",
+            "v": 12
+          },
+          {
+            "d": "2026-06-30",
+            "v": 9
+          },
+          {
+            "d": "2026-07-01",
+            "v": 4
+          },
+          {
+            "d": "2026-07-02",
+            "v": 10
+          }
+        ],
+        "aguaL": [
+          {
+            "d": "2026-06-23",
+            "v": 3
+          },
+          {
+            "d": "2026-06-24",
+            "v": 4
+          },
+          {
+            "d": "2026-06-25",
+            "v": 4
+          },
+          {
+            "d": "2026-06-29",
+            "v": 2
+          },
+          {
+            "d": "2026-07-01",
+            "v": 3
+          },
+          {
+            "d": "2026-07-02",
+            "v": 2
+          }
+        ],
+        "calorias": [
+          {
+            "d": "2026-06-23",
+            "v": 1500
+          },
+          {
+            "d": "2026-06-24",
+            "v": 2000
+          },
+          {
+            "d": "2026-06-25",
+            "v": 2000
+          },
+          {
+            "d": "2026-07-01",
+            "v": 2000
           }
         ]
       },
       "metasManual": {},
       "metasTexto": {},
       "progresso": {
-        "checkins": [],
-        "recordeStreak": 1,
-        "badgesUnlocked": [],
-        "missoesLog": {}
+        "checkins": [
+          "2026-06-19",
+          "2026-06-23",
+          "2026-06-24",
+          "2026-06-25",
+          "2026-06-29",
+          "2026-06-30",
+          "2026-07-01",
+          "2026-07-02"
+        ],
+        "recordeStreak": 4,
+        "badgesUnlocked": [
+          "treino-meta",
+          "sono-5"
+        ],
+        "missoesLog": {
+          "dormir-7h": "2026-07-02",
+          "treinar-hoje": "2026-07-01"
+        }
       },
       "clientes": [],
       "goals": [],
@@ -42,30 +143,95 @@
           "feito": false,
           "exercicios": []
         }
-      ]
+      ],
+      "intencoes": [],
+      "devocoes": [],
+      "facPrep": [],
+      "livros": [],
+      "skills": [],
+      "gratidoes": [],
+      "journal": [],
+      "capsula": []
     },
     "financas": {
       "campos": {
-        "receitaMes": null,
+        "receitaMes": 370,
         "metaReceita": 1000,
-        "despesasMes": null,
-        "reservaEmergencia": null,
+        "despesasMes": 400,
+        "reservaEmergencia": 1900,
         "reservaMeta": 5000,
-        "dividas": null
+        "dividas": -20,
+        "faturamentoTotal": 400,
+        "aReceber": 800,
+        "receitaRecorrente": 0
       },
       "historico": {
-        "receitaMes": [],
-        "despesasMes": [],
-        "reservaEmergencia": []
+        "receitaMes": [
+          {
+            "d": "2026-06-23",
+            "v": 370
+          }
+        ],
+        "despesasMes": [
+          {
+            "d": "2026-06-23",
+            "v": 200
+          },
+          {
+            "d": "2026-06-25",
+            "v": 300
+          },
+          {
+            "d": "2026-07-01",
+            "v": 400
+          }
+        ],
+        "reservaEmergencia": [
+          {
+            "d": "2026-06-23",
+            "v": 1900
+          }
+        ],
+        "faturamentoTotal": [
+          {
+            "d": "2026-06-23",
+            "v": 400
+          }
+        ]
       },
       "metasManual": {},
       "metasTexto": {},
       "progresso": {
-        "checkins": [],
-        "recordeStreak": 0,
-        "badgesUnlocked": [],
-        "missoesLog": {}
-      }
+        "checkins": [
+          "2026-06-22",
+          "2026-06-23",
+          "2026-06-24",
+          "2026-06-25",
+          "2026-06-29",
+          "2026-07-01",
+          "2026-07-02"
+        ],
+        "recordeStreak": 4,
+        "badgesUnlocked": [
+          "lucro-positivo",
+          "sem-dividas",
+          "primeira-reserva"
+        ],
+        "missoesLog": {
+          "guardar-mes": "2026-06-24"
+        }
+      },
+      "clientes": [],
+      "goals": [],
+      "treinos": [],
+      "intencoes": [],
+      "devocoes": [],
+      "facPrep": [],
+      "livros": [],
+      "skills": [],
+      "gratidoes": [],
+      "journal": [],
+      "capsula": []
     },
     "trabalho": {
       "campos": {
@@ -82,23 +248,80 @@
       "metasManual": {},
       "metasTexto": {},
       "progresso": {
-        "checkins": [],
-        "recordeStreak": 0,
+        "checkins": [
+          "2026-06-15",
+          "2026-06-16",
+          "2026-06-19",
+          "2026-06-22",
+          "2026-06-23",
+          "2026-06-24",
+          "2026-06-25",
+          "2026-06-29",
+          "2026-07-02"
+        ],
+        "recordeStreak": 4,
         "badgesUnlocked": [],
-        "missoesLog": {}
+        "missoesLog": {
+          "prospectar": "2026-06-24"
+        }
       },
       "clientes": [
         {
-          "id": "cli-1781486357520",
-          "nome": "dAVI",
-          "produto": "Site",
-          "valor": 0,
+          "id": "cli-1781540315710",
+          "nome": "Casé",
+          "produto": "Balcão",
+          "valor": 800,
+          "estagio": "negociando",
+          "proximaAcao": "",
+          "prazo": null
+        },
+        {
+          "id": "cli-1781906088279",
+          "nome": "Bistrô do Bosque",
+          "produto": "Aconchego",
+          "valor": 300,
           "estagio": "pago",
+          "proximaAcao": "",
+          "prazo": null
+        },
+        {
+          "id": "cli-1782228472499",
+          "nome": "Linha Arquitetura",
+          "produto": "Site",
+          "valor": 2000,
+          "estagio": "lead",
+          "proximaAcao": "",
+          "prazo": null
+        },
+        {
+          "id": "cli-1782228497761",
+          "nome": "RJ arquitetura",
+          "produto": "Site",
+          "valor": 2500,
+          "estagio": "lead",
+          "proximaAcao": "",
+          "prazo": null
+        },
+        {
+          "id": "cli-1782228522711",
+          "nome": "Gelker",
+          "produto": "Site",
+          "valor": 2000,
+          "estagio": "lead",
           "proximaAcao": "",
           "prazo": null
         }
       ],
-      "goals": []
+      "goals": [],
+      "treinos": [],
+      "intencoes": [],
+      "devocoes": [],
+      "facPrep": [],
+      "livros": [],
+      "skills": [],
+      "gratidoes": [],
+      "journal": [],
+      "capsula": []
     },
     "metas": {
       "campos": {
@@ -113,14 +336,40 @@
         "viajar-eua": false,
         "renda-5k-mes": false
       },
-      "metasTexto": {},
+      "metasTexto": {
+        "passo-semana": "Fechar com Maria Fernanda e com Casé, bater 1k e vender um site"
+      },
       "progresso": {
         "checkins": [
-          "2026-06-15"
+          "2026-06-19",
+          "2026-06-22",
+          "2026-06-23",
+          "2026-06-24",
+          "2026-06-25",
+          "2026-06-29",
+          "2026-06-30",
+          "2026-07-01",
+          "2026-07-02"
         ],
-        "recordeStreak": 1,
-        "badgesUnlocked": [],
-        "missoesLog": {}
+        "recordeStreak": 4,
+        "badgesUnlocked": [
+          "st-3",
+          "primeira-missao",
+          "goal-vender-olhos-ini",
+          "meio-caminho",
+          "goal-vender-olhos-meio",
+          "primeiro-marco",
+          "plano-cumprido",
+          "dez-missoes",
+          "destemido",
+          "goal-vender-olhos-ok",
+          "falante",
+          "goal-ingles-ok",
+          "goal-ingles-ini"
+        ],
+        "missoesLog": {
+          "revisar-metas": "2026-06-24"
+        }
       },
       "goals": [
         {
@@ -1221,57 +1470,57 @@
           "custo": 0,
           "prazo": "2026-07-31",
           "estrela": false,
-          "feito": false,
+          "feito": true,
           "missoes": [
             {
               "id": "m1",
               "texto": "Decorar o script da oferta",
-              "feito": false
+              "feito": true
             },
             {
               "id": "m2",
               "texto": "Treinar no espelho",
-              "feito": false
+              "feito": true
             },
             {
               "id": "m3",
               "texto": "Pitch pra 1 amigo",
-              "feito": false
+              "feito": true
             },
             {
               "id": "m4",
               "texto": "1ª oferta presencial",
-              "feito": false
+              "feito": true
             },
             {
               "id": "m5",
               "texto": "Aguentar o silêncio pós-preço",
-              "feito": false
+              "feito": true
             },
             {
               "id": "m6",
               "texto": "Ouvir \"não\" sem desmontar",
-              "feito": false
+              "feito": true
             },
             {
               "id": "m7",
               "texto": "1ª venda presencial",
-              "feito": false
+              "feito": true
             },
             {
               "id": "m8",
               "texto": "Contornar 1 objeção ao vivo",
-              "feito": false
+              "feito": true
             },
             {
               "id": "m9",
               "texto": "Vender sem decoreba",
-              "feito": false
+              "feito": true
             },
             {
               "id": "m10",
               "texto": "Vender olhando nos olhos, calmo",
-              "feito": false
+              "feito": true
             }
           ]
         },
@@ -2046,94 +2295,706 @@
       ],
       "seedV": 5,
       "clientes": [],
-      "treinos": []
+      "treinos": [],
+      "intencoes": [],
+      "devocoes": [],
+      "facPrep": [],
+      "livros": [],
+      "skills": [],
+      "gratidoes": [],
+      "journal": [],
+      "capsula": []
     },
     "igreja": {
       "campos": {
-        "missasSemanais": 0,
-        "missaMeta": 0,
+        "missasSemanais": 1,
+        "missaMeta": 1,
         "oracao": null,
         "biblia": null,
-        "voluntariado": 0
+        "voluntariado": 2,
+        "facData": "2026-07-23",
+        "terco": null,
+        "exame": null,
+        "ultimaConfissao": "2026-06-18"
       },
-      "historico": {},
+      "historico": {
+        "oracao": [
+          {
+            "d": "2026-06-15",
+            "v": 0
+          },
+          {
+            "d": "2026-06-19",
+            "v": 1
+          },
+          {
+            "d": "2026-06-25",
+            "v": 2
+          },
+          {
+            "d": "2026-06-29",
+            "v": 1
+          }
+        ],
+        "terco": [
+          {
+            "d": "2026-06-18",
+            "v": 0
+          },
+          {
+            "d": "2026-06-19",
+            "v": 1
+          },
+          {
+            "d": "2026-06-25",
+            "v": 0
+          }
+        ],
+        "exame": [
+          {
+            "d": "2026-06-18",
+            "v": 1
+          },
+          {
+            "d": "2026-06-25",
+            "v": 2
+          },
+          {
+            "d": "2026-06-29",
+            "v": 0
+          }
+        ],
+        "biblia": [
+          {
+            "d": "2026-06-19",
+            "v": 1
+          },
+          {
+            "d": "2026-06-25",
+            "v": 2
+          }
+        ]
+      },
+      "metasManual": {},
+      "metasTexto": {
+        "versiculo": "\"Ainda que andes pelo Vale da Sombra da Morte, nada temerei, pois o Senhor meu Deus está comigo\""
+      },
+      "progresso": {
+        "checkins": [
+          "2026-06-19",
+          "2026-06-23",
+          "2026-06-24",
+          "2026-06-25",
+          "2026-06-29"
+        ],
+        "recordeStreak": 3,
+        "badgesUnlocked": [
+          "missa-dia",
+          "voluntario",
+          "biblia",
+          "confissao-em-dia"
+        ],
+        "missoesLog": {
+          "orar-hoje": "2026-07-01",
+          "ler-biblia": "2026-07-02"
+        }
+      },
+      "clientes": [],
+      "goals": [],
+      "treinos": [],
+      "intencoes": [
+        {
+          "id": "int-1781906210658",
+          "texto": "FAC",
+          "feito": false
+        }
+      ],
+      "devocoes": [],
+      "facPrep": [
+        {
+          "id": "fac-1781812380058",
+          "texto": "Equipe Externa",
+          "feito": false
+        },
+        {
+          "id": "fac-1781812402048",
+          "texto": "Fazer lista de alimentos e coisas para comprar",
+          "feito": false
+        },
+        {
+          "id": "fac-1781812409770",
+          "texto": "Ofícios",
+          "feito": false
+        },
+        {
+          "id": "fac-1782161568239",
+          "texto": "Grupo de responsáveis desse ano",
+          "feito": false
+        }
+      ],
+      "livros": [],
+      "skills": [],
+      "gratidoes": [],
+      "journal": [],
+      "capsula": []
+    },
+    "lazer": {
+      "campos": {
+        "horasLazer": 16,
+        "metaLazer": 5,
+        "leituraMin": 30,
+        "aprendizadoHoje": null,
+        "apliquei": null,
+        "descansei": 1,
+        "tetoLazerSemana": 12,
+        "skillFoco": "Autonomy"
+      },
+      "historico": {
+        "horasLazer": [
+          {
+            "d": "2026-06-19",
+            "v": 2
+          },
+          {
+            "d": "2026-06-23",
+            "v": 5
+          },
+          {
+            "d": "2026-06-24",
+            "v": 10
+          },
+          {
+            "d": "2026-06-25",
+            "v": 12
+          },
+          {
+            "d": "2026-07-02",
+            "v": 16
+          }
+        ],
+        "leituraMin": [
+          {
+            "d": "2026-06-19",
+            "v": 60
+          },
+          {
+            "d": "2026-06-25",
+            "v": 30
+          },
+          {
+            "d": "2026-07-02",
+            "v": 30
+          }
+        ],
+        "apliquei": [
+          {
+            "d": "2026-06-19",
+            "v": 1
+          },
+          {
+            "d": "2026-06-22",
+            "v": 0
+          },
+          {
+            "d": "2026-06-24",
+            "v": 1
+          },
+          {
+            "d": "2026-06-25",
+            "v": 1
+          }
+        ],
+        "descansei": [
+          {
+            "d": "2026-06-19",
+            "v": 1
+          },
+          {
+            "d": "2026-06-22",
+            "v": 1
+          },
+          {
+            "d": "2026-06-23",
+            "v": 1
+          },
+          {
+            "d": "2026-06-25",
+            "v": 1
+          },
+          {
+            "d": "2026-06-29",
+            "v": 1
+          },
+          {
+            "d": "2026-07-02",
+            "v": 1
+          }
+        ]
+      },
+      "metasManual": {},
+      "metasTexto": {
+        "aplicacao": "Comecei a mandar mensagens com o whatsapp profissional"
+      },
+      "progresso": {
+        "checkins": [
+          "2026-06-22",
+          "2026-06-23",
+          "2026-06-24",
+          "2026-06-25",
+          "2026-06-29",
+          "2026-06-30",
+          "2026-07-01",
+          "2026-07-02"
+        ],
+        "recordeStreak": 4,
+        "badgesUnlocked": [
+          "equilibrio"
+        ],
+        "missoesLog": {
+          "aplicar-hoje": "2026-07-01",
+          "descansar": "2026-07-01"
+        }
+      },
+      "clientes": [],
+      "goals": [],
+      "treinos": [],
+      "intencoes": [],
+      "devocoes": [],
+      "facPrep": [],
+      "livros": [
+        {
+          "id": "liv-1782405356522",
+          "texto": "Esther (Bíblia)",
+          "feito": false
+        }
+      ],
+      "skills": [],
+      "gratidoes": [],
+      "journal": [],
+      "capsula": []
+    },
+    "rotina": {
+      "campos": {
+        "acordouCedo": 12,
+        "aguaL": null,
+        "metaAgua": 2,
+        "celularH": 7,
+        "produtividadeH": 1,
+        "nascimento": "2010-08-05",
+        "sysAcordar": 0,
+        "sysDormir": 1,
+        "metaExecucao": 8,
+        "sysPlano": 1,
+        "sysBloco": 0,
+        "sysOrar": 1
+      },
+      "historico": {
+        "aguaL": [],
+        "celularH": [
+          {
+            "d": "2026-06-25",
+            "v": 0.5
+          },
+          {
+            "d": "2026-07-02",
+            "v": 7
+          }
+        ],
+        "produtividadeH": [
+          {
+            "d": "2026-06-15",
+            "v": 2.5
+          },
+          {
+            "d": "2026-06-23",
+            "v": 9
+          },
+          {
+            "d": "2026-06-25",
+            "v": 10
+          },
+          {
+            "d": "2026-07-02",
+            "v": 1
+          }
+        ],
+        "sysAcordar": [
+          {
+            "d": "2026-06-23",
+            "v": 1
+          },
+          {
+            "d": "2026-06-24",
+            "v": 1
+          },
+          {
+            "d": "2026-06-25",
+            "v": 1
+          },
+          {
+            "d": "2026-07-02",
+            "v": 0
+          }
+        ],
+        "sysDormir": [
+          {
+            "d": "2026-06-23",
+            "v": 1
+          },
+          {
+            "d": "2026-06-24",
+            "v": 1
+          },
+          {
+            "d": "2026-06-25",
+            "v": 1
+          },
+          {
+            "d": "2026-07-02",
+            "v": 1
+          }
+        ],
+        "sysPlano": [
+          {
+            "d": "2026-06-23",
+            "v": 1
+          },
+          {
+            "d": "2026-06-24",
+            "v": 1
+          },
+          {
+            "d": "2026-06-25",
+            "v": 1
+          },
+          {
+            "d": "2026-07-02",
+            "v": 1
+          }
+        ],
+        "sysBloco": [
+          {
+            "d": "2026-06-23",
+            "v": 1
+          },
+          {
+            "d": "2026-06-24",
+            "v": 1
+          },
+          {
+            "d": "2026-06-25",
+            "v": 1
+          },
+          {
+            "d": "2026-07-02",
+            "v": 0
+          }
+        ],
+        "sysOrar": [
+          {
+            "d": "2026-06-23",
+            "v": 1
+          },
+          {
+            "d": "2026-06-24",
+            "v": 1
+          },
+          {
+            "d": "2026-06-25",
+            "v": 1
+          },
+          {
+            "d": "2026-07-02",
+            "v": 1
+          }
+        ]
+      },
+      "metasManual": {},
+      "metasTexto": {},
+      "progresso": {
+        "checkins": [
+          "2026-06-23",
+          "2026-06-24",
+          "2026-06-25",
+          "2026-07-01",
+          "2026-07-02"
+        ],
+        "recordeStreak": 3,
+        "badgesUnlocked": [
+          "madrugador",
+          "sistema-ok"
+        ],
+        "missoesLog": {
+          "acordar-cedo": "2026-07-01"
+        }
+      },
+      "clientes": [],
+      "goals": [],
+      "treinos": [],
+      "intencoes": [],
+      "devocoes": [],
+      "facPrep": [],
+      "livros": [],
+      "skills": [],
+      "gratidoes": [],
+      "journal": [],
+      "capsula": []
+    },
+    "mente": {
+      "campos": {
+        "humor": 7,
+        "ansiedade": 2,
+        "meditacao": null,
+        "gratidao": null,
+        "journalHoje": 0,
+        "fezReset": 1,
+        "gratidaoHoje": 1
+      },
+      "historico": {
+        "humor": [
+          {
+            "d": "2026-06-19",
+            "v": 8
+          },
+          {
+            "d": "2026-06-23",
+            "v": 8
+          },
+          {
+            "d": "2026-06-24",
+            "v": 9
+          },
+          {
+            "d": "2026-06-25",
+            "v": 7
+          },
+          {
+            "d": "2026-07-02",
+            "v": 7
+          }
+        ],
+        "ansiedade": [
+          {
+            "d": "2026-06-19",
+            "v": 2
+          },
+          {
+            "d": "2026-06-23",
+            "v": 2
+          },
+          {
+            "d": "2026-06-24",
+            "v": 5
+          },
+          {
+            "d": "2026-06-25",
+            "v": 3
+          },
+          {
+            "d": "2026-07-02",
+            "v": 2
+          }
+        ],
+        "fezReset": [
+          {
+            "d": "2026-06-19",
+            "v": 1
+          },
+          {
+            "d": "2026-06-23",
+            "v": 1
+          },
+          {
+            "d": "2026-06-24",
+            "v": 1
+          },
+          {
+            "d": "2026-06-25",
+            "v": 1
+          },
+          {
+            "d": "2026-07-02",
+            "v": 1
+          }
+        ],
+        "journalHoje": [
+          {
+            "d": "2026-06-19",
+            "v": 1
+          },
+          {
+            "d": "2026-06-23",
+            "v": 0
+          },
+          {
+            "d": "2026-06-25",
+            "v": 1
+          },
+          {
+            "d": "2026-07-02",
+            "v": 0
+          }
+        ],
+        "gratidaoHoje": [
+          {
+            "d": "2026-06-19",
+            "v": 1
+          },
+          {
+            "d": "2026-06-23",
+            "v": 1
+          },
+          {
+            "d": "2026-06-24",
+            "v": 1
+          },
+          {
+            "d": "2026-06-25",
+            "v": 1
+          },
+          {
+            "d": "2026-07-02",
+            "v": 1
+          }
+        ]
+      },
+      "metasManual": {
+        "meta-1782405186846": false
+      },
+      "metasTexto": {
+        "meta-1782405186846": "Terminar o Livro de Esther"
+      },
+      "progresso": {
+        "checkins": [
+          "2026-06-19",
+          "2026-06-22",
+          "2026-06-23",
+          "2026-06-24",
+          "2026-06-25",
+          "2026-06-29",
+          "2026-07-01",
+          "2026-07-02"
+        ],
+        "recordeStreak": 4,
+        "badgesUnlocked": [
+          "humor-bom",
+          "mente-forte"
+        ],
+        "missoesLog": {
+          "gratidao": "2026-07-01"
+        }
+      },
+      "clientes": [],
+      "goals": [],
+      "treinos": [],
+      "intencoes": [],
+      "devocoes": [],
+      "facPrep": [],
+      "livros": [],
+      "skills": [],
+      "gratidoes": [
+        {
+          "id": "gra-1782228919201",
+          "texto": "Sou grato pela minha família",
+          "feito": false
+        },
+        {
+          "id": "gra-1782404902432",
+          "texto": "Sou grato pela minha vida",
+          "feito": false
+        },
+        {
+          "id": "gra-1782404941922",
+          "texto": "Sou grato pelos meus objetivos, pelo caminho, e por Sofia",
+          "feito": false
+        },
+        {
+          "id": "gra-1782404950886",
+          "texto": "Sou grato pelo Fac",
+          "feito": false
+        },
+        {
+          "id": "gra-1782404960633",
+          "texto": "Sou grato pelos meus amigos",
+          "feito": false
+        },
+        {
+          "id": "gra-1782404978258",
+          "texto": "Sou grato por conseguir treinar",
+          "feito": false
+        },
+        {
+          "id": "gra-1782404992495",
+          "texto": "Sou grato por ser católico",
+          "feito": false
+        },
+        {
+          "id": "gra-1782405011461",
+          "texto": "Sou grato a Caius e Antônio que sempre estão comigo",
+          "feito": false
+        },
+        {
+          "id": "gra-1782405024060",
+          "texto": "Sou grato pela minha afilhada Manoela",
+          "feito": false
+        },
+        {
+          "id": "gra-1782405040433",
+          "texto": "Sou grato por um dia conhecer Sofia",
+          "feito": false
+        },
+        {
+          "id": "gra-1782405068546",
+          "texto": "Sou grato por estar no caminho certo",
+          "feito": false
+        }
+      ],
+      "capsula": [
+        {
+          "id": "cap-1782229012011",
+          "texto": "Sei que vou chegar no topo,  hoje não tenho nem 500 reais no caixa do mês, vou estar melhor",
+          "feito": false
+        },
+        {
+          "id": "cap-1782405103595",
+          "texto": "Hoje é dia 25, não bati minha meta de 1000 reais, mas estou me tornando muito melhor na academia",
+          "feito": false
+        }
+      ]
+    },
+    "diario": {
+      "campos": {
+        "escritaHoje": 1
+      },
+      "historico": {
+        "escritaHoje": [
+          {
+            "d": "2026-07-02",
+            "v": 1
+          }
+        ]
+      },
       "metasManual": {},
       "metasTexto": {},
       "progresso": {
         "checkins": [],
         "recordeStreak": 0,
-        "badgesUnlocked": [
-          "missa-dia",
-          "voluntario"
-        ],
+        "badgesUnlocked": [],
         "missoesLog": {}
       },
       "clientes": [],
       "goals": [],
-      "treinos": []
-    },
-    "lazer": {
-      "campos": {
-        "horasLazer": null,
-        "metaLazer": 5,
-        "leituraMin": null,
-        "aprendizadoHoje": null
-      },
-      "historico": {
-        "horasLazer": [],
-        "leituraMin": []
-      },
-      "metasManual": {},
-      "metasTexto": {},
-      "progresso": {
-        "checkins": [],
-        "recordeStreak": 0,
-        "badgesUnlocked": [],
-        "missoesLog": {}
-      }
-    },
-    "rotina": {
-      "campos": {
-        "acordouCedo": null,
-        "aguaL": null,
-        "metaAgua": 2,
-        "celularH": null,
-        "produtividadeH": null
-      },
-      "historico": {
-        "aguaL": [],
-        "celularH": [],
-        "produtividadeH": []
-      },
-      "metasManual": {},
-      "metasTexto": {},
-      "progresso": {
-        "checkins": [],
-        "recordeStreak": 0,
-        "badgesUnlocked": [],
-        "missoesLog": {}
-      }
-    },
-    "mente": {
-      "campos": {
-        "humor": null,
-        "ansiedade": null,
-        "meditacao": null,
-        "gratidao": null,
-        "journalHoje": null
-      },
-      "historico": {
-        "humor": [],
-        "ansiedade": []
-      },
-      "metasManual": {},
-      "metasTexto": {},
-      "progresso": {
-        "checkins": [],
-        "recordeStreak": 0,
-        "badgesUnlocked": [],
-        "missoesLog": {}
-      }
+      "treinos": [],
+      "intencoes": [],
+      "devocoes": [],
+      "facPrep": [],
+      "livros": [],
+      "skills": [],
+      "gratidoes": [],
+      "capsula": [],
+      "capitulos": [],
+      "aventuras": [],
+      "entradas": []
     }
   },
   "areasOrder": [
@@ -2157,5 +3018,146 @@
     "lazer": 1,
     "rotina": 1,
     "mente": 1
-  }
+  },
+  "scoreHistory": [
+    {
+      "date": "2026-06-21",
+      "overall": 56,
+      "areas": {
+        "claude-code": 49,
+        "saude": 72,
+        "financas": 50,
+        "trabalho": 40,
+        "metas": 0,
+        "igreja": 92,
+        "lazer": 59,
+        "rotina": 71,
+        "mente": 89
+      }
+    },
+    {
+      "date": "2026-06-22",
+      "overall": 45,
+      "areas": {
+        "claude-code": 53,
+        "saude": 57,
+        "financas": 50,
+        "trabalho": 40,
+        "metas": 0,
+        "igreja": 72,
+        "lazer": 28,
+        "rotina": 40,
+        "mente": 50
+      }
+    },
+    {
+      "date": "2026-06-23",
+      "overall": 49,
+      "areas": {
+        "claude-code": 53,
+        "saude": 42,
+        "financas": 57,
+        "trabalho": 28,
+        "metas": 0,
+        "igreja": 72,
+        "lazer": 40,
+        "rotina": 90,
+        "mente": 79
+      }
+    },
+    {
+      "date": "2026-06-24",
+      "overall": 52,
+      "areas": {
+        "claude-code": 58,
+        "saude": 57,
+        "financas": 57,
+        "trabalho": 28,
+        "metas": 1,
+        "igreja": 72,
+        "lazer": 92,
+        "rotina": 48,
+        "mente": 65
+      }
+    },
+    {
+      "date": "2026-06-25",
+      "overall": 56,
+      "areas": {
+        "claude-code": 60,
+        "saude": 57,
+        "financas": 38,
+        "trabalho": 28,
+        "metas": 1,
+        "igreja": 90,
+        "lazer": 100,
+        "rotina": 96,
+        "mente": 80
+      }
+    },
+    {
+      "date": "2026-06-29",
+      "overall": 46,
+      "areas": {
+        "claude-code": 44,
+        "saude": 72,
+        "financas": 38,
+        "trabalho": 28,
+        "metas": 1,
+        "igreja": 70,
+        "lazer": 69,
+        "rotina": 40,
+        "mente": 50
+      }
+    },
+    {
+      "date": "2026-06-30",
+      "overall": 46,
+      "areas": {
+        "claude-code": 41,
+        "saude": 72,
+        "financas": 38,
+        "trabalho": 28,
+        "metas": 1,
+        "igreja": 80,
+        "lazer": 69,
+        "rotina": 40,
+        "mente": 50
+      }
+    },
+    {
+      "date": "2026-07-01",
+      "overall": 39,
+      "areas": {
+        "claude-code": 42,
+        "saude": 42,
+        "financas": 24,
+        "trabalho": 28,
+        "metas": 1,
+        "igreja": 80,
+        "lazer": 69,
+        "rotina": 40,
+        "mente": 50
+      }
+    },
+    {
+      "date": "2026-07-02",
+      "overall": 47,
+      "areas": {
+        "claude-code": 41,
+        "saude": 72,
+        "financas": 24,
+        "trabalho": 28,
+        "metas": 1,
+        "igreja": 80,
+        "lazer": 69,
+        "rotina": 15,
+        "mente": 86,
+        "diario": 73
+      }
+    }
+  ],
+  "lastDay": "2026-07-02",
+  "lastWeek": "2026-W27",
+  "changelog": []
 }

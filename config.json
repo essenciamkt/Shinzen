@@ -111,12 +111,24 @@
   ],
   "projectOverrides": {},
   "goalsDone": {
-    "concluir-shinzen": false,
+    "concluir-shinzen": true,
     "documentar-processo": true,
     "publicar-produto": false,
-    "criar-automacao": false
+    "criar-automacao": true
   },
   "projectTags": {
-    "-home-dante-jarvis-dev": "dispersao"
+    "-home-dante-jarvis-dev": "dispersao",
+    "-home-dante-kaira": "caixa",
+    "-home-dante-jarvis": "dispersao",
+    "-home-dante": "caixa",
+    "-home-dante-safra-hunter": "caixa",
+    "-tmp-jarvis-brain": "infra"
+  },
+  "theme": "sepia",
+  "meta": {
+    "caixaValor": 10000,
+    "caixaData": "2026-07-12",
+    "claudeOffData": "2026-08-08",
+    "mrrAlvo": 10000
   }
 }

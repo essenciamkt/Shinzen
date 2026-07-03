@@ -351,6 +351,19 @@ html, body {
 }
 .hero-left  { flex: 0 0 auto; }
 .hero-right { flex: 0 0 auto; display: flex; flex-direction: column; gap: 14px; align-items: flex-start; }
+.hero-socio {
+  max-width: 380px;
+  margin-top: 16px;
+  padding: 10px 14px;
+  border-left: 3px solid var(--red2);
+  background: rgba(0,0,0,0.32);
+  border-radius: 8px;
+  font-size: 13px;
+  line-height: 1.45;
+  color: rgba(255,255,255,0.86);
+  font-style: italic;
+}
+.hero-spark { width: 120px; height: 28px; margin-top: 8px; display: block; overflow: visible; }
 .hero-eyebrow {
   font-size: var(--text-xs);
   text-transform: uppercase;
@@ -875,10 +888,15 @@ html, body {
 .hz-bar { height:6px !important; border-radius:3px; margin-top:8px; }
 .hz-bar .fin-bar-fill { border-radius:3px; box-shadow:none; }
 .hz-sub { font-family: var(--mono); font-size:10px; color: var(--text3); margin-top:4px; }
-.hz-actions { display:flex; gap:2px; flex-shrink:0; opacity:0; transition: opacity var(--t-fast); }
+.hz-actions { display:flex; gap:6px; flex-shrink:0; opacity:0; transition: opacity var(--t-fast); }
 .hz-goal:hover .hz-actions { opacity:1; }
-.hz-act { background:none; border:none; cursor:pointer; font-size:13px; opacity:.7; padding:3px; line-height:1; }
+.hz-act { background:none; border:none; cursor:pointer; font-size:13px; opacity:.7; padding:6px; line-height:1; }
 .hz-act:hover { opacity:1; }
+/* Mobile/touch: sem hover no celular → revela as ações e amplia o alvo de toque */
+@media (hover: none) and (pointer: coarse) {
+  .hz-actions, .mz-acts, .tr-acts { opacity:1 !important; gap:8px; }
+  .hz-act { padding:9px 11px; font-size:16px; min-width:40px; min-height:40px; }
+}
 .goal-add { display:flex; gap:8px; align-items:center; margin-top:14px; }
 .goal-sel { flex:0 0 116px; cursor:pointer; }
 
@@ -974,7 +992,7 @@ html, body {
 .mz-check.done { background:var(--green); border-color:var(--green); color:#fff; }
 .mz-text { flex:1; font-size:var(--text-sm); color:var(--text); line-height:1.35; }
 .mz-row.done .mz-text { color:var(--text3); text-decoration:line-through; }
-.mz-acts { display:flex; gap:2px; flex-shrink:0; opacity:0; transition:opacity var(--t-fast); }
+.mz-acts { display:flex; gap:6px; flex-shrink:0; opacity:0; transition:opacity var(--t-fast); }
 .mz-row:hover .mz-acts { opacity:1; }
 .mz-empty { font-size:var(--text-xs); color:var(--text3); padding:6px 2px; }
 .mz-add { display:flex; gap:8px; align-items:center; margin-top:8px; }
@@ -995,7 +1013,7 @@ html, body {
 .tr-tipo { font-size:11px; color:var(--text2); }
 .tr-meta { font-size:10px; font-family:var(--mono); color:var(--text3); }
 .tr-count { margin-left:auto; font-family:var(--mono); font-size:11px; font-weight:700; color:var(--text2); }
-.tr-acts { display:flex; gap:2px; flex-shrink:0; }
+.tr-acts { display:flex; gap:6px; flex-shrink:0; }
 .tr-card .hz-missoes { padding-left:18px; }
 .tr-add { display:flex; gap:8px; align-items:center; margin-top:12px; flex-wrap:wrap; }
 .tr-add .cli-inp { flex:1; min-width:120px; }
@@ -1655,11 +1673,13 @@ tr:hover td { background: var(--bg3); }
               <div class="hero-eyebrow" id="hero-greeting">Bem-vindo de volta</div>
               <div class="hero-name" id="hero-name">—</div>
               <div class="hero-level">Nível <span id="hero-level-num">—</span> — <span id="hero-level-title">—</span></div>
+              <div class="hero-socio" id="hero-socio" hidden></div>
             </div>
             <div class="hero-right">
               <div class="hero-score-block">
                 <div class="hero-score-num" id="hero-score">—</div>
                 <div class="hero-score-label">Score de vida</div>
+                <svg class="hero-spark" id="hero-spark" viewBox="0 0 120 28" preserveAspectRatio="none" aria-hidden="true" hidden></svg>
               </div>
               <div class="hero-xp-bar">
                 <div class="hero-xp-label">
@@ -1755,6 +1775,16 @@ tr:hover td { background: var(--bg3); }
             <button class="cfg-btn" data-action="export-backup">⬇ Baixar backup (.json)</button>
           </div>
 
+          <div class="card mb16">
+            <div class="card-title">🗞️ Novidades</div>
+            <div class="cfg-hint" style="margin-top:0;margin-bottom:12px">O que mudou no app — changelog manual, agrupado por semana.</div>
+            <div id="cfg-changelog-list"></div>
+            <div class="mz-add">
+              <input type="text" class="list-inp" id="cfg-changelog-inp" placeholder="O que mudou..." maxlength="200">
+              <button class="meta-add-btn" id="cfg-changelog-add" title="Adicionar">+</button>
+            </div>
+          </div>
+
           <div class="card">
             <div class="card-title">🩺 Diagnóstico</div>
             <div id="health-block" style="font-size:12px;color:var(--text2);line-height:2;"></div>
@@ -1771,6 +1801,10 @@ tr:hover td { background: var(--bg3); }
 
 <script>
 'use strict';
+
+// ── Claude Code disponível no servidor? (alimenta o card Crew) ──
+window._claudeAvailable = false;
+fetch('/api/claude-overview').then(r=>r.json()).then(d=>{ window._claudeAvailable = !!d.available; }).catch(()=>{});
 
 // ── STATE ──
 let D = null;
@@ -1989,7 +2023,9 @@ function renderSidebar() {
   $('sb-score-fill').style.width = (life.overall||0)+'%';
 
   const navAreas = $('nav-areas');
-  navAreas.innerHTML = (D.areas||[]).map(a=>`
+  // Oculta área Claude Code se o servidor não tem overviews.json (modo cloud)
+  const visibleAreas = (D.areas||[]).filter(a => a.id !== 'claude-code' || window._claudeAvailable);
+  navAreas.innerHTML = visibleAreas.map(a=>`
     <div class="nav-item" data-page="area" data-area="${esc(a.id)}" style="--area-color:${esc(a.cor)}">
       <span class="nav-icon">${a.icone}</span>${esc(a.nome)}
       <span class="nav-score">${a.score}</span>
@@ -2025,6 +2061,37 @@ function renderHome() {
   $('hero-xp-cur').textContent = (life.xpIntoLevel||0)+' XP';
   $('hero-xp-max').textContent = (life.xpForNext||200)+' XP';
   $('hero-xp-fill').style.width = (life.progressPct||0)+'%';
+
+  // Sparkline da tendência do score (últimos ≤30 dias)
+  const spark = $('hero-spark');
+  const trend = life.trend || [];
+  if (spark) {
+    if (trend.length >= 2) {
+      const vals = trend.map(t => Number(t.overall) || 0);
+      const n = vals.length, W = 120, H = 28, pad = 2;
+      const pts = vals.map((v, i) => {
+        const x = pad + (i / (n - 1)) * (W - 2 * pad);
+        const y = H - pad - (v / 100) * (H - 2 * pad);
+        return `${x.toFixed(1)},${y.toFixed(1)}`;
+      }).join(' ');
+      const col = vals[n - 1] >= vals[0] ? 'var(--green)' : 'var(--red2)';
+      spark.innerHTML = `<polyline points="${pts}" fill="none" stroke="${col}" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/>`;
+      spark.hidden = false;
+    } else {
+      spark.hidden = true; // histórico insuficiente — aparece a partir do 2º dia
+    }
+  }
+
+  // Voz do Sócio (founder-advisor) — textContent: nunca injeta HTML
+  const socioEl = $('hero-socio');
+  if (socioEl) {
+    if (life.socio && life.socio.frase) {
+      socioEl.textContent = '💬 ' + life.socio.frase;
+      socioEl.hidden = false;
+    } else {
+      socioEl.hidden = true;
+    }
+  }
 
   // Stats + painel Hoje (acionáveis)
   renderStats();
@@ -2564,9 +2631,9 @@ function irpfMensal(base){
   return base*0.275-896.00;
 }
 function calcImposto(){
-  const v = parseFloat(document.getElementById('imp-valor')?.value)||0;
+  const v = numBR(document.getElementById('imp-valor')?.value)||0;
   const reg = document.getElementById('imp-regime')?.value||'simples';
-  const aliq = parseFloat(document.getElementById('imp-aliq')?.value)||0;
+  const aliq = numBR(document.getElementById('imp-aliq')?.value)||0;
   let imp=0, nota='';
   if(reg==='simples'){ imp=v*aliq/100; nota=`Simples · Anexo III ${aliq}% (Fator R)`; }
   else if(reg==='mei'){ imp=75.90; nota='MEI · DAS fixo mensal (serviços) — independe do valor'; }
@@ -3375,7 +3442,6 @@ function menteCockpitHtml(area){
   const reg = d.regulacao||{};
   const hab = d.habitos||[];
   const grat = d.gratidoes||{itens:[],total:0,placas:[],proximaPlaca:null};
-  const journal = d.journal||[];
   const capsula = d.capsula||[];
   const capAtiva = d.capsulaAtiva;
 
@@ -3461,24 +3527,83 @@ function menteCockpitHtml(area){
     </div>
   </div>`;
 
-  // ── Worry-dump / Journal ──
-  const jRows = journal.map(it=>`<div class="mz-row">
-    <span class="mz-text">${esc(it.texto)}</span>
+  return heroHtml + capAtivaHtml + capsulaHtml + habHtml + gratHtml;
+}
+
+// ── COCKPIT DIÁRIO (escrita livre: Capítulo → Aventura → Entrada) ──
+let _diarioSelCap = null;
+let _diarioSelAv = null;
+
+function diarioCockpitHtml(area){
+  const d = area.detalhe||{};
+  const capitulos = d.capitulos||[];
+  const aventuras = d.aventuras||[];
+  const entradas = d.entradas||[];
+
+  if (_diarioSelCap && !capitulos.some(c=>c.id===_diarioSelCap)) _diarioSelCap = null;
+  if (_diarioSelAv && !aventuras.some(a=>a.id===_diarioSelAv)) _diarioSelAv = null;
+  if (!_diarioSelCap && capitulos.length) _diarioSelCap = capitulos[0].id;
+
+  const heroHtml = `<div class="card mb16" style="--area-color:${esc(area.cor)}">
+    <div class="card-title">📔 Diário <span style="color:var(--text3);font-weight:400">(${entradas.length} entradas em ${capitulos.length} capítulos)</span></div>
+    <div style="font-size:12px;color:var(--text3)">${d.streak>0?`🔥 ${d.streak} dias seguidos escrevendo`:'Escreva hoje pra começar a sequência.'}</div>
+  </div>`;
+
+  const capRows = capitulos.map(c=>`<div class="mz-row ${c.id===_diarioSelCap?'sel':''}" data-action="diario-sel-cap" data-cid="${esc(c.id)}" style="cursor:pointer;${c.id===_diarioSelCap?'background:var(--bg2)':''}">
+    <span class="mz-text">${esc(c.titulo)}</span>
     <span class="mz-acts">
-      <button class="hz-act" data-action="list-edit" data-lista="journal" data-iid="${esc(it.id)}" data-cur="${esc(it.texto)}" title="Editar">✏️</button>
-      <button class="hz-act del" data-action="list-delete" data-lista="journal" data-iid="${esc(it.id)}" title="Remover">🗑</button>
+      <button class="hz-act" data-action="diario-edit-cap" data-cid="${esc(c.id)}" data-cur="${esc(c.titulo)}" title="Renomear">✏️</button>
+      <button class="hz-act del" data-action="diario-del-cap" data-cid="${esc(c.id)}" title="Apagar (com aventuras e entradas)">🗑</button>
     </span>
   </div>`).join('');
-  const journalHtml = `<div class="card mb16">
-    <div class="card-title">📓 Despejo da mente <span style="color:var(--text3);font-weight:400">(escrever alivia)</span></div>
-    <div>${jRows||'<div class="mz-empty">Joga aqui o que está pesando. Sem julgamento.</div>'}</div>
+  const capsHtml = `<div class="card mb16">
+    <div class="card-title">Capítulos</div>
+    <div>${capRows||'<div class="mz-empty">Sem capítulos ainda.</div>'}</div>
     <div class="mz-add">
-      <input type="text" class="list-inp" id="list-inp-journal" data-lista="journal" placeholder="O que pesa hoje..." maxlength="160">
-      <button class="meta-add-btn" data-action="list-add" data-lista="journal" title="Adicionar">+</button>
+      <input type="text" class="list-inp" id="diario-inp-cap" placeholder="Novo capítulo..." maxlength="80">
+      <button class="meta-add-btn" data-action="diario-add-cap" title="Adicionar">+</button>
     </div>
   </div>`;
 
-  return heroHtml + capAtivaHtml + capsulaHtml + habHtml + gratHtml + journalHtml;
+  const avDoCapitulo = aventuras.filter(a=>a.capituloId===_diarioSelCap);
+  if (!_diarioSelAv && avDoCapitulo.length) _diarioSelAv = avDoCapitulo[0].id;
+  const avRows = avDoCapitulo.map(a=>`<div class="mz-row ${a.id===_diarioSelAv?'sel':''}" data-action="diario-sel-av" data-aid="${esc(a.id)}" style="cursor:pointer;${a.id===_diarioSelAv?'background:var(--bg2)':''}">
+    <span class="mz-text">${esc(a.titulo)}</span>
+    <span class="mz-acts">
+      <button class="hz-act" data-action="diario-edit-av" data-aid="${esc(a.id)}" data-cur="${esc(a.titulo)}" title="Renomear">✏️</button>
+      <button class="hz-act del" data-action="diario-del-av" data-aid="${esc(a.id)}" title="Apagar (com entradas)">🗑</button>
+    </span>
+  </div>`).join('');
+  const avHtml = _diarioSelCap ? `<div class="card mb16">
+    <div class="card-title">Aventuras</div>
+    <div>${avRows||'<div class="mz-empty">Sem aventuras neste capítulo ainda.</div>'}</div>
+    <div class="mz-add">
+      <input type="text" class="list-inp" id="diario-inp-av" placeholder="Nova aventura..." maxlength="80">
+      <button class="meta-add-btn" data-action="diario-add-av" data-cid="${esc(_diarioSelCap)}" title="Adicionar">+</button>
+    </div>
+  </div>` : '';
+
+  const entDaAventura = entradas.filter(e=>e.aventuraId===_diarioSelAv).sort((x,y)=>x.data<y.data?1:x.data>y.data?-1:0);
+  const entRows = entDaAventura.map(e=>`<div class="mz-row" style="align-items:flex-start">
+    <div style="flex:1">
+      <div style="font-size:11px;color:var(--text3)">${fmtDia(e.data)}${e.titulo?' · '+esc(e.titulo):''}</div>
+      <div class="mz-text" style="white-space:pre-wrap">${esc(e.corpo)}</div>
+    </div>
+    <span class="mz-acts">
+      <button class="hz-act" data-action="diario-edit-ent" data-eid="${esc(e.id)}" data-cur="${esc(e.corpo)}" title="Editar">✏️</button>
+      <button class="hz-act del" data-action="diario-del-ent" data-eid="${esc(e.id)}" title="Remover">🗑</button>
+    </span>
+  </div>`).join('');
+  const entHtml = _diarioSelAv ? `<div class="card mb16">
+    <div class="card-title">Entradas</div>
+    <div>${entRows||'<div class="mz-empty">Sem entradas nesta aventura ainda.</div>'}</div>
+    <div class="mz-add" style="align-items:flex-start">
+      <textarea id="diario-inp-ent" placeholder="Escreva sua entrada..." maxlength="8000" style="flex:1;min-height:80px;background:var(--panel);border:1px solid var(--border);border-radius:8px;color:var(--text);font:inherit;padding:8px"></textarea>
+      <button class="meta-add-btn" data-action="diario-add-ent" data-aid="${esc(_diarioSelAv)}" title="Adicionar">+</button>
+    </div>
+  </div>` : '';
+
+  return heroHtml + capsHtml + avHtml + entHtml;
 }
 
 // overlay de respiração 4-7-8 + próximo passo (reset de 2min)
@@ -3761,6 +3886,7 @@ function renderManualArea(area) {
     ${area.id==='lazer' ? lazerCockpitHtml(area) : ''}
     ${area.id==='rotina' ? rotinaCockpitHtml(area) : ''}
     ${area.id==='mente' ? menteCockpitHtml(area) : ''}
+    ${area.id==='diario' ? diarioCockpitHtml(area) : ''}
     <div class="kpi-row mb16">${kpiHtml}</div>
     ${checkinHtml}
     ${missoesHtml}
@@ -3797,8 +3923,8 @@ function bindDetailDelegation(areaId) {
     if (step) {
       const input = body.querySelector(`.campo-input[data-campo="${step.dataset.campo}"]`);
       if (input) {
-        const delta = parseFloat(step.dataset.step) || 0;
-        const cur = parseFloat(input.value) || 0;
+        const delta = numBR(step.dataset.step) || 0;
+        const cur = numBR(input.value) || 0;
         let next = Math.round((cur + delta) * 100) / 100; // evita 0.30000004
         if (next < 0) next = 0;
         input.value = next;
@@ -3861,7 +3987,7 @@ function bindDetailDelegation(areaId) {
       const texto = item?.querySelector('.meta-texto')?.textContent || metaId;
       if (!confirm(`Deletar meta "${texto}"?`)) return;
       await guard(async()=>{
-        await fetch(`/api/area/${encodeURIComponent(areaId)}/meta/${encodeURIComponent(metaId)}`,{method:'DELETE'});
+        await apiDelete(`/api/area/${encodeURIComponent(areaId)}/meta/${encodeURIComponent(metaId)}`);
         await load(false); toast('Meta removida');
       });
     } else if (action === 'checkin') {
@@ -3881,7 +4007,7 @@ function bindDetailDelegation(areaId) {
     } else if (action === 'add-cliente') {
       const nome = $('cli-nome')?.value?.trim();
       const produto = $('cli-prod')?.value?.trim()||'';
-      const valor = parseFloat($('cli-valor')?.value)||0;
+      const valor = numBR($('cli-valor')?.value)||0;
       if(!nome){ toast('Informe o nome do cliente'); return; }
       await guard(async()=>{
         await postJson(`/api/area/${encodeURIComponent(areaId)}/cliente`,{nome,produto,valor,estagio:'lead'});
@@ -3909,14 +4035,14 @@ function bindDetailDelegation(areaId) {
       const cid = el.dataset.cid;
       if(!confirm(`Remover cliente "${el.dataset.nome||cid}"?`)) return;
       await guard(async()=>{
-        await fetch(`/api/area/${encodeURIComponent(areaId)}/cliente/${encodeURIComponent(cid)}`,{method:'DELETE'});
+        await apiDelete(`/api/area/${encodeURIComponent(areaId)}/cliente/${encodeURIComponent(cid)}`);
         await load(false); toast('Cliente removido');
       });
     } else if (action === 'add-goal') {
       const titulo = $('goal-nome')?.value?.trim();
       if(!titulo){ toast('Dê um nome ao objetivo'); return; }
       const prazo = $('goal-prazo')?.value||null;
-      const custo = parseFloat($('goal-custo')?.value)||0;
+      const custo = numBR($('goal-custo')?.value)||0;
       const track = $('goal-track')?.value||'sofia';
       const fonteRitmo = track==='renda'?'mrr':track==='patrimonio'?'savings':null;
       await guard(async()=>{
@@ -3964,7 +4090,7 @@ function bindDetailDelegation(areaId) {
       const gid = el.dataset.gid;
       if(!confirm(`Remover "${el.dataset.titulo||gid}" do horizonte?`)) return;
       await guard(async()=>{
-        await fetch(`/api/area/${encodeURIComponent(areaId)}/goal/${encodeURIComponent(gid)}`,{method:'DELETE'});
+        await apiDelete(`/api/area/${encodeURIComponent(areaId)}/goal/${encodeURIComponent(gid)}`);
         await load(false); toast('Sonho removido');
       });
     } else if (action === 'goal-missoes') {
@@ -4005,7 +4131,7 @@ function bindDetailDelegation(areaId) {
       const gid=el.dataset.gid, mid=el.dataset.mid;
       _metasExpanded.add(gid);
       await guard(async()=>{
-        await fetch(`/api/area/${encodeURIComponent(areaId)}/goal/${encodeURIComponent(gid)}/missao/${encodeURIComponent(mid)}`,{method:'DELETE'});
+        await apiDelete(`/api/area/${encodeURIComponent(areaId)}/goal/${encodeURIComponent(gid)}/missao/${encodeURIComponent(mid)}`);
         await load(false); toast('Missão removida');
       });
     } else if (action === 'treino-exercicios') {
@@ -4019,7 +4145,7 @@ function bindDetailDelegation(areaId) {
       if(!nome){ toast('Dê um nome ao treino'); return; }
       const tipo = $('treino-tipo')?.value||'forca';
       const dia = $('treino-dia')?.value?.trim()||'';
-      const duracao = parseFloat($('treino-duracao')?.value)||0;
+      const duracao = numBR($('treino-duracao')?.value)||0;
       await guard(async()=>{
         await postJson(`/api/area/${encodeURIComponent(areaId)}/treino`,{nome,tipo,dia,duracao});
         await load(false); toast('✓ Treino criado');
@@ -4038,7 +4164,7 @@ function bindDetailDelegation(areaId) {
       const tid = el.dataset.tid;
       if(!confirm(`Remover o treino "${el.dataset.nome||tid}"?`)) return;
       await guard(async()=>{
-        await fetch(`/api/area/${encodeURIComponent(areaId)}/treino/${encodeURIComponent(tid)}`,{method:'DELETE'});
+        await apiDelete(`/api/area/${encodeURIComponent(areaId)}/treino/${encodeURIComponent(tid)}`);
         await load(false); toast('Treino removido');
       });
     } else if (action === 'exercicio-toggle') {
@@ -4073,7 +4199,7 @@ function bindDetailDelegation(areaId) {
       const tid=el.dataset.tid, xid=el.dataset.xid;
       _metasExpanded.add(tid);
       await guard(async()=>{
-        await fetch(`/api/area/${encodeURIComponent(areaId)}/treino/${encodeURIComponent(tid)}/exercicio/${encodeURIComponent(xid)}`,{method:'DELETE'});
+        await apiDelete(`/api/area/${encodeURIComponent(areaId)}/treino/${encodeURIComponent(tid)}/exercicio/${encodeURIComponent(xid)}`);
         await load(false); toast('Exercício removido');
       });
     } else if (action === 'fe-habito') {
@@ -4131,8 +4257,92 @@ function bindDetailDelegation(areaId) {
       e.stopPropagation();
       const lista=el.dataset.lista, iid=el.dataset.iid;
       await guard(async()=>{
-        await fetch(`/api/area/${encodeURIComponent(areaId)}/lista/${encodeURIComponent(lista)}/${encodeURIComponent(iid)}`,{method:'DELETE'});
+        await apiDelete(`/api/area/${encodeURIComponent(areaId)}/lista/${encodeURIComponent(lista)}/${encodeURIComponent(iid)}`);
         await load(false); toast('Removido');
+      });
+    } else if (action === 'diario-sel-cap') {
+      _diarioSelCap = el.dataset.cid; _diarioSelAv = null;
+      await load(false);
+    } else if (action === 'diario-add-cap') {
+      const inp = $('diario-inp-cap'); const titulo = inp?.value?.trim();
+      if(!titulo){ toast('Escreve o nome do capítulo'); return; }
+      await guard(async()=>{
+        inp.value='';
+        const j = await postJson(`/api/area/${encodeURIComponent(areaId)}/capitulo`,{titulo});
+        if (j.capitulo) _diarioSelCap = j.capitulo.id;
+        await load(false); toast('✓ Capítulo criado');
+      });
+    } else if (action === 'diario-edit-cap') {
+      e.stopPropagation();
+      const cid = el.dataset.cid;
+      const novo = prompt('Renomear capítulo:', el.dataset.cur||'');
+      if(novo===null||!novo.trim()) return;
+      await guard(async()=>{
+        await fetch(`/api/area/${encodeURIComponent(areaId)}/capitulo/${encodeURIComponent(cid)}`,{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify({titulo:novo.trim()})});
+        await load(false); toast('✓ Atualizado');
+      });
+    } else if (action === 'diario-del-cap') {
+      e.stopPropagation();
+      if(!confirm('Apagar este capítulo, suas aventuras e entradas?')) return;
+      const cid = el.dataset.cid;
+      await guard(async()=>{
+        await apiDelete(`/api/area/${encodeURIComponent(areaId)}/capitulo/${encodeURIComponent(cid)}`);
+        if(_diarioSelCap===cid){ _diarioSelCap=null; _diarioSelAv=null; }
+        await load(false); toast('Capítulo removido');
+      });
+    } else if (action === 'diario-sel-av') {
+      _diarioSelAv = el.dataset.aid;
+      await load(false);
+    } else if (action === 'diario-add-av') {
+      const cid = el.dataset.cid; const inp = $('diario-inp-av'); const titulo = inp?.value?.trim();
+      if(!titulo){ toast('Escreve o nome da aventura'); return; }
+      await guard(async()=>{
+        inp.value='';
+        const j = await postJson(`/api/area/${encodeURIComponent(areaId)}/capitulo/${encodeURIComponent(cid)}/aventura`,{titulo});
+        if (j.aventura) _diarioSelAv = j.aventura.id;
+        await load(false); toast('✓ Aventura criada');
+      });
+    } else if (action === 'diario-edit-av') {
+      e.stopPropagation();
+      const aid = el.dataset.aid;
+      const novo = prompt('Renomear aventura:', el.dataset.cur||'');
+      if(novo===null||!novo.trim()) return;
+      await guard(async()=>{
+        await fetch(`/api/area/${encodeURIComponent(areaId)}/aventura/${encodeURIComponent(aid)}`,{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify({titulo:novo.trim()})});
+        await load(false); toast('✓ Atualizado');
+      });
+    } else if (action === 'diario-del-av') {
+      e.stopPropagation();
+      if(!confirm('Apagar esta aventura e suas entradas?')) return;
+      const aid = el.dataset.aid;
+      await guard(async()=>{
+        await apiDelete(`/api/area/${encodeURIComponent(areaId)}/aventura/${encodeURIComponent(aid)}`);
+        if(_diarioSelAv===aid) _diarioSelAv=null;
+        await load(false); toast('Aventura removida');
+      });
+    } else if (action === 'diario-add-ent') {
+      const aid = el.dataset.aid; const inp = $('diario-inp-ent'); const corpo = inp?.value?.trim();
+      if(!corpo){ toast('Escreve algo'); return; }
+      await guard(async()=>{
+        inp.value='';
+        await postJson(`/api/area/${encodeURIComponent(areaId)}/aventura/${encodeURIComponent(aid)}/entrada`,{corpo});
+        await load(false); toast('✓ Entrada salva');
+      });
+    } else if (action === 'diario-edit-ent') {
+      e.stopPropagation();
+      const eid = el.dataset.eid;
+      const novo = prompt('Editar entrada:', el.dataset.cur||'');
+      if(novo===null||!novo.trim()) return;
+      await guard(async()=>{
+        await fetch(`/api/area/${encodeURIComponent(areaId)}/entrada/${encodeURIComponent(eid)}`,{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify({corpo:novo.trim()})});
+        await load(false); toast('✓ Atualizado');
+      });
+    } else if (action === 'diario-del-ent') {
+      e.stopPropagation();
+      const eid = el.dataset.eid;
+      await guard(async()=>{
+        await apiDelete(`/api/area/${encodeURIComponent(areaId)}/entrada/${encodeURIComponent(eid)}`);
+        await load(false); toast('Entrada removida');
       });
     } else if (action === 'mente-reset') {
       e.stopPropagation();
@@ -4166,7 +4376,7 @@ function bindDetailDelegation(areaId) {
       e.stopPropagation();
       const sid=el.dataset.sid;
       await guard(async()=>{
-        await fetch(`/api/area/${encodeURIComponent(areaId)}/skill/${encodeURIComponent(sid)}`,{method:'DELETE'});
+        await apiDelete(`/api/area/${encodeURIComponent(areaId)}/skill/${encodeURIComponent(sid)}`);
         await load(false); toast('Removida');
       });
     } else if (action === 'edit-skillfoco') {
@@ -4211,7 +4421,28 @@ function bindDetailDelegation(areaId) {
 
   _detailKeyHandler = async (e) => {
     if (e.key !== 'Enter') return;
-    if (e.target.classList.contains('campo-input')) {
+    if (e.target.id === 'diario-inp-cap') {
+      e.preventDefault();
+      const titulo = e.target.value.trim();
+      if(!titulo) return;
+      await guard(async()=>{
+        e.target.value='';
+        const j = await postJson(`/api/area/${encodeURIComponent(areaId)}/capitulo`,{titulo});
+        if (j.capitulo) _diarioSelCap = j.capitulo.id;
+        await load(false); toast('✓ Capítulo criado');
+      });
+    } else if (e.target.id === 'diario-inp-av') {
+      e.preventDefault();
+      const cid = _diarioSelCap;
+      const titulo = e.target.value.trim();
+      if(!titulo || !cid) return;
+      await guard(async()=>{
+        e.target.value='';
+        const j = await postJson(`/api/area/${encodeURIComponent(areaId)}/capitulo/${encodeURIComponent(cid)}/aventura`,{titulo});
+        if (j.aventura) _diarioSelAv = j.aventura.id;
+        await load(false); toast('✓ Aventura criada');
+      });
+    } else if (e.target.classList.contains('campo-input')) {
       e.preventDefault();
       await guard(()=>saveCampo(areaId, e.target));
     } else if (e.target.classList.contains('meta-add-input')) {
@@ -4239,7 +4470,7 @@ function bindDetailDelegation(areaId) {
       const titulo = $('goal-nome')?.value?.trim();
       if(!titulo){ toast('Dê um nome ao objetivo'); return; }
       const prazo = $('goal-prazo')?.value||null;
-      const custo = parseFloat($('goal-custo')?.value)||0;
+      const custo = numBR($('goal-custo')?.value)||0;
       const track = $('goal-track')?.value||'sofia';
       const fonteRitmo = track==='renda'?'mrr':track==='patrimonio'?'savings':null;
       await guard(async()=>{
@@ -4282,7 +4513,7 @@ function bindDetailDelegation(areaId) {
       if(!nome){ toast('Dê um nome ao treino'); return; }
       const tipo = $('treino-tipo')?.value||'forca';
       const dia = $('treino-dia')?.value?.trim()||'';
-      const duracao = parseFloat($('treino-duracao')?.value)||0;
+      const duracao = numBR($('treino-duracao')?.value)||0;
       await guard(async()=>{
         await postJson(`/api/area/${encodeURIComponent(areaId)}/treino`,{nome,tipo,dia,duracao});
         await load(false); toast('✓ Treino criado');
@@ -4292,7 +4523,7 @@ function bindDetailDelegation(areaId) {
       const nome = $('cli-nome')?.value?.trim();
       if(!nome){ toast('Informe o nome do cliente'); return; }
       const produto = $('cli-prod')?.value?.trim()||'';
-      const valor = parseFloat($('cli-valor')?.value)||0;
+      const valor = numBR($('cli-valor')?.value)||0;
       await guard(async()=>{
         await postJson(`/api/area/${encodeURIComponent(areaId)}/cliente`,{nome,produto,valor,estagio:'lead'});
         await load(false); toast('✓ Cliente adicionado');
@@ -4320,9 +4551,20 @@ async function postJson(url, body) {
   return j;
 }
 
+// DELETE que checa a resposta — toast de sucesso não pode mentir se falhar.
+async function apiDelete(url) {
+  const r = await fetch(url, { method:'DELETE' });
+  let j = {}; try { j = await r.json(); } catch {}
+  if (!r.ok || j.ok === false) throw new Error((j && j.error) || ('HTTP ' + r.status));
+  return j;
+}
+
+// parseFloat tolerante a vírgula decimal BR ("150,5" → 150.5).
+const numBR = v => parseFloat(String(v).replace(',', '.'));
+
 async function saveCampo(areaId, input) {
   const campo = input.dataset.campo;
-  const val = parseFloat(input.value);
+  const val = numBR(input.value);
   if(isNaN(val)){toast('Valor inválido');return;}
   const isHist = input.dataset.hist==='1';
   const saveBtn=$('save-'+campo);
@@ -4435,6 +4677,48 @@ function renderSettings() {
   // Backup
   const expBtn = document.querySelector('[data-action="export-backup"]');
   if (expBtn) expBtn.onclick = ()=>{ window.location.href = '/api/export'; };
+
+  // Novidades (changelog manual, agrupado por semana)
+  const chg = D.changelog||[];
+  const weekLabel = dataStr=>{
+    const d = new Date(dataStr+'T00:00:00');
+    if (isNaN(d)) return dataStr;
+    const dow = (d.getDay()+6)%7; // seg=0
+    const seg = new Date(d); seg.setDate(d.getDate()-dow);
+    const segYmd = seg.getFullYear()+'-'+String(seg.getMonth()+1).padStart(2,'0')+'-'+String(seg.getDate()).padStart(2,'0');
+    return 'Semana de '+fmtDia(segYmd);
+  };
+  const groups = [];
+  for (const it of chg) {
+    const label = weekLabel(it.data);
+    const g = groups[groups.length-1];
+    if (g && g.label===label) g.itens.push(it); else groups.push({label, itens:[it]});
+  }
+  $('cfg-changelog-list').innerHTML = groups.length ? groups.map(g=>`
+    <div style="font-size:11px;color:var(--text3);margin:10px 0 4px">${esc(g.label)}</div>
+    ${g.itens.map(it=>`<div class="mz-row">
+      <span class="mz-text">${esc(it.texto)} <span style="color:var(--text3);font-size:11px">· ${fmtDia(it.data)}</span></span>
+      <span class="mz-acts"><button class="hz-act del" data-chg="${esc(it.id)}" title="Remover">🗑</button></span>
+    </div>`).join('')}`).join('') : '<div class="mz-empty">Nenhuma novidade registrada ainda.</div>';
+  $('cfg-changelog-list').querySelectorAll('[data-chg]').forEach(btn=>{
+    btn.onclick = async ()=>{
+      await guard(async()=>{
+        await apiDelete(`/api/changelog/${encodeURIComponent(btn.dataset.chg)}`);
+        await load(false); toast('Removido');
+      });
+    };
+  });
+  const chgAdd = async ()=>{
+    const inp = $('cfg-changelog-inp'); const texto = inp?.value?.trim();
+    if(!texto){ toast('Escreve o que mudou'); return; }
+    await guard(async()=>{
+      inp.value='';
+      await postJson('/api/changelog',{texto});
+      await load(false); toast('✓ Adicionado');
+    });
+  };
+  $('cfg-changelog-add').onclick = chgAdd;
+  $('cfg-changelog-inp').onkeydown = e=>{ if(e.key==='Enter'){ e.preventDefault(); chgAdd(); } };
 }
 
 // ── INIT ──
@@ -4449,6 +4733,7 @@ $('btn-refresh').addEventListener('click',async()=>{
 const img=new Image();
 img.src='/assets/porsche.jpg';
 
+// Carrega o app (local, single-user)
 load(false);
 </script>
 </body>

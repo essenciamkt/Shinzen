@@ -3,13 +3,51 @@
 const http = require('http');
 const fs = require('fs');
 const path = require('path');
+const os = require('os');
 const { build, CONFIG_PATH } = require('./lib/payload');
 const { clearCache } = require('./lib/scan');
-const { writeArea, pushHistory, addMeta, editMeta, deleteMeta, doCheckin, logMissao, addCliente, updateCliente, deleteCliente, addGoal, updateGoal, deleteGoal, addMissao, toggleMissao, editMissao, deleteMissao, addTreino, updateTreino, deleteTreino, addExercicio, toggleExercicio, editExercicio, deleteExercicio, addListItem, toggleListItem, editListItem, deleteListItem, addSkill, skillXp, editSkill, deleteSkill, readData, DATA_PATH } = require('./lib/datastore');
+const { ymdLocal, parseYmd } = require('./lib/dateutil');
+const {
+  writeArea, pushHistory, addMeta, editMeta, deleteMeta,
+  doCheckin, logMissao,
+  addCliente, updateCliente, deleteCliente,
+  addGoal, updateGoal, deleteGoal,
+  addMissao, toggleMissao, editMissao, deleteMissao,
+  addTreino, updateTreino, deleteTreino,
+  addExercicio, toggleExercicio, editExercicio, deleteExercicio,
+  addListItem, toggleListItem, editListItem, deleteListItem,
+  addSkill, skillXp, editSkill, deleteSkill,
+  addCapitulo, editCapitulo, deleteCapitulo,
+  addAventura, editAventura, deleteAventura,
+  addEntrada, editEntrada, deleteEntrada,
+  addChangelog, deleteChangelog,
+  readData, DATA_PATH,
+} = require('./lib/datastore');
 
-const PORT = 4317;
-const APP_DIR = path.resolve(__dirname);
+const PORT     = process.env.PORT || 4317;
+const APP_DIR  = path.resolve(__dirname);
 const INDEX_HTML = path.join(APP_DIR, 'index.html');
+
+// ── Guardas anti-CSRF / DNS-rebinding (app local, single-user) ──
+// O servidor escuta só em 127.0.0.1, mas o NAVEGADOR é a máquina local: um site
+// malicioso aberto na aba consegue disparar requests pra http://127.0.0.1:4317.
+// Sem essas guardas (e com o CORS '*' antigo) qualquer página apagava os dados.
+const LOCAL_HOSTS = new Set(['127.0.0.1', 'localhost', '[::1]', '::1']);
+
+// Só aceita Host local → barra DNS rebinding (hostname que resolve pra 127.0.0.1).
+function hostOk(req) {
+  const host = String(req.headers.host || '').toLowerCase();
+  return LOCAL_HOSTS.has(host.split(':')[0]);
+}
+
+// Request que muda estado só passa se o Origin for local (ou ausente: curl/cron,
+// que não é ataque cross-site de navegador). Origin externo (evil.com) → bloqueia.
+function originOk(req) {
+  const origin = req.headers.origin;
+  if (!origin) return true; // sem Origin = não-browser (notify.sh, curl)
+  try { return LOCAL_HOSTS.has(new URL(origin).hostname); }
+  catch { return false; }
+}
 
 let _cachedPayload = null;
 
@@ -20,7 +58,39 @@ async function getPayload(fresh) {
   return _cachedPayload;
 }
 
-// Lê body JSON de uma requisição POST
+function invalidateCache() { _cachedPayload = null; }
+
+// Digest diário (consumido pelo cron notify.sh).
+function buildDigest(p) {
+  const lines = [];
+  const meta  = p.meta   || {};
+  const areas = p.areas  || [];
+  const today = ymdLocal();
+  if (meta.caixaData) {
+    const dias = Math.round((parseYmd(meta.caixaData) - parseYmd(today)) / 86400000);
+    if (dias >= 0 && dias <= 7) lines.push(`💰 Meta de caixa (R$${meta.caixaValor}) vence em ${dias}d.`);
+  }
+  const metasArea = areas.find(a => a.id === 'metas');
+  const goals = (metasArea && metasArea.detalhe && metasArea.detalhe.goals) || [];
+  for (const g of goals) {
+    if (!g.atingido && typeof g.diasPrazo === 'number' && g.diasPrazo >= 0 && g.diasPrazo <= 7)
+      lines.push(`🎯 "${g.titulo}" vence em ${g.diasPrazo}d.`);
+  }
+  for (const a of areas) {
+    if (a.id === 'claude-code') continue;
+    const st = a.progress && a.progress.streak;
+    if (st && st.atual >= 3 && !st.ativoHoje) lines.push(`🔥 ${a.nome}: streak de ${st.atual}d — não perca hoje.`);
+  }
+  let pend = 0;
+  for (const a of areas) {
+    const ms = (a.progress && a.progress.missoes) || [];
+    pend += ms.filter(m => m.periodo === 'semana' && !m.feita).length;
+  }
+  if (pend > 0) lines.push(`📋 ${pend} missão(ões) da semana pendente(s).`);
+  const socio = p.life && p.life.socio ? p.life.socio.frase : null;
+  return { count: lines.length, lines, socio };
+}
+
 function readBody(req) {
   return new Promise((resolve, reject) => {
     const chunks = [];
@@ -33,16 +103,8 @@ function readBody(req) {
   });
 }
 
-const server = http.createServer(async (req, res) => {
-  const url = new URL(req.url, `http://localhost:${PORT}`);
-  const pathname = url.pathname;
-
-  // GET /api/health
-  if (req.method === 'GET' && pathname === '/api/health') {
-    res.writeHead(200, { 'Content-Type': 'application/json' });
-    res.end(JSON.stringify({ ok: true, ts: new Date().toISOString() }));
-    return;
-  }
+// ── ROTAS /api/* (local, single-user) ──────────────────────────────────────
+async function handle(req, res, url, pathname) {
 
   // GET /api/dashboard[?fresh=1]
   if (req.method === 'GET' && pathname === '/api/dashboard') {
@@ -51,6 +113,19 @@ const server = http.createServer(async (req, res) => {
       const payload = await getPayload(fresh);
       res.writeHead(200, { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' });
       res.end(JSON.stringify(payload));
+    } catch (err) {
+      res.writeHead(500, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ ok: false, error: String(err) }));
+    }
+    return;
+  }
+
+  // GET /api/digest
+  if (req.method === 'GET' && pathname === '/api/digest') {
+    try {
+      const payload = await getPayload(false);
+      res.writeHead(200, { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' });
+      res.end(JSON.stringify(buildDigest(payload)));
     } catch (err) {
       res.writeHead(500, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ ok: false, error: String(err) }));
@@ -75,7 +150,7 @@ const server = http.createServer(async (req, res) => {
       const prev = !!config.goalsDone[marcoId];
       config.goalsDone[marcoId] = !prev;
       fs.writeFileSync(CONFIG_PATH, JSON.stringify(config, null, 2), 'utf8');
-      _cachedPayload = null;
+      invalidateCache();
       res.writeHead(200, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ ok: true, marcoId, done: !prev }));
     } catch (err) {
@@ -85,8 +160,7 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
-  // ── CLIENTES (pipeline da área Trabalho) ── (antes do PATCH genérico)
-  // POST /api/area/:id/cliente — cria cliente
+  // ── CLIENTES ──
   if (req.method === 'POST' && pathname.match(/^\/api\/area\/[^/]+\/cliente$/)) {
     const areaId = decodeURIComponent(pathname.split('/')[3]);
     try {
@@ -97,7 +171,7 @@ const server = http.createServer(async (req, res) => {
         return;
       }
       const cli = addCliente(areaId, body);
-      _cachedPayload = null;
+      invalidateCache();
       res.writeHead(200, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ ok: true, cliente: cli }));
     } catch (err) {
@@ -107,7 +181,6 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
-  // PATCH /api/area/:id/cliente/:cid — atualiza cliente
   if (req.method === 'PATCH' && pathname.match(/^\/api\/area\/[^/]+\/cliente\/[^/]+$/)) {
     const parts = pathname.split('/');
     const areaId = decodeURIComponent(parts[3]);
@@ -115,12 +188,8 @@ const server = http.createServer(async (req, res) => {
     try {
       const body = await readBody(req);
       const cli = updateCliente(areaId, cid, body || {});
-      if (!cli) {
-        res.writeHead(404, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify({ ok: false, error: 'cliente não encontrado' }));
-        return;
-      }
-      _cachedPayload = null;
+      if (!cli) { res.writeHead(404, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ ok: false, error: 'cliente não encontrado' })); return; }
+      invalidateCache();
       res.writeHead(200, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ ok: true, cliente: cli }));
     } catch (err) {
@@ -130,14 +199,13 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
-  // DELETE /api/area/:id/cliente/:cid — remove cliente
   if (req.method === 'DELETE' && pathname.match(/^\/api\/area\/[^/]+\/cliente\/[^/]+$/)) {
     const parts = pathname.split('/');
     const areaId = decodeURIComponent(parts[3]);
     const cid = decodeURIComponent(parts[5]);
     try {
       deleteCliente(areaId, cid);
-      _cachedPayload = null;
+      invalidateCache();
       res.writeHead(200, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ ok: true }));
     } catch (err) {
@@ -147,8 +215,7 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
-  // ── GOALS / SONHOS (área Metas) ── (antes do PATCH genérico)
-  // POST /api/area/:id/goal — cria sonho rico
+  // ── GOALS / SONHOS ──
   if (req.method === 'POST' && pathname.match(/^\/api\/area\/[^/]+\/goal$/)) {
     const areaId = decodeURIComponent(pathname.split('/')[3]);
     try {
@@ -159,7 +226,7 @@ const server = http.createServer(async (req, res) => {
         return;
       }
       const goal = addGoal(areaId, body);
-      _cachedPayload = null;
+      invalidateCache();
       res.writeHead(200, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ ok: true, goal }));
     } catch (err) {
@@ -169,7 +236,6 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
-  // PATCH /api/area/:id/goal/:gid — atualiza sonho
   if (req.method === 'PATCH' && pathname.match(/^\/api\/area\/[^/]+\/goal\/[^/]+$/)) {
     const parts = pathname.split('/');
     const areaId = decodeURIComponent(parts[3]);
@@ -177,12 +243,8 @@ const server = http.createServer(async (req, res) => {
     try {
       const body = await readBody(req);
       const goal = updateGoal(areaId, gid, body || {});
-      if (!goal) {
-        res.writeHead(404, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify({ ok: false, error: 'sonho não encontrado' }));
-        return;
-      }
-      _cachedPayload = null;
+      if (!goal) { res.writeHead(404, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ ok: false, error: 'sonho não encontrado' })); return; }
+      invalidateCache();
       res.writeHead(200, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ ok: true, goal }));
     } catch (err) {
@@ -192,14 +254,13 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
-  // DELETE /api/area/:id/goal/:gid — remove sonho
   if (req.method === 'DELETE' && pathname.match(/^\/api\/area\/[^/]+\/goal\/[^/]+$/)) {
     const parts = pathname.split('/');
     const areaId = decodeURIComponent(parts[3]);
     const gid = decodeURIComponent(parts[5]);
     try {
       deleteGoal(areaId, gid);
-      _cachedPayload = null;
+      invalidateCache();
       res.writeHead(200, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ ok: true }));
     } catch (err) {
@@ -209,30 +270,22 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
-  // ── MISSÕES de um goal (os passos em ordem) ── (antes do PATCH genérico)
-  // POST /api/area/:id/goal/:gid/missao — cria missão
+  // ── MISSÕES de goal ──
   if (req.method === 'POST' && pathname.match(/^\/api\/area\/[^/]+\/goal\/[^/]+\/missao$/)) {
     const parts = pathname.split('/');
     const areaId = decodeURIComponent(parts[3]), gid = decodeURIComponent(parts[5]);
     try {
       const body = await readBody(req);
-      if (!body.texto || !String(body.texto).trim()) {
-        res.writeHead(400, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify({ ok: false, error: 'texto requerido' })); return;
-      }
+      if (!body.texto || !String(body.texto).trim()) { res.writeHead(400, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ ok: false, error: 'texto requerido' })); return; }
       const m = addMissao(areaId, gid, String(body.texto).trim());
       if (!m) { res.writeHead(404, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ ok: false, error: 'meta não encontrada' })); return; }
-      _cachedPayload = null;
+      invalidateCache();
       res.writeHead(200, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ ok: true, missao: m }));
-    } catch (err) {
-      res.writeHead(500, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ ok: false, error: String(err) }));
-    }
+    } catch (err) { res.writeHead(500, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ ok: false, error: String(err) })); }
     return;
   }
 
-  // PATCH /api/area/:id/goal/:gid/missao/:mid — texto (edita) ou toggle (sem texto)
   if (req.method === 'PATCH' && pathname.match(/^\/api\/area\/[^/]+\/goal\/[^/]+\/missao\/[^/]+$/)) {
     const parts = pathname.split('/');
     const areaId = decodeURIComponent(parts[3]), gid = decodeURIComponent(parts[5]), mid = decodeURIComponent(parts[7]);
@@ -240,55 +293,39 @@ const server = http.createServer(async (req, res) => {
       const body = await readBody(req);
       const m = (body.texto !== undefined) ? editMissao(areaId, gid, mid, String(body.texto).trim()) : toggleMissao(areaId, gid, mid);
       if (!m) { res.writeHead(404, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ ok: false, error: 'missão não encontrada' })); return; }
-      _cachedPayload = null;
+      invalidateCache();
       res.writeHead(200, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ ok: true, missao: m }));
-    } catch (err) {
-      res.writeHead(500, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ ok: false, error: String(err) }));
-    }
+    } catch (err) { res.writeHead(500, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ ok: false, error: String(err) })); }
     return;
   }
 
-  // DELETE /api/area/:id/goal/:gid/missao/:mid — remove missão
   if (req.method === 'DELETE' && pathname.match(/^\/api\/area\/[^/]+\/goal\/[^/]+\/missao\/[^/]+$/)) {
     const parts = pathname.split('/');
     const areaId = decodeURIComponent(parts[3]), gid = decodeURIComponent(parts[5]), mid = decodeURIComponent(parts[7]);
     try {
       deleteMissao(areaId, gid, mid);
-      _cachedPayload = null;
+      invalidateCache();
       res.writeHead(200, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ ok: true }));
-    } catch (err) {
-      res.writeHead(500, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ ok: false, error: String(err) }));
-    }
+    } catch (err) { res.writeHead(500, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ ok: false, error: String(err) })); }
     return;
   }
 
-  // ── TREINOS (área Saúde) ── (antes do PATCH genérico)
-  // POST /api/area/:id/treino — cria treino
+  // ── TREINOS ──
   if (req.method === 'POST' && pathname.match(/^\/api\/area\/[^/]+\/treino$/)) {
     const areaId = decodeURIComponent(pathname.split('/')[3]);
     try {
       const body = await readBody(req);
-      if (!body.nome || !String(body.nome).trim()) {
-        res.writeHead(400, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify({ ok: false, error: 'nome requerido' }));
-        return;
-      }
+      if (!body.nome || !String(body.nome).trim()) { res.writeHead(400, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ ok: false, error: 'nome requerido' })); return; }
       const treino = addTreino(areaId, body);
-      _cachedPayload = null;
+      invalidateCache();
       res.writeHead(200, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ ok: true, treino }));
-    } catch (err) {
-      res.writeHead(500, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ ok: false, error: String(err) }));
-    }
+    } catch (err) { res.writeHead(500, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ ok: false, error: String(err) })); }
     return;
   }
 
-  // PATCH /api/area/:id/treino/:tid — atualiza treino
   if (req.method === 'PATCH' && pathname.match(/^\/api\/area\/[^/]+\/treino\/[^/]+$/)) {
     const parts = pathname.split('/');
     const areaId = decodeURIComponent(parts[3]), tid = decodeURIComponent(parts[5]);
@@ -296,56 +333,41 @@ const server = http.createServer(async (req, res) => {
       const body = await readBody(req);
       const treino = updateTreino(areaId, tid, body || {});
       if (!treino) { res.writeHead(404, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ ok: false, error: 'treino não encontrado' })); return; }
-      _cachedPayload = null;
+      invalidateCache();
       res.writeHead(200, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ ok: true, treino }));
-    } catch (err) {
-      res.writeHead(500, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ ok: false, error: String(err) }));
-    }
+    } catch (err) { res.writeHead(500, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ ok: false, error: String(err) })); }
     return;
   }
 
-  // DELETE /api/area/:id/treino/:tid — remove treino
   if (req.method === 'DELETE' && pathname.match(/^\/api\/area\/[^/]+\/treino\/[^/]+$/)) {
     const parts = pathname.split('/');
     const areaId = decodeURIComponent(parts[3]), tid = decodeURIComponent(parts[5]);
     try {
       deleteTreino(areaId, tid);
-      _cachedPayload = null;
+      invalidateCache();
       res.writeHead(200, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ ok: true }));
-    } catch (err) {
-      res.writeHead(500, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ ok: false, error: String(err) }));
-    }
+    } catch (err) { res.writeHead(500, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ ok: false, error: String(err) })); }
     return;
   }
 
-  // ── EXERCÍCIOS de um treino ── (antes do PATCH genérico)
-  // POST /api/area/:id/treino/:tid/exercicio — cria exercício
+  // ── EXERCÍCIOS de treino ──
   if (req.method === 'POST' && pathname.match(/^\/api\/area\/[^/]+\/treino\/[^/]+\/exercicio$/)) {
     const parts = pathname.split('/');
     const areaId = decodeURIComponent(parts[3]), tid = decodeURIComponent(parts[5]);
     try {
       const body = await readBody(req);
-      if (!body.texto || !String(body.texto).trim()) {
-        res.writeHead(400, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify({ ok: false, error: 'texto requerido' })); return;
-      }
+      if (!body.texto || !String(body.texto).trim()) { res.writeHead(400, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ ok: false, error: 'texto requerido' })); return; }
       const ex = addExercicio(areaId, tid, String(body.texto).trim());
       if (!ex) { res.writeHead(404, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ ok: false, error: 'treino não encontrado' })); return; }
-      _cachedPayload = null;
+      invalidateCache();
       res.writeHead(200, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ ok: true, exercicio: ex }));
-    } catch (err) {
-      res.writeHead(500, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ ok: false, error: String(err) }));
-    }
+    } catch (err) { res.writeHead(500, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ ok: false, error: String(err) })); }
     return;
   }
 
-  // PATCH /api/area/:id/treino/:tid/exercicio/:xid — texto (edita) ou toggle (sem texto)
   if (req.method === 'PATCH' && pathname.match(/^\/api\/area\/[^/]+\/treino\/[^/]+\/exercicio\/[^/]+$/)) {
     const parts = pathname.split('/');
     const areaId = decodeURIComponent(parts[3]), tid = decodeURIComponent(parts[5]), xid = decodeURIComponent(parts[7]);
@@ -353,56 +375,41 @@ const server = http.createServer(async (req, res) => {
       const body = await readBody(req);
       const ex = (body.texto !== undefined) ? editExercicio(areaId, tid, xid, String(body.texto).trim()) : toggleExercicio(areaId, tid, xid);
       if (!ex) { res.writeHead(404, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ ok: false, error: 'exercício não encontrado' })); return; }
-      _cachedPayload = null;
+      invalidateCache();
       res.writeHead(200, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ ok: true, exercicio: ex }));
-    } catch (err) {
-      res.writeHead(500, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ ok: false, error: String(err) }));
-    }
+    } catch (err) { res.writeHead(500, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ ok: false, error: String(err) })); }
     return;
   }
 
-  // DELETE /api/area/:id/treino/:tid/exercicio/:xid — remove exercício
   if (req.method === 'DELETE' && pathname.match(/^\/api\/area\/[^/]+\/treino\/[^/]+\/exercicio\/[^/]+$/)) {
     const parts = pathname.split('/');
     const areaId = decodeURIComponent(parts[3]), tid = decodeURIComponent(parts[5]), xid = decodeURIComponent(parts[7]);
     try {
       deleteExercicio(areaId, tid, xid);
-      _cachedPayload = null;
+      invalidateCache();
       res.writeHead(200, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ ok: true }));
-    } catch (err) {
-      res.writeHead(500, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ ok: false, error: String(err) }));
-    }
+    } catch (err) { res.writeHead(500, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ ok: false, error: String(err) })); }
     return;
   }
 
-  // ── LISTAS GENÉRICAS (intenções/devoções/preparo-FAC — Igreja) ── (antes do PATCH genérico)
-  // POST /api/area/:id/lista/:lista — cria item
+  // ── LISTAS GENÉRICAS ──
   if (req.method === 'POST' && pathname.match(/^\/api\/area\/[^/]+\/lista\/[^/]+$/)) {
     const parts = pathname.split('/');
     const areaId = decodeURIComponent(parts[3]), lista = decodeURIComponent(parts[5]);
     try {
       const body = await readBody(req);
-      if (!body.texto || !String(body.texto).trim()) {
-        res.writeHead(400, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify({ ok: false, error: 'texto requerido' })); return;
-      }
+      if (!body.texto || !String(body.texto).trim()) { res.writeHead(400, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ ok: false, error: 'texto requerido' })); return; }
       const item = addListItem(areaId, lista, String(body.texto).trim());
       if (!item) { res.writeHead(404, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ ok: false, error: 'lista inválida' })); return; }
-      _cachedPayload = null;
+      invalidateCache();
       res.writeHead(200, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ ok: true, item }));
-    } catch (err) {
-      res.writeHead(500, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ ok: false, error: String(err) }));
-    }
+    } catch (err) { res.writeHead(500, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ ok: false, error: String(err) })); }
     return;
   }
 
-  // PATCH /api/area/:id/lista/:lista/:iid — texto (edita) ou toggle (sem texto)
   if (req.method === 'PATCH' && pathname.match(/^\/api\/area\/[^/]+\/lista\/[^/]+\/[^/]+$/)) {
     const parts = pathname.split('/');
     const areaId = decodeURIComponent(parts[3]), lista = decodeURIComponent(parts[5]), iid = decodeURIComponent(parts[6]);
@@ -410,85 +417,211 @@ const server = http.createServer(async (req, res) => {
       const body = await readBody(req);
       const item = (body.texto !== undefined) ? editListItem(areaId, lista, iid, String(body.texto).trim()) : toggleListItem(areaId, lista, iid);
       if (!item) { res.writeHead(404, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ ok: false, error: 'item não encontrado' })); return; }
-      _cachedPayload = null;
+      invalidateCache();
       res.writeHead(200, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ ok: true, item }));
-    } catch (err) {
-      res.writeHead(500, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ ok: false, error: String(err) }));
-    }
+    } catch (err) { res.writeHead(500, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ ok: false, error: String(err) })); }
     return;
   }
 
-  // DELETE /api/area/:id/lista/:lista/:iid — remove item
   if (req.method === 'DELETE' && pathname.match(/^\/api\/area\/[^/]+\/lista\/[^/]+\/[^/]+$/)) {
     const parts = pathname.split('/');
     const areaId = decodeURIComponent(parts[3]), lista = decodeURIComponent(parts[5]), iid = decodeURIComponent(parts[6]);
     try {
       deleteListItem(areaId, lista, iid);
-      _cachedPayload = null;
+      invalidateCache();
       res.writeHead(200, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ ok: true }));
-    } catch (err) {
-      res.writeHead(500, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ ok: false, error: String(err) }));
-    }
+    } catch (err) { res.writeHead(500, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ ok: false, error: String(err) })); }
     return;
   }
 
-  // POST /api/area/:id/skill — cria skill (skill tree, área Lazer)
+  // ── SKILLS ──
   if (req.method === 'POST' && pathname.match(/^\/api\/area\/[^/]+\/skill$/)) {
     const parts = pathname.split('/');
     const areaId = decodeURIComponent(parts[3]);
     try {
       const body = await readBody(req);
-      if (!body.nome || !String(body.nome).trim()) {
-        res.writeHead(400, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify({ ok: false, error: 'nome requerido' })); return;
-      }
+      if (!body.nome || !String(body.nome).trim()) { res.writeHead(400, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ ok: false, error: 'nome requerido' })); return; }
       const skill = addSkill(areaId, String(body.nome).trim());
-      _cachedPayload = null;
+      invalidateCache();
       res.writeHead(200, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ ok: true, skill }));
-    } catch (err) {
-      res.writeHead(500, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ ok: false, error: String(err) }));
-    }
+    } catch (err) { res.writeHead(500, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ ok: false, error: String(err) })); }
     return;
   }
 
-  // PATCH /api/area/:id/skill/:sid — nome (edita) ou xp (delta)
   if (req.method === 'PATCH' && pathname.match(/^\/api\/area\/[^/]+\/skill\/[^/]+$/)) {
     const parts = pathname.split('/');
     const areaId = decodeURIComponent(parts[3]), sid = decodeURIComponent(parts[5]);
     try {
       const body = await readBody(req);
-      const skill = (body.xp !== undefined) ? skillXp(areaId, sid, Number(body.xp))
-        : editSkill(areaId, sid, String(body.nome || '').trim());
+      const skill = (body.xp !== undefined) ? skillXp(areaId, sid, Number(body.xp)) : editSkill(areaId, sid, String(body.nome || '').trim());
       if (!skill) { res.writeHead(404, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ ok: false, error: 'skill não encontrada' })); return; }
-      _cachedPayload = null;
+      invalidateCache();
       res.writeHead(200, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ ok: true, skill }));
-    } catch (err) {
-      res.writeHead(500, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ ok: false, error: String(err) }));
-    }
+    } catch (err) { res.writeHead(500, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ ok: false, error: String(err) })); }
     return;
   }
 
-  // DELETE /api/area/:id/skill/:sid — remove skill
   if (req.method === 'DELETE' && pathname.match(/^\/api\/area\/[^/]+\/skill\/[^/]+$/)) {
     const parts = pathname.split('/');
     const areaId = decodeURIComponent(parts[3]), sid = decodeURIComponent(parts[5]);
     try {
       deleteSkill(areaId, sid);
-      _cachedPayload = null;
+      invalidateCache();
       res.writeHead(200, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ ok: true }));
-    } catch (err) {
-      res.writeHead(500, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ ok: false, error: String(err) }));
-    }
+    } catch (err) { res.writeHead(500, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ ok: false, error: String(err) })); }
+    return;
+  }
+
+  // ── DIÁRIO: CAPÍTULOS ──
+  if (req.method === 'POST' && pathname.match(/^\/api\/area\/[^/]+\/capitulo$/)) {
+    const areaId = decodeURIComponent(pathname.split('/')[3]);
+    try {
+      const body = await readBody(req);
+      if (!body.titulo || !String(body.titulo).trim()) { res.writeHead(400, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ ok: false, error: 'titulo requerido' })); return; }
+      const capitulo = addCapitulo(areaId, String(body.titulo).trim());
+      invalidateCache();
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ ok: true, capitulo }));
+    } catch (err) { res.writeHead(500, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ ok: false, error: String(err) })); }
+    return;
+  }
+
+  if (req.method === 'PATCH' && pathname.match(/^\/api\/area\/[^/]+\/capitulo\/[^/]+$/)) {
+    const parts = pathname.split('/');
+    const areaId = decodeURIComponent(parts[3]), cid = decodeURIComponent(parts[5]);
+    try {
+      const body = await readBody(req);
+      const capitulo = editCapitulo(areaId, cid, String(body.titulo || '').trim());
+      if (!capitulo) { res.writeHead(404, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ ok: false, error: 'capítulo não encontrado' })); return; }
+      invalidateCache();
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ ok: true, capitulo }));
+    } catch (err) { res.writeHead(500, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ ok: false, error: String(err) })); }
+    return;
+  }
+
+  if (req.method === 'DELETE' && pathname.match(/^\/api\/area\/[^/]+\/capitulo\/[^/]+$/)) {
+    const parts = pathname.split('/');
+    const areaId = decodeURIComponent(parts[3]), cid = decodeURIComponent(parts[5]);
+    try {
+      deleteCapitulo(areaId, cid);
+      invalidateCache();
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ ok: true }));
+    } catch (err) { res.writeHead(500, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ ok: false, error: String(err) })); }
+    return;
+  }
+
+  // ── DIÁRIO: AVENTURAS ──
+  if (req.method === 'POST' && pathname.match(/^\/api\/area\/[^/]+\/capitulo\/[^/]+\/aventura$/)) {
+    const parts = pathname.split('/');
+    const areaId = decodeURIComponent(parts[3]), cid = decodeURIComponent(parts[5]);
+    try {
+      const body = await readBody(req);
+      if (!body.titulo || !String(body.titulo).trim()) { res.writeHead(400, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ ok: false, error: 'titulo requerido' })); return; }
+      const aventura = addAventura(areaId, cid, String(body.titulo).trim());
+      if (!aventura) { res.writeHead(404, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ ok: false, error: 'capítulo não encontrado' })); return; }
+      invalidateCache();
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ ok: true, aventura }));
+    } catch (err) { res.writeHead(500, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ ok: false, error: String(err) })); }
+    return;
+  }
+
+  if (req.method === 'PATCH' && pathname.match(/^\/api\/area\/[^/]+\/aventura\/[^/]+$/)) {
+    const parts = pathname.split('/');
+    const areaId = decodeURIComponent(parts[3]), aid = decodeURIComponent(parts[5]);
+    try {
+      const body = await readBody(req);
+      const aventura = editAventura(areaId, aid, String(body.titulo || '').trim());
+      if (!aventura) { res.writeHead(404, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ ok: false, error: 'aventura não encontrada' })); return; }
+      invalidateCache();
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ ok: true, aventura }));
+    } catch (err) { res.writeHead(500, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ ok: false, error: String(err) })); }
+    return;
+  }
+
+  if (req.method === 'DELETE' && pathname.match(/^\/api\/area\/[^/]+\/aventura\/[^/]+$/)) {
+    const parts = pathname.split('/');
+    const areaId = decodeURIComponent(parts[3]), aid = decodeURIComponent(parts[5]);
+    try {
+      deleteAventura(areaId, aid);
+      invalidateCache();
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ ok: true }));
+    } catch (err) { res.writeHead(500, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ ok: false, error: String(err) })); }
+    return;
+  }
+
+  // ── DIÁRIO: ENTRADAS ──
+  if (req.method === 'POST' && pathname.match(/^\/api\/area\/[^/]+\/aventura\/[^/]+\/entrada$/)) {
+    const parts = pathname.split('/');
+    const areaId = decodeURIComponent(parts[3]), aid = decodeURIComponent(parts[5]);
+    try {
+      const body = await readBody(req);
+      if (!body.corpo || !String(body.corpo).trim()) { res.writeHead(400, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ ok: false, error: 'corpo requerido' })); return; }
+      const entrada = addEntrada(areaId, aid, body);
+      if (!entrada) { res.writeHead(404, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ ok: false, error: 'aventura não encontrada' })); return; }
+      invalidateCache();
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ ok: true, entrada }));
+    } catch (err) { res.writeHead(500, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ ok: false, error: String(err) })); }
+    return;
+  }
+
+  if (req.method === 'PATCH' && pathname.match(/^\/api\/area\/[^/]+\/entrada\/[^/]+$/)) {
+    const parts = pathname.split('/');
+    const areaId = decodeURIComponent(parts[3]), eid = decodeURIComponent(parts[5]);
+    try {
+      const body = await readBody(req);
+      const entrada = editEntrada(areaId, eid, body || {});
+      if (!entrada) { res.writeHead(404, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ ok: false, error: 'entrada não encontrada' })); return; }
+      invalidateCache();
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ ok: true, entrada }));
+    } catch (err) { res.writeHead(500, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ ok: false, error: String(err) })); }
+    return;
+  }
+
+  if (req.method === 'DELETE' && pathname.match(/^\/api\/area\/[^/]+\/entrada\/[^/]+$/)) {
+    const parts = pathname.split('/');
+    const areaId = decodeURIComponent(parts[3]), eid = decodeURIComponent(parts[5]);
+    try {
+      deleteEntrada(areaId, eid);
+      invalidateCache();
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ ok: true }));
+    } catch (err) { res.writeHead(500, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ ok: false, error: String(err) })); }
+    return;
+  }
+
+  // ── NOVIDADES (changelog manual, Configurações) ──
+  if (req.method === 'POST' && pathname === '/api/changelog') {
+    try {
+      const body = await readBody(req);
+      if (!body.texto || !String(body.texto).trim()) { res.writeHead(400, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ ok: false, error: 'texto requerido' })); return; }
+      const item = addChangelog(String(body.texto).trim(), body.data);
+      invalidateCache();
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ ok: true, item }));
+    } catch (err) { res.writeHead(500, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ ok: false, error: String(err) })); }
+    return;
+  }
+
+  if (req.method === 'DELETE' && pathname.match(/^\/api\/changelog\/[^/]+$/)) {
+    const id = decodeURIComponent(pathname.split('/')[3]);
+    try {
+      deleteChangelog(id);
+      invalidateCache();
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ ok: true }));
+    } catch (err) { res.writeHead(500, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ ok: false, error: String(err) })); }
     return;
   }
 
@@ -506,7 +639,7 @@ const server = http.createServer(async (req, res) => {
         return;
       }
       writeArea(areaId, patch);
-      _cachedPayload = null;
+      invalidateCache();
       res.writeHead(200, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ ok: true, areaId }));
     } catch (err) {
@@ -516,7 +649,7 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
-  // POST /api/area/:id/history — registra ponto histórico
+  // POST /api/area/:id/history
   if (req.method === 'POST' && pathname.match(/^\/api\/area\/[^/]+\/history$/)) {
     const parts = pathname.split('/');
     const areaId = decodeURIComponent(parts[3]);
@@ -528,9 +661,9 @@ const server = http.createServer(async (req, res) => {
         res.end(JSON.stringify({ ok: false, error: 'campo e valor requeridos' }));
         return;
       }
-      const today = new Date().toISOString().slice(0, 10);
+      const today = ymdLocal();
       pushHistory(areaId, campo, valor, today);
-      _cachedPayload = null;
+      invalidateCache();
       res.writeHead(200, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ ok: true, areaId, campo, d: today }));
     } catch (err) {
@@ -540,7 +673,7 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
-  // POST /api/area/:id/meta — cria nova meta manual
+  // POST /api/area/:id/meta — cria meta manual
   if (req.method === 'POST' && pathname.match(/^\/api\/area\/[^/]+\/meta$/) && !pathname.includes('/history')) {
     const parts = pathname.split('/');
     const areaId = decodeURIComponent(parts[3]);
@@ -554,7 +687,7 @@ const server = http.createServer(async (req, res) => {
       }
       const metaId = 'meta-' + Date.now();
       addMeta(areaId, metaId, texto.trim().slice(0, 200));
-      _cachedPayload = null;
+      invalidateCache();
       res.writeHead(200, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ ok: true, areaId, metaId }));
     } catch (err) {
@@ -564,7 +697,7 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
-  // PATCH /api/area/:id/meta/:metaId — edita texto de meta manual
+  // PATCH /api/area/:id/meta/:metaId
   if (req.method === 'PATCH' && pathname.match(/^\/api\/area\/[^/]+\/meta\/[^/]+$/)) {
     const parts = pathname.split('/');
     const areaId = decodeURIComponent(parts[3]);
@@ -578,7 +711,7 @@ const server = http.createServer(async (req, res) => {
         return;
       }
       editMeta(areaId, metaId, texto.trim().slice(0, 200));
-      _cachedPayload = null;
+      invalidateCache();
       res.writeHead(200, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ ok: true, areaId, metaId }));
     } catch (err) {
@@ -588,14 +721,14 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
-  // DELETE /api/area/:id/meta/:metaId — remove meta manual
+  // DELETE /api/area/:id/meta/:metaId
   if (req.method === 'DELETE' && pathname.match(/^\/api\/area\/[^/]+\/meta\/[^/]+$/)) {
     const parts = pathname.split('/');
     const areaId = decodeURIComponent(parts[3]);
     const metaId = decodeURIComponent(parts[5]);
     try {
       deleteMeta(areaId, metaId);
-      _cachedPayload = null;
+      invalidateCache();
       res.writeHead(200, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ ok: true, areaId, metaId }));
     } catch (err) {
@@ -605,15 +738,15 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
-  // POST /api/area/:id/checkin — toggle do check-in diário
+  // POST /api/area/:id/checkin
   if (req.method === 'POST' && pathname.match(/^\/api\/area\/[^/]+\/checkin$/)) {
     const parts = pathname.split('/');
     const areaId = decodeURIComponent(parts[3]);
     try {
       const body = await readBody(req);
-      const date = (body && body.date) || new Date().toISOString().slice(0, 10);
+      const date = (body && body.date) || ymdLocal();
       const r = doCheckin(areaId, date);
-      _cachedPayload = null;
+      invalidateCache();
       res.writeHead(200, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ ok: true, areaId, date, feito: r.feito }));
     } catch (err) {
@@ -623,16 +756,16 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
-  // POST /api/area/:id/missao/:missaoId — toggle de missão manual
+  // POST /api/area/:id/missao/:missaoId — toggle missão manual
   if (req.method === 'POST' && pathname.match(/^\/api\/area\/[^/]+\/missao\/[^/]+$/)) {
     const parts = pathname.split('/');
     const areaId = decodeURIComponent(parts[3]);
     const missaoId = decodeURIComponent(parts[5]);
     try {
       const body = await readBody(req);
-      const date = (body && body.date) || new Date().toISOString().slice(0, 10);
+      const date = (body && body.date) || ymdLocal();
       const r = logMissao(areaId, missaoId, date);
-      _cachedPayload = null;
+      invalidateCache();
       res.writeHead(200, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ ok: true, areaId, missaoId, feita: r.feita }));
     } catch (err) {
@@ -642,7 +775,7 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
-  // PATCH /api/config — salva campos permitidos: profile.name, usdToBrl
+  // PATCH /api/config — salva configurações do usuário
   if (req.method === 'PATCH' && pathname === '/api/config') {
     try {
       const body = await readBody(req);
@@ -657,7 +790,6 @@ const server = http.createServer(async (req, res) => {
         const n = parseFloat(body.usdToBrl);
         if (!isNaN(n) && n > 0) config.usdToBrl = n;
       }
-      // tags de projeto: { [projectId]: 'caixa'|'dispersao'|'infra'|null } (merge)
       if (body.projectTags && typeof body.projectTags === 'object') {
         if (!config.projectTags) config.projectTags = {};
         const ALLOWED = ['caixa', 'dispersao', 'infra'];
@@ -666,7 +798,6 @@ const server = http.createServer(async (req, res) => {
           else if (ALLOWED.includes(v)) config.projectTags[k] = v;
         }
       }
-      // meta de caixa / janela (datas e valor editáveis)
       if (body.meta && typeof body.meta === 'object') {
         if (!config.meta) config.meta = {};
         if (body.meta.caixaValor !== undefined) {
@@ -680,13 +811,12 @@ const server = http.createServer(async (req, res) => {
           if (!isNaN(n) && n >= 0) config.meta.mrrAlvo = n;
         }
       }
-      // tema do app (escuro): carvao (default) | meianoite | sepia
       if (body.theme !== undefined) {
         const TEMAS = ['carvao', 'meianoite', 'sepia'];
         if (TEMAS.includes(body.theme)) config.theme = body.theme;
       }
       fs.writeFileSync(CONFIG_PATH, JSON.stringify(config, null, 2), 'utf8');
-      _cachedPayload = null;
+      invalidateCache();
       res.writeHead(200, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ ok: true }));
     } catch (err) {
@@ -696,12 +826,12 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
-  // GET /api/export — baixa backup (config + data) num JSON único
+  // GET /api/export — backup do usuário
   if (req.method === 'GET' && pathname === '/api/export') {
     try {
       let config; try { config = JSON.parse(fs.readFileSync(CONFIG_PATH, 'utf8')); } catch { config = {}; }
       const data = readData();
-      const stamp = new Date().toISOString().slice(0, 10);
+      const stamp = ymdLocal();
       const out = JSON.stringify({ exportedAt: new Date().toISOString(), config, data }, null, 2);
       res.writeHead(200, {
         'Content-Type': 'application/json',
@@ -735,7 +865,47 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
-  // GET / → index.html
+  res.writeHead(404, { 'Content-Type': 'text/plain' });
+  res.end('Not found');
+}
+
+// ── SERVIDOR HTTP ─────────────────────────────────────────────────────────────
+const server = http.createServer(async (req, res) => {
+  const url = new URL(req.url, `http://localhost:${PORT}`);
+  const pathname = url.pathname;
+
+  // ── Guarda 1: Host local (DNS-rebinding). Vale pra TODO request. ──
+  if (!hostOk(req)) { res.writeHead(403, { 'Content-Type': 'text/plain' }); res.end('forbidden host'); return; }
+
+  // ── Guarda 2: mutação (POST/PATCH/DELETE) exige Origin local (CSRF). ──
+  // Sem CORS '*': não emitimos Access-Control-Allow-Origin, então JS cross-origin
+  // nem lê a resposta de GET. O frontend é same-origin (servido aqui), não precisa.
+  const mutating = req.method !== 'GET' && req.method !== 'HEAD' && req.method !== 'OPTIONS';
+  if (mutating && !originOk(req)) { res.writeHead(403, { 'Content-Type': 'text/plain' }); res.end('cross-origin blocked'); return; }
+  if (req.method === 'OPTIONS') { res.writeHead(204); res.end(); return; }
+
+  // ── ROTAS PÚBLICAS (sem auth) ──
+
+  if (req.method === 'GET' && pathname === '/api/health') {
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ ok: true, ts: new Date().toISOString() }));
+    return;
+  }
+
+  // Disponibilidade do Claude Code (condicional)
+  if (req.method === 'GET' && pathname === '/api/claude-overview') {
+    try {
+      const fpath = path.join(os.homedir(), '.claude', 'overviews.json');
+      const raw = fs.readFileSync(fpath, 'utf8');
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ available: true, data: JSON.parse(raw) }));
+    } catch {
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ available: false }));
+    }
+    return;
+  }
+
   if (req.method === 'GET' && (pathname === '/' || pathname === '/index.html')) {
     try {
       const html = fs.readFileSync(INDEX_HTML, 'utf8');
@@ -748,7 +918,6 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
-  // GET /assets/* — serve arquivos estáticos da pasta assets/
   if (req.method === 'GET' && pathname.startsWith('/assets/')) {
     const rel = pathname.slice('/assets/'.length).replace(/\.\./g, '');
     const fpath = path.join(APP_DIR, 'assets', rel);
@@ -765,18 +934,24 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
-  res.writeHead(404, { 'Content-Type': 'text/plain' });
-  res.end('Not found');
+  // ── ROTAS /api/* (local, single-user) ──
+  if (!pathname.startsWith('/api/')) {
+    res.writeHead(404, { 'Content-Type': 'text/plain' });
+    res.end('Not found');
+    return;
+  }
+
+  await handle(req, res, url, pathname);
 });
 
 server.listen(PORT, '127.0.0.1', () => {
-  console.log(`Shinzen v2 rodando em http://localhost:${PORT}`);
+  console.log(`Shinzen rodando em http://localhost:${PORT}`);
   console.log('Pressione Ctrl+C para parar.');
 });
 
 server.on('error', (err) => {
   if (err.code === 'EADDRINUSE') {
-    console.error(`Porta ${PORT} já em uso. Mate o processo anterior ou troque a porta.`);
+    console.error(`Porta ${PORT} já em uso.`);
   } else {
     console.error('Erro no servidor:', err);
   }

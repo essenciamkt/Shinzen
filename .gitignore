@@ -6,6 +6,10 @@ node_modules/
 *.tmp
 .cache/
 
+# Backups/recuperação de estado (escrita atômica) — transientes, não versionar
+data.json.bak
+data.corrupt-*.json
+
 # Lixo de SO / editor
 .DS_Store
 Thumbs.db
@@ -15,3 +19,7 @@ Thumbs.db
 
 # NÃO ignoramos config.json nem data.json:
 # são o estado pessoal do usuário e o ponto do app (single-user, local).
+
+# Variáveis de ambiente (nunca commitar — contêm chaves Supabase)
+.env
+.env.local
