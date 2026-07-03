@@ -1601,6 +1601,88 @@ tr:hover td { background: var(--bg3); }
   .proj-cost { min-width: 64px; }
 }
 
+/* ── DIÁRIO (imersivo: estante → livro → leitura) ──
+   Paleta própria (não briga com os 3 temas do app): roxo da área como lombada/
+   friso, dourado como acento de destaque, tom de "tinta em papel" só pro texto
+   lido — o fundo continua escuro (superfícies do tema), nunca vira página branca. */
+:root {
+  --diario-paper:     #f3e8d3;
+  --diario-paper-dim: #b6a37c;
+  --diario-cover-1:   #3a1f57;
+  --diario-cover-2:   #140a20;
+  --diario-gold:      #d4af6a;
+}
+.diario-intro { margin-bottom: 20px; }
+.diario-intro-title { font-family: var(--serif, Georgia, 'Iowan Old Style', 'Times New Roman', serif); font-size: 26px; font-weight: 700; color: var(--text); letter-spacing: .01em; }
+.diario-intro-sub { font-size: 12px; color: var(--text3); margin-top: 4px; }
+
+/* Tela 1 — Estante: capas de livro por ano */
+.diario-shelf { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 22px; padding: 8px 0 20px; }
+.diario-book {
+  position: relative; aspect-ratio: 3/4; border-radius: 4px 8px 8px 4px; cursor: pointer;
+  background: linear-gradient(155deg, var(--diario-cover-1), var(--diario-cover-2));
+  box-shadow: 0 10px 24px rgba(0,0,0,.5), inset 0 0 0 1px rgba(212,175,106,.25);
+  transition: transform var(--t-med), box-shadow var(--t-med);
+  transform-style: preserve-3d; perspective: 600px;
+}
+.diario-book:hover { transform: rotateY(-8deg) translateY(-4px); box-shadow: 0 18px 34px rgba(0,0,0,.6), inset 0 0 0 1px rgba(212,175,106,.4); }
+.diario-book-spine { position: absolute; left: 0; top: 0; bottom: 0; width: 10px; background: linear-gradient(90deg, rgba(0,0,0,.55), transparent); border-radius: 4px 0 0 4px; }
+.diario-book-face { position: absolute; inset: 10px 8px; border: 1px solid rgba(212,175,106,.35); border-radius: 2px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 10px; }
+.diario-book-face::before, .diario-book-face::after { content:''; position:absolute; left:14%; right:14%; height:1px; background: rgba(212,175,106,.5); }
+.diario-book-face::before { top: 12%; }
+.diario-book-face::after { bottom: 12%; }
+.diario-book-top { font-size: 10px; letter-spacing: .18em; text-transform: uppercase; color: var(--diario-gold); }
+.diario-book-year { font-family: var(--serif, Georgia, serif); font-size: 30px; font-weight: 700; color: var(--diario-paper); margin: 10px 0 6px; letter-spacing: .04em; }
+.diario-book-count { font-family: var(--mono); font-size: 10px; color: var(--diario-paper-dim); }
+
+/* Tela 2 — Livro: sumário (table of contents) */
+.diario-toc { max-width: 620px; }
+.diario-toc-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; }
+.diario-toc-year { font-family: var(--serif, Georgia, serif); font-size: 22px; color: var(--diario-gold); }
+.diario-back { background: none; border: none; color: var(--text2); font-size: 13px; cursor: pointer; padding: 4px 0; }
+.diario-back:hover { color: var(--text); }
+.diario-toc-list { border-top: 1px solid rgba(212,175,106,.25); }
+.diario-toc-cap { border-bottom: 1px solid rgba(212,175,106,.25); }
+.diario-toc-cap-head { display: flex; align-items: center; gap: 12px; padding: 14px 4px; cursor: pointer; }
+.diario-toc-cap-head:hover .diario-toc-title { color: var(--diario-gold); }
+.diario-toc-num { font-family: var(--serif, Georgia, serif); font-size: 15px; color: var(--diario-gold); min-width: 22px; }
+.diario-toc-title { flex: 1; font-family: var(--serif, Georgia, serif); font-size: 17px; color: var(--text); }
+.diario-toc-cap.open .diario-toc-title { color: var(--diario-gold); }
+.diario-toc-av { display: flex; align-items: center; gap: 10px; padding: 9px 4px 9px 34px; cursor: pointer; }
+.diario-toc-av:hover { background: rgba(212,175,106,.06); }
+.diario-toc-av-title { flex: 1; font-size: 13px; color: var(--text2); }
+.diario-toc-av:hover .diario-toc-av-title { color: var(--text); }
+.diario-toc-av-count { font-family: var(--mono); font-size: 10px; color: var(--text3); }
+.diario-toc-newav { display: flex; gap: 8px; padding: 8px 4px 14px 34px; }
+.diario-toc-newcap { display: flex; gap: 8px; margin-top: 16px; }
+
+/* Tela 3 — Leitura: feed contínuo, tipografia de leitura */
+.diario-reading-wrap { max-width: 660px; }
+.diario-reading-head { display: flex; align-items: baseline; gap: 16px; margin-bottom: 24px; flex-wrap: wrap; }
+.diario-reading-title { font-family: var(--serif, Georgia, serif); font-size: 20px; color: var(--diario-gold); }
+.diario-reading-feed { position: relative; }
+.diario-entry { position: relative; padding: 28px 0; border-bottom: 1px solid rgba(212,175,106,.18); }
+.diario-entry:last-child { border-bottom: none; }
+.diario-entry-date { font-family: var(--mono); font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: var(--diario-gold); margin-bottom: 10px; }
+.diario-entry-day { font-size: 13px; font-weight: 700; }
+.diario-entry-body { font-family: var(--serif, Georgia, 'Iowan Old Style', 'Times New Roman', serif); font-size: 18px; line-height: 1.8; color: var(--diario-paper); white-space: normal; }
+.diario-reading-feed > .diario-entry:first-child .diario-entry-body::first-letter {
+  font-size: 2.6em; font-weight: 700; color: var(--diario-gold); float: left; line-height: .8; padding: .05em .08em 0 0;
+}
+.diario-entry-tools { position: absolute; top: 28px; right: 0; display: flex; gap: 6px; opacity: 0; transition: opacity var(--t-fast); }
+.diario-entry:hover .diario-entry-tools { opacity: 1; }
+.diario-composer { margin-top: 12px; padding-top: 20px; border-top: 1px solid rgba(212,175,106,.25); display: flex; flex-direction: column; gap: 10px; }
+.diario-composer input[type=date] { align-self: flex-start; background: var(--surface-2); border: 1px solid var(--border2); border-radius: var(--r); color: var(--text2); font-family: var(--mono); font-size: 12px; padding: 6px 10px; }
+.diario-composer textarea { min-height: 110px; background: var(--surface-1); border: 1px solid var(--border2); border-radius: var(--r); color: var(--diario-paper); font-family: var(--serif, Georgia, serif); font-size: 16px; line-height: 1.7; padding: 14px; resize: vertical; outline: none; }
+.diario-composer textarea:focus { border-color: var(--diario-gold); }
+.diario-composer-btn { align-self: flex-end; background: var(--diario-gold); color: #241305; border: none; border-radius: var(--r); font-weight: 700; font-size: 13px; padding: 9px 20px; cursor: pointer; transition: filter var(--t-fast); }
+.diario-composer-btn:hover { filter: brightness(1.08); }
+
+@media (max-width: 640px) {
+  .diario-shelf { grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 14px; }
+  .diario-entry-body { font-size: 16px; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { transition: none !important; animation: none !important; }
 }
@@ -3530,81 +3612,137 @@ function menteCockpitHtml(area){
   return heroHtml + capAtivaHtml + capsulaHtml + habHtml + gratHtml;
 }
 
-// ── COCKPIT DIÁRIO (escrita livre: Capítulo → Aventura → Entrada) ──
+// ── COCKPIT DIÁRIO — imersivo: Estante (capas por ano) → Livro (sumário de
+// capítulos/aventuras) → Leitura (feed contínuo das entradas). ──
+let _diarioScreen = 'estante'; // 'estante' | 'livro' | 'leitura'
+let _diarioSelYear = null;
 let _diarioSelCap = null;
 let _diarioSelAv = null;
+
+const MESES_PT = ['jan','fev','mar','abr','mai','jun','jul','ago','set','out','nov','dez'];
+function toRoman(n){
+  const map=[[10,'X'],[9,'IX'],[5,'V'],[4,'IV'],[1,'I']];
+  let out='', v=n;
+  for(const [val,sym] of map){ while(v>=val){ out+=sym; v-=val; } }
+  return out||'I';
+}
 
 function diarioCockpitHtml(area){
   const d = area.detalhe||{};
   const capitulos = d.capitulos||[];
   const aventuras = d.aventuras||[];
   const entradas = d.entradas||[];
+  const anoAtual = new Date().getFullYear();
 
-  if (_diarioSelCap && !capitulos.some(c=>c.id===_diarioSelCap)) _diarioSelCap = null;
+  // ── anos com "livro" — todo ano com entrada + o ano corrente sempre disponível ──
+  const anos = new Set([anoAtual]);
+  entradas.forEach(e=>{ const y=parseInt((e.data||'').slice(0,4),10); if(y) anos.add(y); });
+  const anosOrdenados = [...anos].sort((a,b)=>b-a);
+
+  if (_diarioSelYear && !anos.has(_diarioSelYear)) _diarioSelYear = null;
+  if (_diarioSelCap && !capitulos.some(c=>c.id===_diarioSelCap)) { _diarioSelCap=null; _diarioSelAv=null; }
   if (_diarioSelAv && !aventuras.some(a=>a.id===_diarioSelAv)) _diarioSelAv = null;
-  if (!_diarioSelCap && capitulos.length) _diarioSelCap = capitulos[0].id;
+  if (_diarioScreen==='livro' && !_diarioSelYear) _diarioScreen='estante';
+  if (_diarioScreen==='leitura' && (!_diarioSelYear || !_diarioSelAv)) _diarioScreen = _diarioSelYear ? 'livro' : 'estante';
 
-  const heroHtml = `<div class="card mb16" style="--area-color:${esc(area.cor)}">
-    <div class="card-title">📔 Diário <span style="color:var(--text3);font-weight:400">(${entradas.length} entradas em ${capitulos.length} capítulos)</span></div>
-    <div style="font-size:12px;color:var(--text3)">${d.streak>0?`🔥 ${d.streak} dias seguidos escrevendo`:'Escreva hoje pra começar a sequência.'}</div>
+  const introHtml = `<div class="diario-intro">
+    <div class="diario-intro-title">📔 Diário</div>
+    <div class="diario-intro-sub">${d.streak>0?`🔥 ${d.streak} dia${d.streak===1?'':'s'} seguido${d.streak===1?'':'s'} escrevendo`:'Escreva hoje e comece a sequência.'} · ${entradas.length} entrada${entradas.length===1?'':'s'}</div>
   </div>`;
 
-  const capRows = capitulos.map(c=>`<div class="mz-row ${c.id===_diarioSelCap?'sel':''}" data-action="diario-sel-cap" data-cid="${esc(c.id)}" style="cursor:pointer;${c.id===_diarioSelCap?'background:var(--bg2)':''}">
-    <span class="mz-text">${esc(c.titulo)}</span>
-    <span class="mz-acts">
-      <button class="hz-act" data-action="diario-edit-cap" data-cid="${esc(c.id)}" data-cur="${esc(c.titulo)}" title="Renomear">✏️</button>
-      <button class="hz-act del" data-action="diario-del-cap" data-cid="${esc(c.id)}" title="Apagar (com aventuras e entradas)">🗑</button>
-    </span>
-  </div>`).join('');
-  const capsHtml = `<div class="card mb16">
-    <div class="card-title">Capítulos</div>
-    <div>${capRows||'<div class="mz-empty">Sem capítulos ainda.</div>'}</div>
-    <div class="mz-add">
-      <input type="text" class="list-inp" id="diario-inp-cap" placeholder="Novo capítulo..." maxlength="80">
-      <button class="meta-add-btn" data-action="diario-add-cap" title="Adicionar">+</button>
+  // ══════════════ TELA 1 — ESTANTE (capas por ano) ══════════════
+  if (_diarioScreen==='estante') {
+    const capas = anosOrdenados.map(y=>{
+      const n = entradas.filter(e=>(e.data||'').slice(0,4)===String(y)).length;
+      return `<div class="diario-book" data-action="diario-open-book" data-year="${y}">
+        <div class="diario-book-spine"></div>
+        <div class="diario-book-face">
+          <div class="diario-book-top">Diário</div>
+          <div class="diario-book-year">${y}</div>
+          <div class="diario-book-count">${n} entrada${n===1?'':'s'}</div>
+        </div>
+      </div>`;
+    }).join('');
+    return introHtml + `<div class="diario-shelf">${capas}</div>`;
+  }
+
+  // ══════════════ TELA 2 — LIVRO (sumário: capítulos → aventuras) ══════════════
+  if (_diarioScreen==='livro') {
+    const capRows = capitulos.map((c,i)=>{
+      const aventurasDoCapitulo = aventuras.filter(a=>a.capituloId===c.id);
+      const aberto = c.id===_diarioSelCap;
+      const avRows = aberto ? aventurasDoCapitulo.map(a=>{
+        const n = entradas.filter(e=>e.aventuraId===a.id && (e.data||'').slice(0,4)===String(_diarioSelYear)).length;
+        return `<div class="diario-toc-av" data-action="diario-open-leitura" data-aid="${esc(a.id)}">
+          <span class="diario-toc-av-title">${esc(a.titulo)}</span>
+          <span class="diario-toc-av-count">${n||''}</span>
+          <span class="mz-acts">
+            <button class="hz-act" data-action="diario-edit-av" data-aid="${esc(a.id)}" data-cur="${esc(a.titulo)}" title="Renomear">✏️</button>
+            <button class="hz-act del" data-action="diario-del-av" data-aid="${esc(a.id)}" title="Apagar (com entradas)">🗑</button>
+          </span>
+        </div>`;
+      }).join('') + `<div class="diario-toc-newav">
+          <input type="text" class="list-inp" id="diario-inp-av" placeholder="Nova aventura..." maxlength="80">
+          <button class="meta-add-btn" data-action="diario-add-av" data-cid="${esc(c.id)}" title="Adicionar">+</button>
+        </div>` : '';
+      return `<div class="diario-toc-cap ${aberto?'open':''}">
+        <div class="diario-toc-cap-head" data-action="diario-sel-cap" data-cid="${esc(c.id)}">
+          <span class="diario-toc-num">${toRoman(i+1)}</span>
+          <span class="diario-toc-title">${esc(c.titulo)}</span>
+          <span class="mz-acts">
+            <button class="hz-act" data-action="diario-edit-cap" data-cid="${esc(c.id)}" data-cur="${esc(c.titulo)}" title="Renomear">✏️</button>
+            <button class="hz-act del" data-action="diario-del-cap" data-cid="${esc(c.id)}" title="Apagar (com aventuras e entradas)">🗑</button>
+          </span>
+        </div>
+        ${avRows}
+      </div>`;
+    }).join('');
+
+    return introHtml + `<div class="diario-toc">
+      <div class="diario-toc-head">
+        <button class="diario-back" data-action="diario-back-shelf">‹ Estante</button>
+        <div class="diario-toc-year">${_diarioSelYear}</div>
+      </div>
+      <div class="diario-toc-list">${capRows||'<div class="mz-empty">Sem capítulos ainda. Comece um abaixo.</div>'}</div>
+      <div class="diario-toc-newcap">
+        <input type="text" class="list-inp" id="diario-inp-cap" placeholder="Novo capítulo..." maxlength="80">
+        <button class="meta-add-btn" data-action="diario-add-cap" title="Adicionar">+</button>
+      </div>
+    </div>`;
+  }
+
+  // ══════════════ TELA 3 — LEITURA (feed contínuo de uma aventura) ══════════════
+  const capitulo = capitulos.find(c=>c.id===_diarioSelCap);
+  const aventura = aventuras.find(a=>a.id===_diarioSelAv);
+  const feed = entradas
+    .filter(e=>e.aventuraId===_diarioSelAv && (e.data||'').slice(0,4)===String(_diarioSelYear))
+    .sort((x,y)=>x.data<y.data?1:x.data>y.data?-1:0);
+  const feedHtml = feed.map(e=>{
+    const [y,m,dia] = (e.data||'').split('-');
+    return `<article class="diario-entry">
+      <div class="diario-entry-date"><span class="diario-entry-day">${dia||'—'}</span> <span class="diario-entry-month">${MESES_PT[(parseInt(m,10)||1)-1]}</span></div>
+      <div class="diario-entry-body">${esc(e.corpo).replace(/\n/g,'<br>')}</div>
+      <div class="diario-entry-tools">
+        <button class="hz-act" data-action="diario-edit-ent" data-eid="${esc(e.id)}" data-cur="${esc(e.corpo)}" title="Editar">✏️</button>
+        <button class="hz-act del" data-action="diario-del-ent" data-eid="${esc(e.id)}" title="Remover">🗑</button>
+      </div>
+    </article>`;
+  }).join('');
+
+  return introHtml + `<div class="diario-reading-wrap">
+    <div class="diario-reading-head">
+      <button class="diario-back" data-action="diario-back-book">‹ ${esc(capitulo?capitulo.titulo:'Sumário')}</button>
+      <div class="diario-reading-title">${esc(aventura?aventura.titulo:'')}</div>
+    </div>
+    <div class="diario-reading-feed">${feedHtml||'<div class="mz-empty">Nenhuma entrada de '+_diarioSelYear+' aqui ainda. Escreva a primeira.</div>'}</div>
+    <div class="diario-composer">
+      <input type="date" id="diario-inp-ent-data" value="${_diarioSelYear===anoAtual?todayIsoBr():_diarioSelYear+'-01-01'}">
+      <textarea id="diario-inp-ent" placeholder="Escreva sua entrada..." maxlength="8000"></textarea>
+      <button class="diario-composer-btn" data-action="diario-add-ent" data-aid="${esc(_diarioSelAv)}" title="Adicionar">Escrever</button>
     </div>
   </div>`;
-
-  const avDoCapitulo = aventuras.filter(a=>a.capituloId===_diarioSelCap);
-  if (!_diarioSelAv && avDoCapitulo.length) _diarioSelAv = avDoCapitulo[0].id;
-  const avRows = avDoCapitulo.map(a=>`<div class="mz-row ${a.id===_diarioSelAv?'sel':''}" data-action="diario-sel-av" data-aid="${esc(a.id)}" style="cursor:pointer;${a.id===_diarioSelAv?'background:var(--bg2)':''}">
-    <span class="mz-text">${esc(a.titulo)}</span>
-    <span class="mz-acts">
-      <button class="hz-act" data-action="diario-edit-av" data-aid="${esc(a.id)}" data-cur="${esc(a.titulo)}" title="Renomear">✏️</button>
-      <button class="hz-act del" data-action="diario-del-av" data-aid="${esc(a.id)}" title="Apagar (com entradas)">🗑</button>
-    </span>
-  </div>`).join('');
-  const avHtml = _diarioSelCap ? `<div class="card mb16">
-    <div class="card-title">Aventuras</div>
-    <div>${avRows||'<div class="mz-empty">Sem aventuras neste capítulo ainda.</div>'}</div>
-    <div class="mz-add">
-      <input type="text" class="list-inp" id="diario-inp-av" placeholder="Nova aventura..." maxlength="80">
-      <button class="meta-add-btn" data-action="diario-add-av" data-cid="${esc(_diarioSelCap)}" title="Adicionar">+</button>
-    </div>
-  </div>` : '';
-
-  const entDaAventura = entradas.filter(e=>e.aventuraId===_diarioSelAv).sort((x,y)=>x.data<y.data?1:x.data>y.data?-1:0);
-  const entRows = entDaAventura.map(e=>`<div class="mz-row" style="align-items:flex-start">
-    <div style="flex:1">
-      <div style="font-size:11px;color:var(--text3)">${fmtDia(e.data)}${e.titulo?' · '+esc(e.titulo):''}</div>
-      <div class="mz-text" style="white-space:pre-wrap">${esc(e.corpo)}</div>
-    </div>
-    <span class="mz-acts">
-      <button class="hz-act" data-action="diario-edit-ent" data-eid="${esc(e.id)}" data-cur="${esc(e.corpo)}" title="Editar">✏️</button>
-      <button class="hz-act del" data-action="diario-del-ent" data-eid="${esc(e.id)}" title="Remover">🗑</button>
-    </span>
-  </div>`).join('');
-  const entHtml = _diarioSelAv ? `<div class="card mb16">
-    <div class="card-title">Entradas</div>
-    <div>${entRows||'<div class="mz-empty">Sem entradas nesta aventura ainda.</div>'}</div>
-    <div class="mz-add" style="align-items:flex-start">
-      <textarea id="diario-inp-ent" placeholder="Escreva sua entrada..." maxlength="8000" style="flex:1;min-height:80px;background:var(--panel);border:1px solid var(--border);border-radius:8px;color:var(--text);font:inherit;padding:8px"></textarea>
-      <button class="meta-add-btn" data-action="diario-add-ent" data-aid="${esc(_diarioSelAv)}" title="Adicionar">+</button>
-    </div>
-  </div>` : '';
-
-  return heroHtml + capsHtml + avHtml + entHtml;
 }
+function todayIsoBr(){ const d=new Date(); return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
 
 // overlay de respiração 4-7-8 + próximo passo (reset de 2min)
 function abrirResetMente(areaId){
@@ -4260,8 +4398,20 @@ function bindDetailDelegation(areaId) {
         await apiDelete(`/api/area/${encodeURIComponent(areaId)}/lista/${encodeURIComponent(lista)}/${encodeURIComponent(iid)}`);
         await load(false); toast('Removido');
       });
+    } else if (action === 'diario-open-book') {
+      _diarioSelYear = Number(el.dataset.year); _diarioScreen = 'livro'; _diarioSelCap = null; _diarioSelAv = null;
+      await load(false);
+    } else if (action === 'diario-back-shelf') {
+      _diarioScreen = 'estante';
+      await load(false);
+    } else if (action === 'diario-back-book') {
+      _diarioScreen = 'livro'; _diarioSelAv = null;
+      await load(false);
+    } else if (action === 'diario-open-leitura') {
+      _diarioSelAv = el.dataset.aid; _diarioScreen = 'leitura';
+      await load(false);
     } else if (action === 'diario-sel-cap') {
-      _diarioSelCap = el.dataset.cid; _diarioSelAv = null;
+      _diarioSelCap = (_diarioSelCap===el.dataset.cid) ? null : el.dataset.cid;
       await load(false);
     } else if (action === 'diario-add-cap') {
       const inp = $('diario-inp-cap'); const titulo = inp?.value?.trim();
@@ -4290,16 +4440,12 @@ function bindDetailDelegation(areaId) {
         if(_diarioSelCap===cid){ _diarioSelCap=null; _diarioSelAv=null; }
         await load(false); toast('Capítulo removido');
       });
-    } else if (action === 'diario-sel-av') {
-      _diarioSelAv = el.dataset.aid;
-      await load(false);
     } else if (action === 'diario-add-av') {
       const cid = el.dataset.cid; const inp = $('diario-inp-av'); const titulo = inp?.value?.trim();
       if(!titulo){ toast('Escreve o nome da aventura'); return; }
       await guard(async()=>{
         inp.value='';
-        const j = await postJson(`/api/area/${encodeURIComponent(areaId)}/capitulo/${encodeURIComponent(cid)}/aventura`,{titulo});
-        if (j.aventura) _diarioSelAv = j.aventura.id;
+        await postJson(`/api/area/${encodeURIComponent(areaId)}/capitulo/${encodeURIComponent(cid)}/aventura`,{titulo});
         await load(false); toast('✓ Aventura criada');
       });
     } else if (action === 'diario-edit-av') {
@@ -4317,15 +4463,16 @@ function bindDetailDelegation(areaId) {
       const aid = el.dataset.aid;
       await guard(async()=>{
         await apiDelete(`/api/area/${encodeURIComponent(areaId)}/aventura/${encodeURIComponent(aid)}`);
-        if(_diarioSelAv===aid) _diarioSelAv=null;
+        if(_diarioSelAv===aid){ _diarioSelAv=null; _diarioScreen='livro'; }
         await load(false); toast('Aventura removida');
       });
     } else if (action === 'diario-add-ent') {
-      const aid = el.dataset.aid; const inp = $('diario-inp-ent'); const corpo = inp?.value?.trim();
+      const aid = el.dataset.aid; const inp = $('diario-inp-ent'); const dataInp = $('diario-inp-ent-data');
+      const corpo = inp?.value?.trim();
       if(!corpo){ toast('Escreve algo'); return; }
       await guard(async()=>{
         inp.value='';
-        await postJson(`/api/area/${encodeURIComponent(areaId)}/aventura/${encodeURIComponent(aid)}/entrada`,{corpo});
+        await postJson(`/api/area/${encodeURIComponent(areaId)}/aventura/${encodeURIComponent(aid)}/entrada`,{corpo, data:dataInp?.value||undefined});
         await load(false); toast('✓ Entrada salva');
       });
     } else if (action === 'diario-edit-ent') {

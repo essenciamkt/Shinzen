@@ -2977,8 +2977,10 @@
       "metasManual": {},
       "metasTexto": {},
       "progresso": {
-        "checkins": [],
-        "recordeStreak": 0,
+        "checkins": [
+          "2026-07-02"
+        ],
+        "recordeStreak": 1,
         "badgesUnlocked": [],
         "missoesLog": {}
       },
