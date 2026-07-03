@@ -483,7 +483,7 @@ async function handle(req, res, url, pathname) {
     try {
       const body = await readBody(req);
       if (!body.titulo || !String(body.titulo).trim()) { res.writeHead(400, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ ok: false, error: 'titulo requerido' })); return; }
-      const capitulo = addCapitulo(areaId, String(body.titulo).trim());
+      const capitulo = addCapitulo(areaId, body.ano, String(body.titulo).trim());
       invalidateCache();
       res.writeHead(200, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ ok: true, capitulo }));

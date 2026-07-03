@@ -1601,15 +1601,14 @@ tr:hover td { background: var(--bg3); }
   .proj-cost { min-width: 64px; }
 }
 
-/* ── DIÁRIO (imersivo: estante → livro → leitura) ──
-   Paleta própria (não briga com os 3 temas do app): roxo da área como lombada/
-   friso, dourado como acento de destaque, tom de "tinta em papel" só pro texto
-   lido — o fundo continua escuro (superfícies do tema), nunca vira página branca. */
+/* ── DIÁRIO (imersivo: estante → livro → capítulo → leitura) ──
+   Cada capa (livro OU capítulo) recebe sua própria encadernação via --dc1/--dc2
+   (var de instância, ver diarioEncadernacao() no JS) — um tom de joia diferente
+   por ano, determinístico, não randômico. O dourado é o fio que une a estante
+   inteira; muda a cor da lombada, nunca o friso nem a tipografia. */
 :root {
   --diario-paper:     #f3e8d3;
   --diario-paper-dim: #b6a37c;
-  --diario-cover-1:   #3a1f57;
-  --diario-cover-2:   #140a20;
   --diario-gold:      #d4af6a;
 }
 .diario-intro { margin-bottom: 20px; }
@@ -1620,7 +1619,10 @@ tr:hover td { background: var(--bg3); }
 .diario-shelf { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 22px; padding: 8px 0 20px; }
 .diario-book {
   position: relative; aspect-ratio: 3/4; border-radius: 4px 8px 8px 4px; cursor: pointer;
-  background: linear-gradient(155deg, var(--diario-cover-1), var(--diario-cover-2));
+  background:
+    repeating-linear-gradient(115deg, rgba(255,255,255,.025) 0 2px, transparent 2px 5px),
+    radial-gradient(140% 90% at 85% 100%, rgba(0,0,0,.35), transparent 60%),
+    linear-gradient(155deg, var(--dc1), var(--dc2));
   box-shadow: 0 10px 24px rgba(0,0,0,.5), inset 0 0 0 1px rgba(212,175,106,.25);
   transition: transform var(--t-med), box-shadow var(--t-med);
   transform-style: preserve-3d; perspective: 600px;
@@ -1631,8 +1633,9 @@ tr:hover td { background: var(--bg3); }
 .diario-book-face::before, .diario-book-face::after { content:''; position:absolute; left:14%; right:14%; height:1px; background: rgba(212,175,106,.5); }
 .diario-book-face::before { top: 12%; }
 .diario-book-face::after { bottom: 12%; }
+.diario-book-orn { font-size: 15px; color: var(--diario-gold); opacity: .8; margin-bottom: 6px; }
 .diario-book-top { font-size: 10px; letter-spacing: .18em; text-transform: uppercase; color: var(--diario-gold); }
-.diario-book-year { font-family: var(--serif, Georgia, serif); font-size: 30px; font-weight: 700; color: var(--diario-paper); margin: 10px 0 6px; letter-spacing: .04em; }
+.diario-book-year { font-family: var(--serif, Georgia, serif); font-size: 30px; font-weight: 700; color: var(--diario-paper); margin: 10px 0 6px; letter-spacing: .04em; text-wrap: balance; }
 .diario-book-count { font-family: var(--mono); font-size: 10px; color: var(--diario-paper-dim); }
 .diario-book.empty { opacity: .5; filter: saturate(.4); }
 .diario-book.empty:hover { opacity: .85; filter: saturate(.7); }
@@ -1644,31 +1647,36 @@ tr:hover td { background: var(--bg3); }
 .diario-back:hover { color: var(--text); }
 .diario-toc-newcap { display: flex; gap: 8px; margin-top: 20px; max-width: 420px; }
 
-/* Tela 2 — Livro: capa própria por capítulo (estante menor, dentro do livro) */
-.diario-chapters { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 18px; }
+/* Tela 2 — Livro: capa própria por capítulo, mesma encadernação do livro-pai
+   (mesma família de cor do ano — coesão), mas tratada como um mini-livro de
+   verdade: lombada, friso duplo e numeral centrado, não um card utilitário. */
+.diario-chapters { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 20px; }
 .diario-chapter {
-  position: relative; min-height: 170px; border-radius: var(--r2); cursor: pointer; padding: 18px 16px;
+  position: relative; aspect-ratio: 3/4; border-radius: 4px 8px 8px 4px; cursor: pointer;
   background:
-    radial-gradient(120% 140% at 8% 0%, rgba(212,175,106,.10), transparent 55%),
-    linear-gradient(150deg, var(--diario-cover-1), var(--diario-cover-2));
-  border: 1px solid rgba(212,175,106,.28);
-  display: flex; flex-direction: column; justify-content: space-between; overflow: hidden;
+    radial-gradient(140% 90% at 85% 100%, rgba(0,0,0,.35), transparent 60%),
+    linear-gradient(155deg, var(--dc1), var(--dc2));
+  box-shadow: 0 8px 18px rgba(0,0,0,.45), inset 0 0 0 1px rgba(212,175,106,.25);
   transition: transform var(--t-med), box-shadow var(--t-med), border-color var(--t-med);
 }
-.diario-chapter:hover { transform: translateY(-5px); box-shadow: 0 16px 30px rgba(0,0,0,.5); border-color: rgba(212,175,106,.55); }
-.diario-chapter-num {
-  position: absolute; right: -6px; top: -18px; font-family: var(--serif, Georgia, serif); font-size: 92px;
-  font-weight: 700; color: rgba(212,175,106,.10); line-height: 1; pointer-events: none; user-select: none;
+.diario-chapter:hover { transform: translateY(-5px) scale(1.015); box-shadow: 0 14px 26px rgba(0,0,0,.55), inset 0 0 0 1px rgba(212,175,106,.4); }
+.diario-chapter-spine { position: absolute; left: 0; top: 0; bottom: 0; width: 8px; background: linear-gradient(90deg, rgba(0,0,0,.5), transparent); border-radius: 4px 0 0 4px; }
+.diario-chapter-face {
+  position: absolute; inset: 9px 7px; border: 1px solid rgba(212,175,106,.32); border-radius: 2px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 12px 8px;
 }
-.diario-chapter-face { position: relative; z-index: 1; }
-.diario-chapter-eyebrow { font-size: 10px; letter-spacing: .16em; text-transform: uppercase; color: var(--diario-gold); margin-bottom: 8px; }
-.diario-chapter-title { font-family: var(--serif, Georgia, serif); font-size: 19px; line-height: 1.3; color: var(--diario-paper); }
-.diario-chapter-meta { position: relative; z-index: 1; font-family: var(--mono); font-size: 10px; color: var(--diario-paper-dim); margin-top: 12px; }
-.diario-chapter-acts { position: absolute; top: 10px; right: 10px; z-index: 2; opacity: 0; transition: opacity var(--t-fast); }
+.diario-chapter-face::before, .diario-chapter-face::after { content:''; position:absolute; left:16%; right:16%; height:1px; background: rgba(212,175,106,.45); }
+.diario-chapter-face::before { top: 11%; }
+.diario-chapter-face::after { bottom: 11%; }
+.diario-chapter-num { font-family: var(--serif, Georgia, serif); font-size: 26px; font-weight: 700; color: var(--diario-gold); line-height: 1; }
+.diario-chapter-orn { font-size: 11px; color: var(--diario-gold); opacity: .7; margin: 6px 0; }
+.diario-chapter-title { font-family: var(--serif, Georgia, serif); font-size: 15px; line-height: 1.3; color: var(--diario-paper); text-wrap: balance; }
+.diario-chapter-meta { font-family: var(--mono); font-size: 9px; color: var(--diario-paper-dim); margin-top: 10px; }
+.diario-chapter-acts { position: absolute; top: 8px; right: 8px; z-index: 2; opacity: 0; transition: opacity var(--t-fast); }
 .diario-chapter:hover .diario-chapter-acts { opacity: 1; }
-.diario-chapter-new { background: transparent; border: 1px dashed rgba(212,175,106,.35); cursor: default; align-items: center; justify-content: center; }
+.diario-chapter-new { background: transparent; border: 1px dashed rgba(212,175,106,.35); cursor: default; box-shadow: none; display: flex; align-items: center; justify-content: center; }
 .diario-chapter-new:hover { transform: none; box-shadow: none; }
-.diario-chapter-new-face { display: flex; flex-direction: column; gap: 10px; width: 100%; }
+.diario-chapter-new-face { display: flex; flex-direction: column; gap: 10px; width: 100%; padding: 0 14px; }
 .diario-chapter-new-face input { background: var(--surface-2); border: 1px solid var(--border2); border-radius: var(--r); color: var(--text); font-family: var(--font); font-size: 13px; padding: 8px 10px; }
 .diario-chapter-new-face .meta-add-btn { align-self: flex-end; }
 
@@ -3654,6 +3662,18 @@ let _diarioSelAv = null;
 
 const DIARIO_ANO_INICIO = 2010;
 const MESES_PT = ['jan','fev','mar','abr','mai','jun','jul','ago','set','out','nov','dez'];
+// Paleta de encadernações — um tom de joia por livro (determinístico por ano, não randômico:
+// mesmo ano sempre a mesma cor entre sessões). O dourado (--diario-gold) é o fio comum que une
+// a estante inteira; a cor muda, o friso e a tipografia não.
+const DIARIO_ENCADERNACOES = [
+  ['#3a1f57', '#140a20'], // ameixa
+  ['#4a1626', '#180508'], // vinho
+  ['#163524', '#06120b'], // verde-caça
+  ['#10233f', '#050b16'], // meia-noite
+  ['#3f2410', '#170d05'], // terra queimada
+  ['#0f3438', '#041012'], // petróleo
+];
+function diarioEncadernacao(ano){ return DIARIO_ENCADERNACOES[((ano % DIARIO_ENCADERNACOES.length) + DIARIO_ENCADERNACOES.length) % DIARIO_ENCADERNACOES.length]; }
 function toRoman(n){
   const map=[[10,'X'],[9,'IX'],[5,'V'],[4,'IV'],[1,'I']];
   let out='', v=n;
@@ -3689,10 +3709,13 @@ function diarioCockpitHtml(area){
   if (_diarioScreen==='estante') {
     const capas = anosOrdenados.map(y=>{
       const n = entradas.filter(e=>(e.data||'').slice(0,4)===String(y)).length;
-      const vazio = n===0;
-      return `<div class="diario-book ${vazio?'empty':''}" data-action="diario-open-book" data-year="${y}">
+      const nCap = capitulos.filter(c=>c.ano===y).length;
+      const vazio = n===0 && nCap===0;
+      const [c1,c2] = diarioEncadernacao(y);
+      return `<div class="diario-book ${vazio?'empty':''}" data-action="diario-open-book" data-year="${y}" style="--dc1:${c1};--dc2:${c2}">
         <div class="diario-book-spine"></div>
         <div class="diario-book-face">
+          <div class="diario-book-orn">❦</div>
           <div class="diario-book-top">Diário</div>
           <div class="diario-book-year">${y}</div>
           <div class="diario-book-count">${vazio?'em branco':n+' entrada'+(n===1?'':'s')}</div>
@@ -3702,21 +3725,24 @@ function diarioCockpitHtml(area){
     return introHtml + `<div class="diario-shelf diario-fade">${capas}</div>`;
   }
 
-  // ══════════════ TELA 2 — LIVRO (capas de capítulo dentro do ano) ══════════════
+  // ══════════════ TELA 2 — LIVRO (capas de capítulo, próprias deste ano) ══════════════
   if (_diarioScreen==='livro') {
-    const capCovers = capitulos.map((c,i)=>{
+    const capsDoAno = capitulos.filter(c=>c.ano===_diarioSelYear);
+    const [c1,c2] = diarioEncadernacao(_diarioSelYear);
+    const capCovers = capsDoAno.map((c,i)=>{
       const n = entradas.filter(e=>{
         if((e.data||'').slice(0,4)!==String(_diarioSelYear)) return false;
         const av = aventuras.find(a=>a.id===e.aventuraId);
         return av && av.capituloId===c.id;
       }).length;
       const nAv = aventuras.filter(a=>a.capituloId===c.id).length;
-      return `<div class="diario-chapter" data-action="diario-open-cap" data-cid="${esc(c.id)}">
-        <div class="diario-chapter-num">${toRoman(i+1)}</div>
+      return `<div class="diario-chapter" data-action="diario-open-cap" data-cid="${esc(c.id)}" style="--dc1:${c1};--dc2:${c2}">
+        <div class="diario-chapter-spine"></div>
         <div class="diario-chapter-face">
-          <div class="diario-chapter-eyebrow">Capítulo ${toRoman(i+1)}</div>
+          <div class="diario-chapter-num">${toRoman(i+1)}</div>
+          <div class="diario-chapter-orn">❦</div>
           <div class="diario-chapter-title">${esc(c.titulo)}</div>
-          <div class="diario-chapter-meta">${nAv} aventura${nAv===1?'':'s'} · ${n} em ${_diarioSelYear}</div>
+          <div class="diario-chapter-meta">${nAv} aventura${nAv===1?'':'s'} · ${n} entrada${n===1?'':'s'}</div>
         </div>
         <span class="mz-acts diario-chapter-acts">
           <button class="hz-act" data-action="diario-edit-cap" data-cid="${esc(c.id)}" data-cur="${esc(c.titulo)}" title="Renomear">✏️</button>
@@ -3725,7 +3751,7 @@ function diarioCockpitHtml(area){
       </div>`;
     }).join('');
     const newCapCard = `<div class="diario-chapter diario-chapter-new">
-      <div class="diario-chapter-face diario-chapter-new-face">
+      <div class="diario-chapter-new-face">
         <input type="text" class="list-inp" id="diario-inp-cap" placeholder="Novo capítulo..." maxlength="80">
         <button class="meta-add-btn" data-action="diario-add-cap" title="Adicionar">+</button>
       </div>
@@ -3767,6 +3793,7 @@ function diarioCockpitHtml(area){
 
   // ══════════════ TELA 4 — LEITURA (feed contínuo de uma aventura) ══════════════
   const aventura = aventuras.find(a=>a.id===_diarioSelAv);
+  const capituloDaLeitura = capitulos.find(c=>c.id===_diarioSelCap);
   const feed = entradas
     .filter(e=>e.aventuraId===_diarioSelAv && (e.data||'').slice(0,4)===String(_diarioSelYear))
     .sort((x,y)=>x.data<y.data?1:x.data>y.data?-1:0);
@@ -3784,7 +3811,7 @@ function diarioCockpitHtml(area){
 
   return introHtml + `<div class="diario-reading-wrap diario-fade">
     <div class="diario-reading-head">
-      <button class="diario-back" data-action="diario-back-cap">‹ Capítulo</button>
+      <button class="diario-back" data-action="diario-back-cap">‹ ${esc(capituloDaLeitura?capituloDaLeitura.titulo:'Capítulo')}</button>
       <div class="diario-reading-title">${esc(aventura?aventura.titulo:'')}</div>
     </div>
     <div class="diario-reading-feed">${feedHtml||'<div class="mz-empty">Nenhuma entrada de '+_diarioSelYear+' aqui ainda. Escreva a primeira.</div>'}</div>
@@ -4473,7 +4500,7 @@ function bindDetailDelegation(areaId) {
       if(!titulo){ toast('Escreve o nome do capítulo'); return; }
       await guard(async()=>{
         inp.value='';
-        const j = await postJson(`/api/area/${encodeURIComponent(areaId)}/capitulo`,{titulo});
+        const j = await postJson(`/api/area/${encodeURIComponent(areaId)}/capitulo`,{titulo, ano:_diarioSelYear});
         if (j.capitulo) _diarioSelCap = j.capitulo.id;
         await load(false); toast('✓ Capítulo criado');
       });
@@ -4629,7 +4656,7 @@ function bindDetailDelegation(areaId) {
       if(!titulo) return;
       await guard(async()=>{
         e.target.value='';
-        const j = await postJson(`/api/area/${encodeURIComponent(areaId)}/capitulo`,{titulo});
+        const j = await postJson(`/api/area/${encodeURIComponent(areaId)}/capitulo`,{titulo, ano:_diarioSelYear});
         if (j.capitulo) _diarioSelCap = j.capitulo.id;
         await load(false); toast('✓ Capítulo criado');
       });
